@@ -1,0 +1,78 @@
+name: Flutter Build iOS
+
+on: workflow_dispatch
+
+jobs:
+  build_ios:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: plum-tech/xiaoying-x
+          token: ${{ secrets.MIMIR_GITHUB_TOKEN }}
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+          cache-dependency-path: tools/pnpm-lock.yaml
+
+      - name: Pnpm install
+        run: |
+          cd tools && pnpm i && pnpm build && cd ..
+
+      - name: Change Develop to Distribution
+        run: |
+          pnpm run to-distro
+
+      - name: Install Apple Certificate
+        uses: apple-actions/import-codesign-certs@v3
+        with:
+          p12-file-base64: ${{ secrets.P12_BASE64 }}
+          p12-password: ${{ secrets.P12_PASSWORD }}
+
+      - name: Install the provisioning profile
+        env:
+          PROVISIONING_CERTIFICATE_BASE64: ${{ secrets.PROVISIONING_PROFILE_BASE64 }}
+        run: |
+          PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
+
+          echo -n "$PROVISIONING_CERTIFICATE_BASE64" | base64 --decode --output $PP_PATH
+
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+          flutter-version-file: pubspec.yaml
+
+      - name: Build iOS
+        run: |
+          flutter config --no-cli-animations
+          flutter build ios --release --no-codesign
+
+      - name: Build resolve Swift dependencies
+        run: |
+          xcodebuild -resolvePackageDependencies -workspace ios/Runner.xcworkspace -scheme Runner -configuration Release
+
+      - name: Build xArchive
+        run: |
+          xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner -configuration Release DEVELOPMENT_TEAM="TGBYYVM7AB" -sdk 'iphoneos' -destination 'generic/platform=iOS' -archivePath build-output/app.xcarchive PROVISIONING_PROFILE="05f6171f-60f5-45f4-a6e8-40d042c29e91" clean archive CODE_SIGN_IDENTITY="Apple Distribution: Shanghai Plum Technology Ltd. (TGBYYVM7AB)"
+
+      - name: Export ipa
+        run: |
+          xcodebuild -exportArchive -archivePath build-output/app.xcarchive -exportPath build-output/ios -exportOptionsPlist ios/ExportOptions.plist
+
+      - name: Publish iOS Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: iOS-release
+          path: build-output/ios/life.mysit.SITLife.ipa

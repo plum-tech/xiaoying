@@ -1,0 +1,532 @@
+appName: 小应生活
+agreements:
+  privacyPolicy:
+    title: 隐私政策
+    content: |
+      @:appName 在提供服务时需要收集您的相关信息及以下权限：
+
+      访问网络以获取您在学校各系统中的信息；使用摄像头以扫描二维码；读写相册以从照片中扫描二维码和保存生成的图片；读写日历以添加考试提醒和课程表；读取外部存储空间以导入您所选的课程表文件；写入外部存储空间以将您导出的课程表文件保存至本地文件系统。
+
+      当您在使用具体功能时，我们需要获取您与该功能相应所需的权限。
+      未经您的许可，我们不会向第三方披露、共享或提供您的个人信息。
+      您可以根据我们的指引、访问、更正、删除您的信息或撤销您的相关授权。您可以通过查看《小应生活隐私政策》中的联系方式来与我们联系。
+
+      更多详情请阅读完整版的 [《小应生活隐私政策》](https://www.xiaoying.life/privacy-policy) 和 [《小应生活使用协议》](https://www.xiaoying.life/tos)。
+    accept: 同意并继续
+    decline: 拒绝
+    onDecline: 只有接受我们的隐私政策后，您才可享用 @:appName 的功能
+  basic: |
+    我已阅读并同意 [《小应生活隐私政策》](https://www.xiaoying.life/privacy-policy) 和 [《小应生活使用协议》](https://www.xiaoying.life/tos)
+  account: |
+    我已阅读并同意 [《小应生活隐私政策》](https://www.xiaoying.life/privacy-policy) 和 [《小应生活使用协议》](https://www.xiaoying.life/tos)
+  acceptanceRequired:
+    title: 需要同意协议
+    desc: 在使用@:appName前，你必须同意我们的协议和政策
+mimir:
+  school:
+    title: 学校
+    10259: 上海应用技术大学
+timetable:
+  navigation: 课程表
+  jump: 跳转
+  findToday: 找到今天
+  startWith: 起始于
+  createdWhen: 创建于
+  weekOrderedName: "第 {} 周"
+  focusTimetable: 课程表模式
+  signature: 签名
+  signaturePlaceholder: 你的名字
+  lunchtime: 午餐时间
+  dinnertime: 晚餐时间
+  mine:
+    title: 你的课程表
+    exportCalendar: 导出日历
+    patch: 调课
+    deleteRequest: 确定删除？
+    deleteRequestDesc: 这个课程表将被永久删除
+    emptyTip: 快去导入一个课程表吧！
+    details: 详情
+  edit:
+    name: 名称
+    tab:
+      info: 信息
+      advanced: 高级
+    editCourse: 编辑课程
+    newCourse: 创建课程
+    addCourse: 添加一个课程
+    repeating: 重复
+    daysOfWeek: 日历日
+    timeslots:
+      single: "第 {} 节"
+      multiple: "从第 {from} 节到第 {to} 节"
+  issue:
+    title: 课程表问题
+    resolve: 解决
+    builtin:
+      empty:
+        title: 课表为空
+        desc: 请检查你是否导入了正确的课表
+      cbeCourse:
+        title: 发现免听课程
+        desc: 你可以在课表中隐藏免听课程
+      patchOutOfRange:
+        title: 调课不在课程表的时间范围内
+        desc: 调课不在当前课程表所处学期的时间范围内，调课将不会生效。请检查你是否设置了正确的日期
+      courseOverlaps:
+        title: 发现课程时间冲突
+        desc: 你可以隐藏其中一个课程以避免冲突
+  import:
+    title: 导入课程表
+    import: 导入
+    fromFile: 从文件
+    tryImportBtn: 尝试导入
+    fromFileBtn: 从文件导入
+    connectivityCheckerDesc: 在导入课程表之前，需要先检查你是否能访问教务系统。
+    selectSemesterTip: 请先选择学年与学期
+    endTip: 请完善课程表的信息。
+    failed: 导入失败
+    networkFailedDesc: 无法访问教务系统，请检查是否连接校园网，并稍后再试
+    failedDesc: 无法导入这个课程表, 请稍后再试
+    failedTip: 导入失败, 请稍后再试
+    importing: 正在尝试获取课程表的数据……
+    timetableInfo: 课程表信息
+    defaultName: "{yearStart}年 {semester} 课程表"
+    fileSystemError:
+      title: 文件系统错误
+    formatError:
+      title: 格式错误
+      desc: 所选文件无法作为课程表导入，请选择一个课程表文件。
+  displayMode:
+    daily: 日
+    weekly: 周
+  dayLocMode:
+    pos: 位置
+    date: 日期
+  weekIndexType:
+    all: 每周
+    odd: 单周
+    even: 双周
+    of:
+      single: "第 {} 周"
+      all: "第 {start} 周到第 {end} 周"
+      odd: "第 {start} 周到第 {end} 周中的单周"
+      even: "第 {start} 周到第 {end} 周中的双周"
+  freeTip:
+    dayTip: 好耶，没课的一天！
+    isTodayTip: 尽情享受今天吧！
+    weekTip: 哇，这周没课！
+    isThisWeekTip: 尽情享受这周吧！
+    termTip: 不可思议，这个学期你都在放假！
+    findNearestWeekWithClass: 找到有课的一周
+    findNearestDayWithClass: 找到有课的一天
+  settings:
+    autoUseImported:
+      title: 自动使用新课程表
+      desc: 自动使用新导入的课程表
+    showTimetableNavigation:
+      title: '显示 "课程表" 导航'
+      desc: '在底部导航栏上显示 "课程表"'
+    cellStyle:
+      title: 单元格风格
+      desc: 课程单元格如何显示
+    quickLookLessonOnTap:
+      title: 点击快速查看一节课
+      desc: 在周课程表中长按查看完整课程
+school:
+  navigation: 学校
+  semester:
+    all: 整学年
+    term1: 第一学期
+    term2: 第二学期
+  allYear: 所有学年
+  course:
+    courseName: 课程名称
+    classCode: 教学班
+    courseCode: 课程代码
+    place: 地点
+    campus: 校区
+    displayable: 在课程表中显示
+    semester: 学期
+    schoolYear: 学年
+    credit: 学分
+    category: 课程类别
+    teacher: 教师
+    compulsory: 必修
+    elective: 选修
+  studentType:
+    title: 学生类型
+    undergraduate: 本科生
+    postgraduate: 研究生
+  courseCat:
+    none: 无
+    genEd: 通识课
+    publicCore: 公共基础课
+    specializedCore: 学科专业基础课
+    specializedCompulsory: 专业必修课
+    specializedElective: 专业选修课
+    integratedPractice: 综合实践
+    practicalInstruction: 实践教学
+  settings:
+    examResult:
+      showResultPreview:
+        title: 显示考试成绩预览
+        desc: 在卡片中显示当前学期的考试成绩
+    electricity:
+      autoRefresh:
+        title: 电费余额自动刷新
+        desc: 启动时刷新电费余额
+    expenseRecords:
+      autoRefresh:
+        title: 消费记录自动刷新
+        desc: 启动时刷新消费记录
+ywb:
+  title: 应网办
+  info: |
+    本功能基于 "上应一网通办"。
+    对于绝大多数业务，即使你在平台上已完成申请，仍要去现场办理。
+  action:
+    applications: 申请
+  apply: 申请
+  noServicesTip: 应网办没有可办事项
+  mine:
+    title: 你的申请
+    noApplicationsTip: 你没有申请
+  details:
+    apply: 申请
+  type:
+    todo: 待办
+    running: 在途
+    complete: 办结
+captcha:
+  title: 验证码
+  enterHint: 请输入验证码
+  emptyInputError: 你输入的验证码为空
+credentials:
+  account: 账号
+  pwd: 密码
+  savedPwd:
+    title: 保存的密码
+    desc: 用于自动登录
+  credentialsError: 账号密码错误
+  oa:
+    studentId: 学号
+    oaAccount: OA 账号
+    oaPwd: OA 密码
+    oaPwdChangedOutsideRequest: |
+      你保存的 OA 密码与学校服务器上的密码不匹配。
+      这可能是因为你在 @:appName 之外更改了 OA 密码。
+      请在设置中更新你保存的密码。
+    goSettings: 前往设置
+  error:
+    accountPassword: 你的账号或密码不正确
+    captcha: 你的验证码不正确
+    frozen: 你的账号处于冻结状态
+    locked: 你的账号处于锁定状态
+    oa-frozen: 你的 OA 账号处于冻结状态，请稍后再试
+    oa-locked: 你的 OA 账号处于锁定状态，请联系管理员
+    oa-incompleteUserInfo: 你的 OA 账号用户信息不完整，请访问 https://myportal.sit.edu.cn 进行完善
+electricity:
+  title: 电费余额
+  balance: 可用余额
+  remainingPower: 剩余电量
+  searchInvalidTip: 请输入或选择一个存在的房间号
+  refreshSuccessTip: 电费余额刷新成功
+  refreshFailedTip: 电费余额刷新失败
+  searchRoom: 搜索房间
+  emptyHistoryTip: 无搜索历史
+  noMatchedRoomNumbers: 没有匹配的房间号
+  lastUpdateTime: "上次更新：{}"
+examResult:
+  title: 考试成绩
+  check: 查询
+  teacherEval: 评教
+  noResultsTip: 你没有考试成绩
+  courseNotEval: 未评教
+  teacherEvalTitle: 评教
+  examRequireEvalTip: 分数将在评教此课程后可查看
+  score: 考试分数
+  publishTime: 发布时间
+  maxScore: 最高分数
+  gpa:
+    title: 绩点
+    lessonSelected: "已选 {} 门"
+    credit: "学分: {}"
+    gpaResult: "绩点: {}"
+    selectAll: 全选
+    invert: 反选
+    exceptGenEd: 除去通识课
+    exceptFailed: 除去未通过
+  examType:
+    title: 考试性质
+    normal: 正常考试
+    resit: 补考
+    retake: 重修
+examArrange:
+  title: 考试安排
+  check: 查询
+  date: 日期
+  time: 时间
+  retake: 重修
+  disqualified: 取消资格
+  location: 地点
+  noExamsTip: 你没有考试安排
+  seatNumber: 座位号
+  addCalendarEvent: 添加事项
+  calendarEventTitle: "考试: {}"
+expenseRecords:
+  title: 消费记录
+  list: 清单
+  statistics: 统计
+  topUp: 充值
+  launchFailed: 启动失败
+  launchFailedDesc: 请确保你已安装支付宝
+  balanceInCard: "卡内余额 {} 元"
+  lastTransaction: "¥{amount} {place}"
+  income: "收入: {} 元"
+  outcome: "支出: {} 元"
+  noTransactionsTip: 你没有交易记录
+  refreshSuccessTip: 消费记录刷新成功
+  refreshFailedTip: 消费记录刷新失败
+  lastUpdateTime: "上次更新：{}"
+  statsMode:
+    day: 日
+    week: 周
+    month: 月
+    year: 年
+  view:
+    balance: 卡内余额
+    rmb: 元
+  stats:
+    title: 消费统计
+    total: 总计
+    summary: 摘要
+    details: 详情
+    averageSpendIn: "在{type}上平均消费{amount}"
+    maxSpendOf: "最大消费为 {amount}"
+    averageLineLabel: 平均
+    hourlyAverage: 时均
+    dailyAverage: 日均
+    monthlyAverage: 月均
+    today: 今天
+    yesterday: 昨天
+    thisWeek: 本周
+    lastWeek: 上周
+    thisMonth: 本月
+    lastMonth: 上月
+    thisYear: 今年
+    lastYear: 去年
+  type:
+    consume: 消费
+    coffee: 咖啡
+    food: 食堂
+    store: 商店
+    water: 热水
+    library: 图书馆
+    shower: 洗浴
+    topUp: 充值
+    subsidy: 补贴
+    other: 杂项
+auth:
+  signIn: 登录
+  signUp: 注册
+  signOut: 登出
+  login: 登录
+  forgotPwd: 忘记密码？
+  validateInputAccountPwdRequest: 请检查你输入的账号与密码
+  unknownAuthErrorTip: 未知账号验证错误
+  invalidAccountFormat: 账号格式不正确
+  offlineModeBtn: 离线模式
+  failedWarn: 登录失败
+  formatError: 格式错误
+oa:
+  login:
+    loginOa: 登录 OA
+    welcomeHeader: 欢迎！
+    accountHint: 学号/工号
+    oaPwdHint: 输入你的OA密码
+    freshmanSystemPwd: 迎新系统密码
+    freshmanSystemPwdHint: 输入迎新系统密码
+    loginRequired: 需要登录
+    neverLoggedInTip: 你必须先登录才能继续。
+    schoolServerUnconnectedTip: 无法连接学校服务器
+    disclaimer: |
+      您即将登录上海应用技术大学（简称"学校"）的[信息门户（简称"OA"）](https://myportal.sit.edu.cn/)的账户，
+      作为学校其他系统的统一认证服务。
+
+      我们非常重视您的隐私安全。您的账号与密码仅用于提交给学校服务器进行身份验证，并仅存储在本地。
+    freshmanTip: |
+      OA账户与迎新系统间独立且不共通，请勿使用高考报名号作为账号。请查看《新生入学须知》以了解初始密码。
+
+      在首次登录前，可能还需前往[OA官网](https://myportal.sit.edu.cn/)修改初始密码并绑定手机号。
+    freshmanSystemTip: |
+      您即将使用高考报名号登录迎新系统，仅可查看您的入学信息，
+      如宿舍房间号，和辅导员及其联系方式。
+      请查看《新生入学须知》以了解初始密码。
+
+      迎新系统不与其他系统共通（如课程表功能），在您入学后，请使用学校为您分配的学号重新登录 EasyConnect 和 @:appName。
+settings:
+  title: 设置
+  themeColor: 主题色
+  fromSystem: 根据系统
+  loginTest:
+    title: 测试登录
+    desc: 尝试使用当前的登录凭据登录
+  clearCache:
+    title: 清空缓存
+    desc: 清空使用过程中产生的离线缓存和 Cookies
+    request: 你下次需要连接校园网才能重新加载它们。
+  themeMode:
+    title: 亮度
+  wipeData:
+    title: 擦除数据并登出
+    desc: 擦除所有数据并登出当前 OA 账号
+    request: 擦除所有数据
+    requestDesc: 此操作将永久擦除你的登录凭据，缓存和其他信息，如已导入的课程表。
+  about:
+    title: 关于
+    version: 版本
+    termsOfService: 服务条款
+    privacyPolicy: 隐私政策
+    marketingWebsite: 官网
+oaAnnounce:
+  title: OA 公告
+  noOaAnnouncementsTip: 学校没有 OA 公告
+  downloadCompleted: 下载完成
+  downloadFailed: 下载失败
+  downloading: 下载中
+  info:
+    title: 标题
+    publishTime: 发布时间
+    department: 发布部门
+    author: 作者
+    tags: 标签
+    attachmentHeader:
+      one: 附件
+      other: 附件
+  oaAnnounceCat:
+    studentAffairs: 学生事务
+    learning: 学习课堂
+    collegeNotification: 二级学院通知
+    culture: 校园文化
+    announcement: 公告信息
+    life: 生活服务
+    download: 文件下载专区
+    training: 培养信息
+    academicReport: 学术报告
+freshman:
+  title: 迎新系统
+greeting:
+  headerA: 今天是你在上应大的
+  headerB:
+    one: 第 1 天
+    other: "第 {} 天"
+404:
+  title: 找不到页面
+  subtitle: 未找到请求的页面
+weekday:
+  0: 周一
+  1: 周二
+  2: 周三
+  3: 周四
+  4: 周五
+  5: 周六
+  6: 周日
+weekdayShort:
+  0: 一
+  1: 二
+  2: 三
+  3: 四
+  4: 五
+  5: 六
+  6: 日
+campus:
+  xuhui: 徐汇
+  fengxian: 奉贤
+unit:
+  rmb: "{} 元"
+  powerKwh: "{} 度"
+time:
+  minute: 分钟
+  hour: 小时
+  hourMinuteFormat: "{hour} 小时 {minute} 分钟"
+  minuteFormat: "{} 分钟"
+  hourFormat: "{} 小时"
+brightness:
+  light: 明亮
+  dark: 黑暗
+themeMode:
+  dark: 黑暗
+  light: 明亮
+  system: 系统
+OaUserType:
+  undergraduate: 本科生
+  postgraduate: 研究生
+  freshman: 新生
+  worker: 职工
+  other: 其他
+permission:
+  permissionDenied: 没有权限
+  permissionDeniedDescOf: "{} 权限未被授权，请检查应用的设置。"
+  permissionRequestOf: "需要 {} 权限"
+  goSettings: 前往设置
+  type:
+    storage: 存储
+    camera: 相机
+    photos: 相册
+  usage:
+    storage: "@:appName 需要存储权限来读取和写入课程表文件"
+    camera: "@:appName 需要相机权限来扫描二维码"
+    photos: "@:appName 需要相册权限来从图像中扫描二维码"
+quitPrompt:
+  request:
+    saveAndQuit: 你有未保存的更改，想要保存吗？
+    discardAndQuit: 你的进度无法被保存，想要丢弃吗？
+  saveAndQuit: 保存并退出
+  discardAndQuit: 丢弃并退出
+  discard: 丢弃
+dormitoryRoom: "{building}号楼 #{room}"
+open: 打开
+delete: 删除
+confirm: 确定
+error: 错误
+ok: 好的
+close: 关闭
+submit: 提交
+cancel: 取消
+save: 保存
+yes: 是的
+refresh: 刷新
+update: 更新
+sync: 同步
+back: 返回
+clear: 清空
+continue: 继续
+unknown: 未知
+failed: 失败
+download: 下载
+fetching: 获取中
+warning: 警告
+untitled: 无标题
+congratulations: 恭喜
+search: 搜索
+seeAll: 查看全部
+select: 选择
+unselect: 取消选择
+share: 分享
+use: 使用
+used: 已使用
+edit: 编辑
+copy: 复制
+preview: 预览
+upload: 上传
+pick: 选择
+duplicate: 创建副本
+copyTip: "已复制 {} 到剪贴板了"
+done: 完成
+openInBrowser: 在浏览器中打开
+choose: 挑选
+unspecified: 未指定
+add: 添加
+rename: 重命名
+enter: 进入
+troubleshoot: 疑难解答

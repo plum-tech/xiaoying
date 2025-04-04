@@ -5,8 +5,7 @@ on:
     inputs:
       ref:
         description: 'Branch, tag or commit to build'
-        required: true
-        default: master
+        default: ""
         type: string
 jobs:
   build_ios:

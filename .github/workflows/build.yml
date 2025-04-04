@@ -10,8 +10,7 @@ on:
         type: boolean
       ref:
         description: 'Branch, tag or commit to build'
-        required: true
-        default: master
+        default: ""
         type: string
 
 permissions: write-all

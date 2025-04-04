@@ -197,7 +197,7 @@ jobs:
           path: build/
 
       - name: Deploy to App Store (TestFlight)
-        uses: apple-actions/upload-testflight-build@v3
+        uses: apple-actions/upload-testflight-build@v3.0.0
         with:
           app-path: ${{ github.workspace }}/build/life.mysit.SITLife.ipa
           issuer-id: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
@@ -220,6 +220,6 @@ jobs:
       - name: Publish preview version
         continue-on-error: true
         env:
-          MIMIR_VERSION_ADMIN_TOKEN: ${{ secrets.MIMIR_VERSION_ADMIN_TOKEN }}
+          XY_VERSION_ADMIN_TOKEN: ${{ secrets.XY_VERSION_ADMIN_TOKEN }}
         run: |
           pnpm run publish-preview --upload build/app-release-signed.apk

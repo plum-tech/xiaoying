@@ -8,6 +8,11 @@ on:
         required: true
         default: true
         type: boolean
+      ref:
+        description: 'Branch, tag or commit to build'
+        required: true
+        default: master
+        type: string
 
 permissions: write-all
 
@@ -20,6 +25,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: plum-tech/xiaoying-x
+          ref: ${{ inputs.ref }}
           token: ${{ secrets.MIMIR_GITHUB_TOKEN }}
           fetch-depth: 0
 

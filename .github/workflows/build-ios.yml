@@ -1,7 +1,13 @@
 name: Flutter Build iOS
 
-on: workflow_dispatch
-
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Branch, tag or commit to build'
+        required: true
+        default: master
+        type: string
 jobs:
   build_ios:
     runs-on: macos-15
@@ -9,6 +15,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: plum-tech/xiaoying-x
+          ref: ${{ inputs.ref }}
           token: ${{ secrets.MIMIR_GITHUB_TOKEN }}
 
       - name: Install pnpm

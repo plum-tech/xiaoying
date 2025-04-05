@@ -113,10 +113,6 @@ jobs:
         run: |
           pnpm run increment-build-number
 
-      - name: Change Develop to Distribution
-        run: |
-          pnpm run to-distro
-
       - name: Install Apple Certificate
         uses: apple-actions/import-codesign-certs@v5
         with:

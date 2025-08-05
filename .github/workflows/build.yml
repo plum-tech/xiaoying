@@ -8,6 +8,11 @@ on:
         required: true
         default: true
         type: boolean
+      publish_version:
+        description: 'Publish the preview version'
+        required: true
+        default: true
+        type: boolean
       ref:
         description: 'Branch, tag or commit to build'
         default: ""
@@ -226,6 +231,7 @@ jobs:
 
       - name: Publish preview version
         continue-on-error: true
+        if: ${{ inputs.publish_version }}
         env:
           XY_VERSION_ADMIN_TOKEN: ${{ secrets.XY_VERSION_ADMIN_TOKEN }}
         run: |

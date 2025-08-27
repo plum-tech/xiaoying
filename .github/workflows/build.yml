@@ -97,7 +97,7 @@ jobs:
 
   build_ios:
     runs-on: macos-15
-    if: github.ref == 'refs/heads/master' && ${{ inputs.deploy_app_store }}
+    if: github.ref == 'refs/heads/master'
 
     steps:
       - uses: actions/checkout@v4
@@ -210,6 +210,7 @@ jobs:
 
       - name: Deploy to App Store (TestFlight)
         uses: apple-actions/upload-testflight-build@v3.0.0
+        if: ${{ inputs.deploy_app_store }}
         with:
           app-path: ${{ github.workspace }}/build/life.mysit.SITLife.ipa
           issuer-id: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
@@ -218,6 +219,7 @@ jobs:
 
       - name: Push changes
         uses: ad-m/github-push-action@master
+        if: ${{ inputs.deploy_app_store }} && ${{ inputs.publish_version }}
         with:
           repository: plum-tech/xiaoying-x
           github_token: ${{ secrets.MIMIR_GITHUB_TOKEN }}

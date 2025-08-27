@@ -14,6 +14,12 @@ jobs:
           token: ${{ secrets.MIMIR_GITHUB_TOKEN }}
           fetch-depth: 0
 
+      # Configure Git with PAT for subsequent steps
+      # This is the crucial step that sets up global credentials.
+      - name: Configure Git for private dependencies
+        run: |
+          git config --global url."https://${{ secrets.MIMIR_GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"
+
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:

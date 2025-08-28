@@ -11,7 +11,6 @@ import 'package:mimir/credentials/init.dart';
 import 'package:mimir/init.dart';
 import 'package:mimir/lifecycle.dart';
 import 'package:mimir/school/exam_result/page/gpa.dart';
-import 'package:mimir/school/exam_result/page/result.pg.dart';
 import 'package:mimir/school/ywb/entity/service.dart';
 import 'package:mimir/school/ywb/page/details.dart';
 import 'package:mimir/school/ywb/page/service.dart';
@@ -246,10 +245,6 @@ final _examResultRoute = GoRoute(
           builder: (ctx, state) => const GpaCalculatorPage(),
         ),
       ],
-    ),
-    GoRoute(
-      path: "pg",
-      builder: (ctx, state) => const ExamResultPgPage(),
     ),
   ],
   redirect: (ctx, state) {

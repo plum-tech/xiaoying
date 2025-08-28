@@ -6,7 +6,6 @@ import 'package:mimir/credentials/entity/user_type.dart';
 import 'package:mimir/entity/campus.dart';
 import 'package:mimir/school/electricity/entity/balance.dart';
 import 'package:mimir/school/expense_records/entity/local.dart';
-import 'package:mimir/school/exam_result/entity/result.pg.dart';
 import 'package:mimir/school/ywb/entity/service.dart';
 import 'package:mimir/school/ywb/entity/application.dart';
 import 'package:mimir/school/exam_result/entity/result.ug.dart';
@@ -54,7 +53,6 @@ class HiveAdapter {
     hive.addAdapter(ExamResultUgAdapter());
     hive.addAdapter(ExamResultItemAdapter());
     hive.addAdapter(UgExamTypeAdapter());
-    hive.addAdapter(ExamResultPgAdapter());
 
     // Expense Records
     hive.addAdapter(TransactionAdapter());

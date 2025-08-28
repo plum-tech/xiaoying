@@ -1,17 +1,13 @@
 import 'package:beautiful_soup_dart/beautiful_soup.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:mimir/credentials/init.dart';
 import 'package:mimir/init.dart';
 
 import 'package:mimir/school/entity/school.dart';
-import 'package:mimir/school/exam_result/init.dart';
-import 'package:mimir/session/pg_registration.dart';
 import 'package:mimir/session/ug_registration.dart';
 import 'package:mimir/settings/settings.dart';
 
 import '../entity/timetable.dart';
-import '../utils/parse.pg.dart';
 import '../utils/parse.ug.dart';
 
 class TimetableService {
@@ -20,8 +16,6 @@ class TimetableService {
       'http://gms.sit.edu.cn/epstar/yjs/T_PYGL_KWGL_WSXK/T_PYGL_KWGL_WSXK_XSKB_NEW.jsp';
 
   UgRegistrationSession get _ugRegSession => Init.ugRegSession;
-
-  PgRegistrationSession get _pgRegSession => Init.pgRegSession;
 
   const TimetableService();
 
@@ -49,36 +43,6 @@ class TimetableService {
       json,
       defaultCampus: Settings.campus,
     );
-  }
-
-  /// 获取研究生课表
-  Future<Timetable> fetchPgTimetable(SemesterInfo info) async {
-    final timetableRes = await _pgRegSession.request(
-      _postgraduateTimetableUrl,
-      options: Options(
-        method: "POST",
-      ),
-      data: () => {
-        "excel": "true",
-        "XQDM": _toPgSemesterText(info),
-      },
-    );
-    final resultRawList = await ExamResultInit.pgService.fetchResultRawList();
-    return parsePostgraduateTimetableFromRaw(
-      resultList: resultRawList,
-      pageHtml: timetableRes.data,
-      campus: Settings.campus,
-      studentId: CredentialsInit.storage.oa.credentials?.account ?? "",
-    );
-  }
-
-  String _toPgSemesterText(SemesterInfo info) {
-    assert(info.semester != Semester.all);
-    if (info.semester == Semester.term1) {
-      return "${info.exactYear}09";
-    } else {
-      return "${info.exactYear + 1}02";
-    }
   }
 
   Future<({DateTime start, DateTime end})?> getUgSemesterSpan() async {

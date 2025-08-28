@@ -8,9 +8,7 @@ import 'package:mimir/entity/campus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mimir/credentials/init.dart';
 import 'package:mimir/lifecycle.dart';
-import 'package:mimir/session/freshman.dart';
 import 'package:mimir/storage/hive/init.dart';
-import 'package:mimir/session/pg_registration.dart';
 import 'package:mimir/session/ywb.dart';
 import 'package:mimir/school/electricity/init.dart';
 import 'package:mimir/school/expense_records/init.dart';
@@ -40,9 +38,7 @@ class Init {
   static late Dio mimirDio;
   static late Dio dioNoCookie;
   static late SsoSession ssoSession;
-  static late FreshmanSession freshmanSession;
   static late UgRegistrationSession ugRegSession;
-  static late PgRegistrationSession pgRegSession;
   static late YwbSession ywbSession;
 
   static Future<void> initNetwork() async {
@@ -87,10 +83,6 @@ class Init {
     ugRegSession = const UgRegistrationSession();
     ywbSession = YwbSession(
       dio: schoolDio,
-    );
-    freshmanSession = const FreshmanSession();
-    pgRegSession = PgRegistrationSession(
-      ssoSession: ssoSession,
     );
   }
 

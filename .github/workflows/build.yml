@@ -40,21 +40,6 @@ jobs:
         run: |
           git config --global url."https://${{ secrets.MIMIR_GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: 'pnpm'
-          cache-dependency-path: tools/pnpm-lock.yaml
-
-      - name: Pnpm install
-        run: |
-          cd tools && pnpm i && pnpm build && cd ..
-
       - name: Install JDK 17
         uses: actions/setup-java@v4
         with:
@@ -111,21 +96,6 @@ jobs:
       - name: Configure Git for private dependencies
         run: |
           git config --global url."https://${{ secrets.MIMIR_GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: 'pnpm'
-          cache-dependency-path: tools/pnpm-lock.yaml
-
-      - name: Pnpm install
-        run: |
-          cd tools && pnpm i && pnpm build && cd ..
 
       - name: Install Apple Certificate
         uses: apple-actions/import-codesign-certs@v5

@@ -1,6 +1,12 @@
 name: Flutter Build Android Release
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Branch, tag or commit to build'
+        default: ""
+        type: string
 
 jobs:
   build_android:
@@ -11,6 +17,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: plum-tech/xiaoying-x
+          ref: ${{ inputs.ref }}
           token: ${{ secrets.MIMIR_GITHUB_TOKEN }}
           fetch-depth: 0
 

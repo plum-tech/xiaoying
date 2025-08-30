@@ -3,6 +3,11 @@ name: Flutter Build iOS
 on:
   workflow_dispatch:
     inputs:
+      deploy_app_store:
+        description: 'Deploy on App Store connect'
+        required: true
+        default: true
+        type: boolean
       ref:
         description: 'Branch, tag or commit to build'
         default: ""
@@ -87,3 +92,29 @@ jobs:
         with:
           name: iOS-release
           path: build-output/ios/life.mysit.SITLife.ipa
+
+  after_build:
+    runs-on: macos-latest
+    if: ${{ inputs.deploy_app_store }}
+    needs: [ build_ios ]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: plum-tech/xiaoying-x
+          ref: ${{ inputs.ref }}
+          token: ${{ secrets.MIMIR_GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Get iOS Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: iOS-release
+          path: build/
+
+      - name: Deploy to App Store (TestFlight)
+        uses: apple-actions/upload-testflight-build@v3.0.0
+        with:
+          app-path: ${{ github.workspace }}/build/life.mysit.SITLife.ipa
+          issuer-id: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          api-key-id: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          api-private-key: ${{ secrets.APP_STORE_CONNECT_API_PRIVATE_KEY }}

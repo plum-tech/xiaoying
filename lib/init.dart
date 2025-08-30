@@ -11,7 +11,6 @@ import 'package:mimir/lifecycle.dart';
 import 'package:mimir/storage/hive/init.dart';
 import 'package:mimir/session/ywb.dart';
 import 'package:mimir/school/electricity/init.dart';
-import 'package:mimir/school/expense_records/init.dart';
 import 'package:mimir/login/init.dart';
 import 'package:mimir/school/ywb/init.dart';
 import 'package:mimir/school/exam_arrange/init.dart';
@@ -94,7 +93,6 @@ class Init {
       OaAnnounceInit.init();
       ExamResultInit.init();
       ExamArrangeInit.init();
-      ExpenseRecordsInit.init();
       YwbInit.init();
       ElectricityBalanceInit.init();
     }
@@ -109,7 +107,6 @@ class Init {
       OaAnnounceInit.initStorage();
       ExamResultInit.initStorage();
       ExamArrangeInit.initStorage();
-      ExpenseRecordsInit.initStorage();
       YwbInit.initStorage();
       ElectricityBalanceInit.initStorage();
     }

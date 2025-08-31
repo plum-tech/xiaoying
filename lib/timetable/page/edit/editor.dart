@@ -125,7 +125,6 @@ class _TimetableEditorPageState extends State<TimetableEditorPage> {
   }
 
   List<Widget> buildInfoTab() {
-    final timetable = buildTimetable();
     return [
       SliverList.list(children: [
         buildDescForm(),

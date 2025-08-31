@@ -1,4 +1,4 @@
-import 'package:mimir/backend/entity/user.dart';
+import 'package:mimir/school/entity/school_code.dart';
 import 'package:mimir/entity/campus.dart';
 import 'package:mimir/school/entity/school.dart';
 import 'package:mimir/school/utils.dart';

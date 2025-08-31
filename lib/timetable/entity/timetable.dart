@@ -4,7 +4,6 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
-import 'package:mimir/backend/entity/user.dart';
 import 'package:mimir/credentials/entity/user_type.dart';
 import 'package:mimir/credentials/init.dart';
 import 'package:mimir/entity/campus.dart';
@@ -15,6 +14,8 @@ import 'package:mimir/settings/settings.dart';
 import 'package:mimir/timetable/utils.dart';
 import 'package:statistics/statistics.dart';
 import 'package:uuid/uuid.dart';
+
+import '../../school/entity/school_code.dart';
 
 part 'timetable.g.dart';
 

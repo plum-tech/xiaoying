@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'package:hive_ce/hive.dart';
-import 'package:mimir/settings/meta.dart';
 import 'package:mimir/settings/settings.dart';
 import "package:hive_ce/src/hive_impl.dart";
 import 'adapter.dart';
@@ -17,17 +16,13 @@ class HiveInit {
       credentials,
       timetable,
       settings,
-      meta,
       cookies;
 
   static late Box //
-      expense,
-      class2nd,
       examArrange,
       examResult,
       oaAnnounce,
       ywb,
-      electricity,
       schoolCookies;
 
   static late Map<String, Box> name2Box;
@@ -53,22 +48,17 @@ class HiveInit {
     name2Box = _name2Box([
       credentials = await core.openBox('credentials'),
       settings = await core.openBox('settings'),
-      meta = await core.openBox('meta'),
       timetable = await core.openBox('timetable'),
       ...cacheBoxes = [
         cookies = await cache.openBox('cookies'),
         schoolCookies = await cache.openBox('school-cookies'),
-        expense = await cache.openBox('expense'),
         examArrange = await cache.openBox('exam-arrange'),
         examResult = await cache.openBox('exam-result'),
         oaAnnounce = await cache.openBox('oa-announce'),
-        class2nd = await cache.openBox('class2nd'),
         ywb = await cache.openBox('ywb'),
-        electricity = await cache.openBox('electricity'),
       ],
     ]);
     Settings = SettingsImpl(settings);
-    Meta = MetaImpl(meta);
   }
 
   static Map<String, Box> _name2Box(List<Box> boxes) {

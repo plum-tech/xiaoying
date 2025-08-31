@@ -13,7 +13,6 @@ import 'package:mimir/design/adaptive/dialog.dart';
 import 'package:mimir/school/entity/school.dart';
 import 'package:mimir/school/utils.dart';
 import 'package:mimir/school/widget/semester.dart';
-import 'package:mimir/settings/meta.dart';
 import 'package:mimir/settings/settings.dart';
 import 'package:mimir/timetable/utils.dart';
 import 'package:mimir/utils/error.dart';
@@ -132,7 +131,7 @@ class _ImportTimetablePageState extends ConsumerState<ImportTimetablePage> {
             ? null
             : i18n.import.defaultName(semester.l10n(), exactYear.toString(), (exactYear + 1).toString()),
         startDate: await fetchStartDateOfCurrentSemester(info, userType) ?? estimateStartDate(exactYear, semester),
-        signature: Meta.userRealName ?? Settings.lastSignature,
+        signature: Settings.lastSignature,
       );
     }
     if (!mounted) return null;

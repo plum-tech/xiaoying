@@ -9,13 +9,11 @@ import 'package:mimir/files.dart';
 import 'package:mimir/storage/hive/init.dart';
 import 'package:mimir/init.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:mimir/settings/meta.dart';
 import 'package:mimir/entity/meta.dart';
 import 'package:mimir/storage/prefs.dart';
 import 'package:mimir/utils/error.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:uuid/uuid.dart';
-import 'package:version/version.dart';
 
 import 'app.dart';
 
@@ -32,11 +30,6 @@ void main() async {
     await InAppWebViewController.setWebContentsDebuggingEnabled(kDebugMode);
   }
   final prefs = await SharedPreferences.getInstance();
-  final installationTime = prefs.getInstallTime();
-  debugPrint("First installation time: $installationTime");
-  if (installationTime == null) {
-    await prefs.setInstallTime(DateTime.now());
-  }
   final uuid = prefs.getUuid();
   if (uuid == null) {
     final newUuid = const Uuid().v4();
@@ -62,12 +55,6 @@ void main() async {
   );
   // Perform migrations
   R.meta = await getCurrentVersion();
-  final currentVersion = R.meta.version;
-  final lastVersionRaw = prefs.getLastVersion();
-  final lastVersion = lastVersionRaw != null ? Version.parse(lastVersionRaw) : currentVersion;
-  debugPrint("Last version: $lastVersion");
-  await prefs.setLastVersion(currentVersion.toString());
-
   // Initialize Hive
   await HiveInit.initLocalStorage(
     coreDir: Files.internal.subDir("hive", R.hiveStorageVersionCore),
@@ -80,9 +67,6 @@ void main() async {
   // Setup Settings and Meta
 
   R.deviceInfo = await getDeviceInfo();
-  // The last time when user launch this app
-  Meta.lastLaunchTime = Meta.thisLaunchTime;
-  Meta.thisLaunchTime = DateTime.now();
   Init.registerCustomEditor();
   await Init.initNetwork();
   await Init.initModules();

@@ -16,11 +16,11 @@ import 'package:universal_platform/universal_platform.dart';
 import '../../events.dart';
 import '../../entity/timetable.dart';
 import '../../entity/timetable_entity.dart';
+import '../../p13n/builtin.dart';
 import 'course_sheet.dart';
 import '../../utils.dart';
 import '../free.dart';
 import 'header.dart';
-import '../../p13n/widget/style.dart';
 import '../../entity/pos.dart';
 import '../../i18n.dart';
 
@@ -146,7 +146,6 @@ class _TimetableOneWeekCachedState extends State<TimetableOneWeekCached> with Au
     if (cache != null) {
       return cache;
     } else {
-      final style = TimetableStyle.of(context);
       final now = DateTime.now();
       Widget buildCell({
         required BuildContext context,
@@ -157,7 +156,6 @@ class _TimetableOneWeekCachedState extends State<TimetableOneWeekCached> with Au
         final passed = lesson.type.endTime.isBefore(now);
         Widget cell = InteractiveCourseCell(
           lesson: lesson,
-          style: style,
           timetable: timetable,
           isLessonTaken: passed,
         );
@@ -360,14 +358,12 @@ class InteractiveCourseCell extends ConsumerWidget {
   final TimetableLessonPart lesson;
   final TimetableEntity timetable;
   final bool isLessonTaken;
-  final TimetableStyleData style;
 
   const InteractiveCourseCell({
     super.key,
     required this.lesson,
     required this.timetable,
     this.isLessonTaken = false,
-    required this.style,
   });
 
   @override
@@ -377,7 +373,6 @@ class InteractiveCourseCell extends ConsumerWidget {
       return InteractiveCourseCellWithTooltip(
         timetable: timetable,
         isLessonTaken: isLessonTaken,
-        style: style,
         lesson: lesson,
       );
     }
@@ -386,7 +381,6 @@ class InteractiveCourseCell extends ConsumerWidget {
       timetable: timetable,
       course: course,
       isLessonTaken: isLessonTaken,
-      style: style,
       innerBuilder: (ctx, child) => InkWell(
         onTap: () async {
           if (!context.mounted) return;
@@ -408,14 +402,12 @@ class InteractiveCourseCellWithTooltip extends StatefulWidget {
   final TimetableLessonPart lesson;
   final TimetableEntity timetable;
   final bool isLessonTaken;
-  final TimetableStyleData style;
 
   const InteractiveCourseCellWithTooltip({
     super.key,
     required this.lesson,
     required this.timetable,
     this.isLessonTaken = false,
-    required this.style,
   });
 
   @override
@@ -431,7 +423,6 @@ class _InteractiveCourseCellWithTooltipState extends State<InteractiveCourseCell
       timetable: widget.timetable,
       course: widget.lesson.course,
       isLessonTaken: widget.isLessonTaken,
-      style: widget.style,
       innerBuilder: (ctx, child) => Tooltip(
         key: $tooltip,
         preferBelow: false,
@@ -519,20 +510,18 @@ class StyledCourseCell extends StatelessWidget {
   final TimetableEntity timetable;
   final bool isLessonTaken;
   final Widget Function(BuildContext context, Widget child)? innerBuilder;
-  final TimetableStyleData style;
 
   const StyledCourseCell({
     super.key,
     required this.timetable,
     required this.course,
     required this.isLessonTaken,
-    required this.style,
     this.innerBuilder,
   });
 
   @override
   Widget build(BuildContext context) {
-    final colorEntry = timetable.resolveColor(style.platte, course);
+    final colorEntry = timetable.resolveColor(BuiltinTimetablePalettes.classic, course);
     var color = colorEntry.colorBy(context);
     return CourseCell(
       courseName: course.courseName,

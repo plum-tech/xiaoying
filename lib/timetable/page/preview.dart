@@ -10,7 +10,6 @@ import '../p13n/entity/palette.dart';
 import '../entity/timetable.dart';
 import '../entity/timetable_entity.dart';
 import '../entity/pos.dart';
-import '../p13n/widget/style.dart';
 import '../widget/timetable/board.dart';
 
 import '../i18n.dart';
@@ -97,11 +96,8 @@ Future<void> previewTimetable(
 }) async {
   assert(timetable != null || entity != null);
   await context.showSheet(
-    (context) => TimetableStyleProv(
-      palette: palette,
-      child: TimetablePreviewPage(
-        entity: entity ?? timetable!.resolve(),
-      ),
+    (context) => TimetablePreviewPage(
+      entity: entity ?? timetable!.resolve(),
     ),
   );
 }

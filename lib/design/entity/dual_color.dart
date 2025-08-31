@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/widgets.dart';

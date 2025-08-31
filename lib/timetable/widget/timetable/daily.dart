@@ -16,9 +16,9 @@ import 'package:rettulf/rettulf.dart';
 import '../../entity/timetable.dart';
 import '../../events.dart';
 import '../../entity/timetable_entity.dart';
+import '../../p13n/builtin.dart';
 import '../../utils.dart';
 import '../../i18n.dart';
-import '../../p13n/widget/style.dart';
 import '../../entity/pos.dart';
 import 'header.dart';
 
@@ -227,8 +227,8 @@ class _TimetableOneDayPageState extends State<TimetableOneDayPage> with Automati
     required int timeslot,
   }) {
     final course = lesson.course;
-    final style = TimetableStyle.of(context);
-    final colorEntry = timetable.resolveColor(style.platte, course);
+
+    final colorEntry = timetable.resolveColor(BuiltinTimetablePalettes.classic, course);
     final textColor = colorEntry.textColorBy(context);
     var color = colorEntry.colorBy(context);
     final classTime = calcBeginEndTimePointOfLesson(timeslot, timetable.campus, course.place);
@@ -363,7 +363,7 @@ class LessonOverlapGroup extends StatelessWidget {
     if (lessonsInSlot.isEmpty) return const SizedBox.shrink();
     final List<Widget> all = [];
     ClassTime? classTime;
-    final palette = TimetableStyle.of(context).platte;
+    const palette = BuiltinTimetablePalettes.classic;
     for (int lessonIndex = 0; lessonIndex < lessonsInSlot.length; lessonIndex++) {
       final lesson = lessonsInSlot[lessonIndex];
       final course = lesson.course;
@@ -380,7 +380,7 @@ class LessonOverlapGroup extends StatelessWidget {
     }
     // [classTime] must be nonnull.
     // TODO: Color for class overlap.
-    final firstColorEntry = TimetableStyle.of(context).platte.colors[0];
+    final firstColorEntry = BuiltinTimetablePalettes.classic.colors[0];
     return Card.outlined(
       child: [
         ClassTimeCard(

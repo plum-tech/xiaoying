@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../init.dart';
-import '../p13n/widget/style.dart';
 import 'mine.dart';
 import 'timetable.dart';
 import '../entity/timetable_entity.dart';
@@ -27,10 +26,8 @@ class _TimetablePageState extends ConsumerState<TimetablePage> {
       // If no timetable selected, navigate to Mine page to select/import one.
       return const MyTimetableListPage();
     } else {
-      return TimetableStyleProv(
-        child: TimetableBoardPage(
-          timetable: selected,
-        ),
+      return TimetableBoardPage(
+        timetable: selected,
       );
     }
   }

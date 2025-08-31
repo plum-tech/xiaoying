@@ -33,7 +33,6 @@ import '../utils/export.dart';
 import '../utils/freshman.dart';
 import '../utils/import.dart';
 import '../widget/focus.dart';
-import '../p13n/widget/style.dart';
 import 'import.dart';
 import 'preview.dart';
 
@@ -313,11 +312,9 @@ class TimetableCard extends StatelessWidget {
         ),
       ],
       detailsBuilder: (ctx, actions) {
-        return TimetableStyleProv(
-          child: TimetableDetailsPage(
-            timetable: timetable,
-            actions: actions?.call(ctx),
-          ),
+        return TimetableDetailsPage(
+          timetable: timetable,
+          actions: actions?.call(ctx),
         );
       },
       itemBuilder: (ctx) {

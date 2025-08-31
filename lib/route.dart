@@ -22,7 +22,6 @@ import 'package:mimir/login/page/index.dart';
 import 'package:mimir/settings/page/theme_color.dart';
 import 'package:mimir/timetable/entity/timetable.dart';
 import 'package:mimir/timetable/init.dart';
-import 'package:mimir/timetable/p13n/page/cell_style.dart';
 import 'package:mimir/timetable/page/edit/editor.dart';
 import 'package:mimir/timetable/page/settings.dart';
 import 'package:mimir/widget/inapp_webview/page.dart';
@@ -104,10 +103,6 @@ final _timetableRoutes = [
       if (timetable == null) throw 404;
       return TimetableEditorPage(timetable: timetable);
     },
-  ),
-  GoRoute(
-    path: "/timetable/cell-style",
-    builder: (ctx, state) => const TimetableCellStyleEditor(),
   ),
 ];
 

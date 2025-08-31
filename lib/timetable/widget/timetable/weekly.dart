@@ -534,17 +534,12 @@ class StyledCourseCell extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorEntry = timetable.resolveColor(style.platte, course);
     var color = colorEntry.colorBy(context);
-    color = style.cellStyle.decorateColor(
-      color,
-      themeColor: context.colorScheme.primary,
-      isLessonTaken: isLessonTaken,
-    );
     return CourseCell(
       courseName: course.courseName,
       color: color,
       textColor: colorEntry.textColorBy(context),
       place: course.place,
-      teachers: style.cellStyle.showTeachers ? course.teachers : null,
+      teachers: course.teachers,
       innerBuilder: innerBuilder,
     );
   }

@@ -6,27 +6,21 @@ import 'package:mimir/timetable/p13n/entity/palette.dart';
 
 import '../../init.dart';
 import '../builtin.dart';
-import '../entity/cell_style.dart';
 
 part "style.g.dart";
 
 @CopyWith(skipFields: true)
 class TimetableStyleData {
   final TimetablePalette platte;
-  final CourseCellStyle cellStyle;
 
   const TimetableStyleData({
     this.platte = BuiltinTimetablePalettes.classic,
-    this.cellStyle = const CourseCellStyle(),
   });
 
   @override
   // ignore: hash_and_equals
   bool operator ==(Object other) {
-    return other is TimetableStyleData &&
-        runtimeType == other.runtimeType &&
-        platte == other.platte &&
-        cellStyle == other.cellStyle;
+    return other is TimetableStyleData && runtimeType == other.runtimeType && platte == other.platte;
   }
 }
 
@@ -59,7 +53,6 @@ class TimetableStyle extends InheritedWidget {
 class TimetableStyleProv extends ConsumerStatefulWidget {
   final Widget? child;
   final TimetablePalette? palette;
-  final CourseCellStyle? cellStyle;
 
   final Widget Function(BuildContext context, TimetableStyleData style)? builder;
 
@@ -68,7 +61,6 @@ class TimetableStyleProv extends ConsumerStatefulWidget {
     this.child,
     this.builder,
     this.palette,
-    this.cellStyle,
   }) : assert(builder != null || child != null, "TimetableStyleProv should have at least one child.");
 
   @override
@@ -99,13 +91,10 @@ class TimetableStyleProvState extends ConsumerState<TimetableStyleProv> {
 
   @override
   Widget build(BuildContext context) {
-    final cellStyle = ref.watch(Settings.timetable.$cellStyle) ?? const CourseCellStyle();
     final data = TimetableStyleData(
       platte: palette,
-      cellStyle: cellStyle,
     ).copyWith(
       platte: widget.palette,
-      cellStyle: widget.cellStyle,
     );
     return TimetableStyle(
       data: data,

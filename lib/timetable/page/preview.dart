@@ -6,7 +6,6 @@ import 'package:mimir/design/animation/marquee.dart';
 import 'package:text_scroll/text_scroll.dart';
 
 import '../entity/display.dart';
-import '../p13n/entity/cell_style.dart';
 import '../p13n/entity/palette.dart';
 import '../entity/timetable.dart';
 import '../entity/timetable_entity.dart';
@@ -93,7 +92,6 @@ class _TimetablePreviewPageState extends State<TimetablePreviewPage> {
 Future<void> previewTimetable(
   BuildContext context, {
   TimetablePalette? palette,
-  CourseCellStyle? cellStyle,
   Timetable? timetable,
   TimetableEntity? entity,
 }) async {
@@ -101,7 +99,6 @@ Future<void> previewTimetable(
   await context.showSheet(
     (context) => TimetableStyleProv(
       palette: palette,
-      cellStyle: cellStyle,
       child: TimetablePreviewPage(
         entity: entity ?? timetable!.resolve(),
       ),

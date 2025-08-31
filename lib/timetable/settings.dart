@@ -1,9 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:mimir/utils/hive.dart';
-import 'package:mimir/utils/json.dart';
-
-import 'p13n/entity/cell_style.dart';
 
 const _kAutoUseImported = true;
 const _kQuickLookCourseOnTap = true;
@@ -25,22 +22,6 @@ class TimetableSettings {
   set autoUseImported(bool newV) => box.safePut<bool>(_K.autoUseImported, newV);
 
   late final $autoUseImported = box.providerWithDefault<bool>(_K.autoUseImported, () => _kAutoUseImported);
-
-  CourseCellStyle? get cellStyle => decodeJsonObject(
-        box.safeGet<String>(_K.cellStyle),
-        (obj) => CourseCellStyle.fromJson(obj),
-      );
-
-  set cellStyle(CourseCellStyle? newV) => box.safePut<String>(
-        _K.cellStyle,
-        encodeJsonObject(newV, (obj) => obj.toJson()),
-      );
-
-  late final $cellStyle = box.provider(
-    _K.cellStyle,
-    get: () => cellStyle,
-    set: (v) => cellStyle = v,
-  );
 
   ValueListenable listenCellStyle() => box.listenable(keys: [_K.cellStyle]);
 

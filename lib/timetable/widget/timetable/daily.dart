@@ -231,11 +231,6 @@ class _TimetableOneDayPageState extends State<TimetableOneDayPage> with Automati
     final colorEntry = timetable.resolveColor(style.platte, course);
     final textColor = colorEntry.textColorBy(context);
     var color = colorEntry.colorBy(context);
-    color = style.cellStyle.decorateColor(
-      color,
-      themeColor: context.colorScheme.primary,
-      isLessonTaken: lesson.endTime.isBefore(DateTime.now()),
-    );
     final classTime = calcBeginEndTimePointOfLesson(timeslot, timetable.campus, course.place);
     return [
       ClassTimeCard(

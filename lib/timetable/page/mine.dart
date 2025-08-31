@@ -366,7 +366,6 @@ class TimetableDetailsPage extends ConsumerWidget {
     final resolver = TimetablePaletteResolver(timetable);
     final palette = ref.watch(TimetableInit.storage.palette.$selectedRow) ?? BuiltinTimetablePalettes.classic;
     final code2Courses = timetable.courses.values.groupListsBy((c) => c.courseCode).entries.toList();
-    final style = TimetableStyle.of(context);
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -414,7 +413,7 @@ class TimetableDetailsPage extends ConsumerWidget {
                 courseCode: template.courseCode,
                 classCode: template.classCode,
                 campus: timetable.campus,
-                color: style.cellStyle.decorateColor(color, themeColor: ctx.colorScheme.primary),
+                color: color,
               );
             },
           )

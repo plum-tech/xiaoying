@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -51,15 +50,14 @@ class _MainStagePageState extends ConsumerState<MainStagePage> {
           label: $timetable.i18n.navigation,
         )
       ),
-      if (!kIsWeb)
-        (
-          route: "/school",
-          item: (
-            icon: Icons.school_outlined,
-            activeIcon: Icons.school,
-            label: $school.i18n.navigation,
-          )
-        ),
+      (
+        route: "/school",
+        item: (
+          icon: Icons.school_outlined,
+          activeIcon: Icons.school,
+          label: $school.i18n.navigation,
+        )
+      ),
     ];
   }
 

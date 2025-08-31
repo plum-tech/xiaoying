@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mimir/design/adaptive/dialog.dart';
@@ -95,11 +94,7 @@ Future<Timetable?> readTimetableWithPrompt(
 }
 
 Future<Uint8List?> _getBytes(PlatformFile file) async {
-  if (kIsWeb) {
-    return file.bytes;
-  } else {
-    final path = file.path;
-    if (path == null) return null;
-    return await File(path).readAsBytes();
-  }
+  final path = file.path;
+  if (path == null) return null;
+  return await File(path).readAsBytes();
 }

@@ -41,17 +41,12 @@ class Init {
 
   static Future<void> initNetwork() async {
     debugPrint("Initializing network");
-    if (kIsWeb) {
-      schoolCookieJar = WebCookieJar();
-      cookieJar = WebCookieJar();
-    } else {
-      schoolCookieJar = PersistCookieJar(
-        storage: HiveCookieJar(HiveInit.schoolCookies),
-      );
-      cookieJar = PersistCookieJar(
-        storage: HiveCookieJar(HiveInit.cookies),
-      );
-    }
+    schoolCookieJar = PersistCookieJar(
+      storage: HiveCookieJar(HiveInit.schoolCookies),
+    );
+    cookieJar = PersistCookieJar(
+      storage: HiveCookieJar(HiveInit.cookies),
+    );
     final uaForSchoolServer = await getUserAgentForSchoolServer();
     schoolDio = Dio(BaseOptions(
       connectTimeout: const Duration(milliseconds: 16 * 1000),
@@ -88,12 +83,10 @@ class Init {
     debugPrint("Initializing modules");
     CredentialsInit.init();
     TimetableInit.init();
-    if (!kIsWeb) {
-      OaAnnounceInit.init();
-      ExamResultInit.init();
-      ExamArrangeInit.init();
-      YwbInit.init();
-    }
+    OaAnnounceInit.init();
+    ExamResultInit.init();
+    ExamArrangeInit.init();
+    YwbInit.init();
     LoginInit.init();
   }
 
@@ -101,12 +94,10 @@ class Init {
     debugPrint("Initializing module storage");
     CredentialsInit.initStorage();
     TimetableInit.initStorage();
-    if (!kIsWeb) {
-      OaAnnounceInit.initStorage();
-      ExamResultInit.initStorage();
-      ExamArrangeInit.initStorage();
-      YwbInit.initStorage();
-    }
+    OaAnnounceInit.initStorage();
+    ExamResultInit.initStorage();
+    ExamArrangeInit.initStorage();
+    YwbInit.initStorage();
     LoginInit.initStorage();
   }
 

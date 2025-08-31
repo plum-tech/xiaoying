@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mimir/utils/error.dart';
@@ -9,7 +8,7 @@ Future<bool> guardLaunchUrl(BuildContext ctx, Uri url) async {
   if (url.scheme == "http" || url.scheme == "https") {
     try {
       // guards the http(s)
-      if (kIsWeb || UniversalPlatform.isDesktop) {
+      if (UniversalPlatform.isDesktop) {
         return await launchUrl(url, mode: LaunchMode.externalApplication);
       }
       final target = Uri(

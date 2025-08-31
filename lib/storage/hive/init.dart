@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:mimir/settings/meta.dart';
@@ -57,17 +56,15 @@ class HiveInit {
       meta = await core.openBox('meta'),
       timetable = await core.openBox('timetable'),
       ...cacheBoxes = [
-        if (!kIsWeb) ...[
-          cookies = await cache.openBox('cookies'),
-          schoolCookies = await cache.openBox('school-cookies'),
-          expense = await cache.openBox('expense'),
-          examArrange = await cache.openBox('exam-arrange'),
-          examResult = await cache.openBox('exam-result'),
-          oaAnnounce = await cache.openBox('oa-announce'),
-          class2nd = await cache.openBox('class2nd'),
-          ywb = await cache.openBox('ywb'),
-          electricity = await cache.openBox('electricity'),
-        ],
+        cookies = await cache.openBox('cookies'),
+        schoolCookies = await cache.openBox('school-cookies'),
+        expense = await cache.openBox('expense'),
+        examArrange = await cache.openBox('exam-arrange'),
+        examResult = await cache.openBox('exam-result'),
+        oaAnnounce = await cache.openBox('oa-announce'),
+        class2nd = await cache.openBox('class2nd'),
+        ywb = await cache.openBox('ywb'),
+        electricity = await cache.openBox('electricity'),
       ],
     ]);
     Settings = SettingsImpl(settings);
@@ -102,7 +99,6 @@ extension HiveX on HiveInterface {
   /// You can provide a [subDir] where the boxes should be stored.
   Future<void> initFlutter(Directory dir) async {
     WidgetsFlutterBinding.ensureInitialized();
-    if (kIsWeb) return;
     init(dir.path);
   }
 

@@ -78,7 +78,7 @@ class _InAppWebViewPageState extends State<InAppWebViewPage> {
       iframeAllow: "camera; microphone",
       iframeAllowFullscreen: true,
     );
-    pullToRefreshController = !kIsWeb && UniversalPlatform.isMobile
+    pullToRefreshController = UniversalPlatform.isMobile
         ? PullToRefreshController(
             settings: PullToRefreshSettings(
               color: Colors.blue,

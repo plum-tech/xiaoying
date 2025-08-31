@@ -24,15 +24,11 @@ import 'r.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if (kIsWeb && kDebugMode) {
-    // waiting for debugger connecting to chrome
-    await Future.delayed(const Duration(seconds: 5));
-  }
   // debugRepaintRainbowEnabled = true;
   // debugRepaintTextRainbowEnabled = true;
   // debugPaintSizeEnabled = true;
   GoRouter.optionURLReflectsImperativeAPIs = kDebugMode;
-  if (kDebugMode && !kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+  if (kDebugMode && defaultTargetPlatform == TargetPlatform.android) {
     await InAppWebViewController.setWebContentsDebuggingEnabled(kDebugMode);
   }
   final prefs = await SharedPreferences.getInstance();
@@ -58,14 +54,12 @@ void main() async {
   }
   await EasyLocalization.ensureInitialized();
 
-  if (!kIsWeb) {
-    await Files.init(
-      temp: await getTemporaryDirectory(),
-      cache: await getApplicationCacheDirectory(),
-      internal: await getApplicationSupportDirectory(),
-      user: await getApplicationDocumentsDirectory(),
-    );
-  }
+  await Files.init(
+    temp: await getTemporaryDirectory(),
+    cache: await getApplicationCacheDirectory(),
+    internal: await getApplicationSupportDirectory(),
+    user: await getApplicationDocumentsDirectory(),
+  );
   // Perform migrations
   R.meta = await getCurrentVersion();
   final currentVersion = R.meta.version;
@@ -75,13 +69,11 @@ void main() async {
   await prefs.setLastVersion(currentVersion.toString());
 
   // Initialize Hive
-  if (!kIsWeb) {
-    await HiveInit.initLocalStorage(
-      coreDir: Files.internal.subDir("hive", R.hiveStorageVersionCore),
-      // iOS will clear the cache under [getApplicationCacheDirectory()] when device has no enough storage.
-      cacheDir: Files.internal.subDir("hive-cache", R.hiveStorageVersionCache),
-    );
-  }
+  await HiveInit.initLocalStorage(
+    coreDir: Files.internal.subDir("hive", R.hiveStorageVersionCore),
+    // iOS will clear the cache under [getApplicationCacheDirectory()] when device has no enough storage.
+    cacheDir: Files.internal.subDir("hive-cache", R.hiveStorageVersionCache),
+  );
   HiveInit.initAdapters();
   await HiveInit.initBox();
 
@@ -110,4 +102,3 @@ void main() async {
 }
 
 final _yamlAssetsLoader = YamlAssetLoader();
-

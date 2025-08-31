@@ -3,7 +3,6 @@ import 'dart:ui';
 
 import 'package:animations/animations.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -78,7 +77,7 @@ class _MimirAppState extends ConsumerState<MimirApp> {
                 brightness: origin.brightness,
               ),
         visualDensity: VisualDensity.comfortable,
-        splashFactory: kIsWeb ? null : InkSparkle.splashFactory,
+        splashFactory: InkSparkle.splashFactory,
         navigationBarTheme: const NavigationBarThemeData(
           height: 60,
         ),

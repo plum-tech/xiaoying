@@ -19,9 +19,7 @@ Future<String> getUserAgentForSchoolServer() async {
 
 extension DioX on Dio {
   Dio withCookieJar(CookieJar cookieJar) {
-    if (!kIsWeb) {
-      interceptors.add(CookieManager(cookieJar));
-    }
+    interceptors.add(CookieManager(cookieJar));
     return this;
   }
 

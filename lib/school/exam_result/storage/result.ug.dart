@@ -8,8 +8,6 @@ import '../entity/result.ug.dart';
 
 class _K {
   static const ns = "/ug";
-  static const lastSemesterInfo = "$ns/lastSemesterInfo";
-
   static String resultList(SemesterInfo info) => "$ns/resultList/$info";
 }
 

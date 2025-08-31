@@ -12,8 +12,6 @@ import '../utils/parse.ug.dart';
 
 class TimetableService {
   static const _undergraduateTimetableUrl = 'http://jwxt.sit.edu.cn/jwglxt/kbcx/xskbcx_cxXsgrkb.html';
-  static const _postgraduateTimetableUrl =
-      'http://gms.sit.edu.cn/epstar/yjs/T_PYGL_KWGL_WSXK/T_PYGL_KWGL_WSXK_XSKB_NEW.jsp';
 
   UgRegistrationSession get _ugRegSession => Init.ugRegSession;
 

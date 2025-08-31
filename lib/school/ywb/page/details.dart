@@ -114,7 +114,3 @@ class _YwbServiceDetailsPageState extends ConsumerState<YwbServiceDetailsPage> {
     // ));
   }
 }
-
-const _blocked = [
-  "097",
-];

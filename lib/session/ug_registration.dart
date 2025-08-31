@@ -1,4 +1,3 @@
-import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:mimir/init.dart';
 import 'package:mimir/session/sso.dart';
@@ -8,8 +7,6 @@ import 'package:mimir/utils/dio.dart';
 /// Student registration system for undergraduate
 class UgRegistrationSession {
   Dio get _dio => Init.schoolDio;
-
-  CookieJar get _cookieJar => Init.schoolCookieJar;
 
   SsoSession get _ssoSession => Init.ssoSession;
 

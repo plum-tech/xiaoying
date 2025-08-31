@@ -141,7 +141,6 @@ flutter:
     - assets/
     - assets/fonts/
     - assets/course/
-    - assets/room_list.json
     - assets/l10n/
 
 flutter_intl:

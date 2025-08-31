@@ -103,6 +103,7 @@ jobs:
 
       - name: Publish preview version
         continue-on-error: true
+        timeout-minutes: 5
         if: ${{ inputs.publish_version }}
         env:
           XY_VERSION_ADMIN_TOKEN: ${{ secrets.XY_VERSION_ADMIN_TOKEN }}

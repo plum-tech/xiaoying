@@ -4,7 +4,6 @@ import 'package:mimir/credentials/entity/credential.dart';
 import 'package:mimir/credentials/entity/login_status.dart';
 import 'package:mimir/credentials/entity/user_type.dart';
 import 'package:mimir/entity/campus.dart';
-import 'package:mimir/school/electricity/entity/balance.dart';
 import 'package:mimir/school/ywb/entity/service.dart';
 import 'package:mimir/school/ywb/entity/application.dart';
 import 'package:mimir/school/exam_result/entity/result.ug.dart';
@@ -33,9 +32,6 @@ class HiveAdapter {
 
   static void registerCacheAdapters(HiveInterface hive) {
     debugPrint("Register cache Hive type");
-    // Electric Bill
-    hive.addAdapter(ElectricityBalanceAdapter());
-
     // OA Announcement
     hive.addAdapter(OaAnnounceDetailsAdapter());
     hive.addAdapter(OaAnnounceRecordAdapter());

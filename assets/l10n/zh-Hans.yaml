@@ -171,10 +171,6 @@ school:
       showResultPreview:
         title: 显示考试成绩预览
         desc: 在卡片中显示当前学期的考试成绩
-    electricity:
-      autoRefresh:
-        title: 电费余额自动刷新
-        desc: 启动时刷新电费余额
     expenseRecords:
       autoRefresh:
         title: 消费记录自动刷新
@@ -225,17 +221,6 @@ credentials:
     oa-frozen: 你的 OA 账号处于冻结状态，请稍后再试
     oa-locked: 你的 OA 账号处于锁定状态，请联系管理员
     oa-incompleteUserInfo: 你的 OA 账号用户信息不完整，请访问 https://myportal.sit.edu.cn 进行完善
-electricity:
-  title: 电费余额
-  balance: 可用余额
-  remainingPower: 剩余电量
-  searchInvalidTip: 请输入或选择一个存在的房间号
-  refreshSuccessTip: 电费余额刷新成功
-  refreshFailedTip: 电费余额刷新失败
-  searchRoom: 搜索房间
-  emptyHistoryTip: 无搜索历史
-  noMatchedRoomNumbers: 没有匹配的房间号
-  lastUpdateTime: "上次更新：{}"
 examResult:
   title: 考试成绩
   check: 查询

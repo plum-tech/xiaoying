@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:mimir/settings/meta.dart';
 import 'package:mimir/settings/settings.dart';
-import "package:hive/src/hive_impl.dart";
+import "package:hive_ce/src/hive_impl.dart";
 import 'adapter.dart';
 
 class HiveInit {

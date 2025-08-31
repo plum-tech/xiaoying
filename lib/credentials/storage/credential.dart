@@ -1,4 +1,4 @@
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:mimir/credentials/entity/user_type.dart';
 import 'package:mimir/storage/hive/init.dart';
 import 'package:mimir/utils/hive.dart';

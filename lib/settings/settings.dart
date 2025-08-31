@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:mimir/agreements/settings.dart';
 import 'package:mimir/utils/hive.dart';
 import 'package:mimir/entity/campus.dart';

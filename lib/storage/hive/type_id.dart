@@ -1,4 +1,4 @@
-export "package:hive/hive.dart";
+export "package:hive_ce/hive.dart";
 
 /// Basic 0-19
 class CoreHiveType {

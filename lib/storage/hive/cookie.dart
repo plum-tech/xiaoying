@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:mimir/r.dart';
 import 'package:mimir/utils/hive.dart';
 import 'package:cookie_jar/cookie_jar.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 
 class HiveCookieJar implements Storage {
   final Box box;

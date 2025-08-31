@@ -2,8 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:mimir/l10n/common.dart';
 import 'package:mimir/school/i18n.dart';
 
-import 'entity/issue.dart';
-
 const i18n = _I18n();
 
 class _I18n with CommonI18nMixin {
@@ -196,12 +194,6 @@ class _Issue {
   String get title => "$ns.title".tr();
 
   String get resolve => "$ns.resolve".tr();
-}
-
-extension TimetableIssueTypeI18nX on TimetableIssueType {
-  String l10n() => "${_Issue.ns}.builtin.$name.title".tr();
-
-  String l10nDesc() => "${_Issue.ns}.builtin.$name.desc".tr();
 }
 
 class _Export {

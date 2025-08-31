@@ -16,8 +16,6 @@ import 'package:rettulf/rettulf.dart';
 import 'package:mimir/l10n/time.dart';
 import 'package:mimir/school/widget/course.dart';
 import 'package:mimir/settings/settings.dart';
-import '../../entity/issue.dart';
-import '../../widget/issue.dart';
 import 'package:mimir/utils/save.dart';
 
 import '../../entity/timetable.dart';
@@ -128,26 +126,12 @@ class _TimetableEditorPageState extends State<TimetableEditorPage> {
 
   List<Widget> buildInfoTab() {
     final timetable = buildTimetable();
-    final issues = timetable.inspect();
     return [
       SliverList.list(children: [
         buildDescForm(),
         buildStartDate(),
         buildCampus(),
         buildSignature(),
-        if (issues.isNotEmpty) ...[
-          ListTile(
-            leading: Icon(context.icons.warning),
-            title: i18n.issue.title.text(),
-          ),
-          ...issues.build(
-            context: context,
-            timetable: timetable,
-            onTimetableChanged: (newTimetable) {
-              setFromTimetable(newTimetable);
-            },
-          ),
-        ],
       ]),
     ];
   }

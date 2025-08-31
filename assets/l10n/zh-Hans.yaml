@@ -59,22 +59,6 @@ timetable:
     timeslots:
       single: "第 {} 节"
       multiple: "从第 {from} 节到第 {to} 节"
-  issue:
-    title: 课程表问题
-    resolve: 解决
-    builtin:
-      empty:
-        title: 课表为空
-        desc: 请检查你是否导入了正确的课表
-      cbeCourse:
-        title: 发现免听课程
-        desc: 你可以在课表中隐藏免听课程
-      patchOutOfRange:
-        title: 调课不在课程表的时间范围内
-        desc: 调课不在当前课程表所处学期的时间范围内，调课将不会生效。请检查你是否设置了正确的日期
-      courseOverlaps:
-        title: 发现课程时间冲突
-        desc: 你可以隐藏其中一个课程以避免冲突
   import:
     title: 导入课程表
     import: 导入

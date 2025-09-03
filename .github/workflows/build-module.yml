@@ -56,8 +56,18 @@ jobs:
       - name: Build APK
         run: |
           flutter config --no-cli-animations
+          pwd
           cd example
+          pwd
           flutter build apk --release --target-platform android-arm64 --split-per-abi
+
+      - name: Rename APK
+        run: |
+          pwd
+          current_date_hour=$(TZ="Asia/Shanghai" date +"%y%m%d%H")
+          new_name="xiaoying_${{inputs.module}}_${current_date_hour}.apk"
+          mv build/app/outputs/flutter-apk/*.apk ${new_name}
+          ls ${after_name}
 
       - name: Sign APK
         uses: r0adkll/sign-android-release@v1
@@ -71,15 +81,8 @@ jobs:
         env:
           BUILD_TOOLS_VERSION: "34.0.0"
 
-      - name: Rename APK
-        run: |
-          current_date_hour=$(TZ="Asia/Shanghai" date +"%y%m%d%H")
-          new_name="xiaoying_${{inputs.module}}_${current_date_hour}.apk"
-          mv build/app/outputs/flutter-apk/*-signed.apk ${new_name}
-          ls ${after_name}
-
       - name: Publish Android Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Android-release
-          path: example/build/app/outputs/flutter-apk/xiaoying_*.apk
+          path: example/build/app/outputs/flutter-apk/*-signed.apk

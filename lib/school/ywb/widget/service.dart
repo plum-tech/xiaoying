@@ -40,7 +40,6 @@ class YwbServiceTile extends StatelessWidget {
         : Text(meta.count.toString(), style: style);
 
     return ListTile(
-      leading: Icon(meta.icon, size: 35, color: color).center().sized(w: 40, h: 40),
       title: Text(
         meta.name,
         overflow: TextOverflow.ellipsis,

@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:mimir/storage/hive/type_id.dart';
-import 'package:mimir/utils/iconfont.dart';
 
 part 'service.g.dart';
 
@@ -26,8 +24,6 @@ class YwbService {
   @JsonKey(name: 'appIcon')
   @HiveField(5)
   final String iconName;
-
-  IconData get icon => IconFont.query(iconName);
 
   const YwbService({
     required this.id,

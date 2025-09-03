@@ -242,59 +242,6 @@ examArrange:
   seatNumber: 座位号
   addCalendarEvent: 添加事项
   calendarEventTitle: "考试: {}"
-expenseRecords:
-  title: 消费记录
-  list: 清单
-  statistics: 统计
-  topUp: 充值
-  launchFailed: 启动失败
-  launchFailedDesc: 请确保你已安装支付宝
-  balanceInCard: "卡内余额 {} 元"
-  lastTransaction: "¥{amount} {place}"
-  income: "收入: {} 元"
-  outcome: "支出: {} 元"
-  noTransactionsTip: 你没有交易记录
-  refreshSuccessTip: 消费记录刷新成功
-  refreshFailedTip: 消费记录刷新失败
-  lastUpdateTime: "上次更新：{}"
-  statsMode:
-    day: 日
-    week: 周
-    month: 月
-    year: 年
-  view:
-    balance: 卡内余额
-    rmb: 元
-  stats:
-    title: 消费统计
-    total: 总计
-    summary: 摘要
-    details: 详情
-    averageSpendIn: "在{type}上平均消费{amount}"
-    maxSpendOf: "最大消费为 {amount}"
-    averageLineLabel: 平均
-    hourlyAverage: 时均
-    dailyAverage: 日均
-    monthlyAverage: 月均
-    today: 今天
-    yesterday: 昨天
-    thisWeek: 本周
-    lastWeek: 上周
-    thisMonth: 本月
-    lastMonth: 上月
-    thisYear: 今年
-    lastYear: 去年
-  type:
-    consume: 消费
-    coffee: 咖啡
-    food: 食堂
-    store: 商店
-    water: 热水
-    library: 图书馆
-    shower: 洗浴
-    topUp: 充值
-    subsidy: 补贴
-    other: 杂项
 auth:
   signIn: 登录
   signUp: 注册

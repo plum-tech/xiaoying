@@ -409,14 +409,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
-  dynamic_color:
-    dependency: "direct main"
-    description:
-      name: dynamic_color
-      sha256: "43a5a6679649a7731ab860334a5812f2067c2d9ce6452cf069c5e0c25336c17c"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.8.1"
   easy_localization:
     dependency: "direct main"
     description:
@@ -441,14 +433,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.0.3"
-  equatable:
-    dependency: transitive
-    description:
-      name: equatable
-      sha256: "567c64b3cb4cf82397aac55f4f0cbd3ca20d77c6c03bedbc4ceaddc08904aef7"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.7"
   event_bus:
     dependency: "direct main"
     description:
@@ -497,22 +481,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
-  fk_user_agent:
-    dependency: "direct main"
-    description:
-      name: fk_user_agent
-      sha256: fd6c94e120786985a292d12f61422a581f4e851148d5940af38b819357b8ad0d
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.0"
-  fl_chart:
-    dependency: "direct main"
-    description:
-      name: fl_chart
-      sha256: "74959b99b92b9eebeed1a4049426fd67c4abc3c5a0f4d12e2877097d6a11ae08"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.69.2"
   flame:
     dependency: "direct main"
     description:
@@ -869,30 +837,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.5.4"
-  image_cropper:
-    dependency: "direct main"
-    description:
-      name: image_cropper
-      sha256: "266760ed426d7121f0ada02c672bfe5c1b5c714e908328716aee756f045709dc"
-      url: "https://pub.dev"
-    source: hosted
-    version: "8.1.0"
-  image_cropper_for_web:
-    dependency: transitive
-    description:
-      name: image_cropper_for_web
-      sha256: fd81ebe36f636576094377aab32673c4e5d1609b32dec16fad98d2b71f1250a9
-      url: "https://pub.dev"
-    source: hosted
-    version: "6.1.0"
-  image_cropper_platform_interface:
-    dependency: transitive
-    description:
-      name: image_cropper_platform_interface
-      sha256: "6ca6b81769abff9a4dcc3bbd3d75f5dfa9de6b870ae9613c8cd237333a4283af"
-      url: "https://pub.dev"
-    source: hosted
-    version: "7.1.0"
   intl:
     dependency: "direct main"
     description:
@@ -1643,7 +1587,7 @@ packages:
     source: hosted
     version: "2.4.0"
   stack_trace:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: stack_trace
       sha256: "8b27215b45d22309b5cddda1aa2b19bdfec9df0e765f2de506401c071d38d1b1"
@@ -1786,14 +1730,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
-  unicons:
-    dependency: "direct main"
-    description:
-      name: unicons
-      sha256: f3eab9d87c226415ef857cfd2167e1d12ad81ea1f5783b46cf644224fea4eab7
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.0"
   universal_io:
     dependency: transitive
     description:

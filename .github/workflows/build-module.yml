@@ -80,4 +80,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Android-release
-          path: example/build/app/outputs/flutter-apk/*-signed.apk
+          path: example/build/app/outputs/flutter-apk/xiaoying_*.apk

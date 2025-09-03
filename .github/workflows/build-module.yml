@@ -65,8 +65,8 @@ jobs:
         run: |
           pwd
           current_date_hour=$(TZ="Asia/Shanghai" date +"%y%m%d%H")
-          new_name="xiaoying_${{inputs.module}}_${current_date_hour}.apk"
-          mv build/app/outputs/flutter-apk/*.apk ${new_name}
+          new_name="xiaoying_${{inputs.module}}-${current_date_hour}.apk"
+          mv example/build/app/outputs/flutter-apk/*.apk ${new_name}
           ls ${after_name}
 
       - name: Sign APK

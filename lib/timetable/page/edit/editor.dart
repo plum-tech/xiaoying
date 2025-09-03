@@ -14,7 +14,6 @@ import 'package:mimir/entity/campus.dart';
 import 'package:mimir/l10n/extension.dart';
 import 'package:rettulf/rettulf.dart';
 import 'package:mimir/l10n/time.dart';
-import 'package:mimir/school/widget/course.dart';
 import 'package:mimir/settings/settings.dart';
 import 'package:mimir/utils/save.dart';
 
@@ -375,10 +374,6 @@ class TimetableEditableCourseCard extends StatelessWidget {
     final allHidden = courses.every((c) => c.hidden);
     final templateStyle = TextStyle(color: allHidden ? context.theme.disabledColor : null);
     return AnimatedExpansionTile(
-      leading: CourseIcon(
-        courseName: template.courseName,
-        enabled: !allHidden,
-      ),
       visualDensity: VisualDensity.compact,
       rotateTrailing: false,
       title: template.courseName.text(style: templateStyle),

@@ -4,7 +4,6 @@ import 'package:mimir/design/widget/card.dart';
 import 'package:mimir/design/widget/expansion_tile.dart';
 import 'package:mimir/entity/campus.dart';
 import 'package:mimir/l10n/time.dart';
-import 'package:mimir/school/widget/course.dart';
 import 'package:mimir/timetable/entity/timetable.dart';
 import '../i18n.dart';
 
@@ -31,10 +30,6 @@ class TimetableCourseCard extends StatelessWidget {
     final allHidden = courses.every((c) => c.hidden);
     final templateStyle = TextStyle(color: allHidden ? context.theme.disabledColor : null);
     return AnimatedExpansionTile(
-      leading: CourseIcon(
-        courseName: courseName,
-        enabled: !allHidden,
-      ),
       title: courseName.text(style: templateStyle),
       subtitle: [
         if (courseCode.isNotEmpty) "${i18n.course.courseCode} $courseCode".text(style: templateStyle),

@@ -7,22 +7,6 @@ import 'package:rettulf/rettulf.dart';
 
 import 'multiplatform.dart';
 
-class _CupertinoSheetAdapter extends StatelessWidget {
-  final WidgetBuilder builder;
-
-  const _CupertinoSheetAdapter({
-    required this.builder,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return [
-      builder(context).expanded(),
-      const SizedBox(height: 80),
-    ].column();
-  }
-}
-
 extension $BuildContextEx$ on BuildContext {
   Future<T?> showSheet<T>(
     WidgetBuilder builder, {
@@ -31,12 +15,9 @@ extension $BuildContextEx$ on BuildContext {
   }) async {
     if (isCupertino) {
       return await showCupertinoSheet(
-        context: this,
-        pageBuilder: (ctx) => _CupertinoSheetAdapter(builder: builder),
+        context: this, builder: builder,
       );
     } else {
-      // dismissible not working with CustomScrollView
-      // see https://github.com/flutter/flutter/issues/36283
       var enableDrag = dismissible;
       var showDragHandle = enableDrag;
       return await showModalBottomSheet<T>(

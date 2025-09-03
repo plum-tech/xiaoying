@@ -84,5 +84,5 @@ jobs:
       - name: Publish Android Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Android-release
+          name: xiaoying_${{ inputs.module }}
           path: example/build/app/outputs/flutter-apk/*-signed.apk

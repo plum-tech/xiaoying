@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mimir/agreements/entity/agreements.dart';
 import 'package:mimir/credentials/entity/credential.dart';
@@ -220,18 +221,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     );
   }
 
-  // Widget buildConnectivityIcon() {
-  //   return switch (schoolServerConnected) {
-  //     null => const CircularProgressIndicator.adaptive(),
-  //     true =>  const Icon(Icons.check),
-  //     false => const Icon(Icons.public_off),
-  //   };
-  // }
-
   Widget buildHeader() {
     return widget.isGuarded
         ? const Icon(Icons.person_off_outlined, size: 120)
-        : Image.asset("assets/icon.png", width: 80, height: 80);
+        : SvgPicture.asset("assets/icon.svg").sizedAll(80);
   }
 
   Widget buildLoginForm() {

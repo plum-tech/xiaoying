@@ -3,18 +3,11 @@ import 'dart:math';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
-import 'package:fk_user_agent/fk_user_agent.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mimir/r.dart';
-import 'package:universal_platform/universal_platform.dart';
 
 Future<String> getUserAgentForSchoolServer() async {
-  if (UniversalPlatform.isAndroid || UniversalPlatform.isIOS) {
-    await FkUserAgent.init();
-    return FkUserAgent.webViewUserAgent ?? _getRandomUa();
-  } else {
-    return _getRandomUa();
-  }
+  return _getRandomUa();
 }
 
 extension DioX on Dio {

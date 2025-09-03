@@ -71,6 +71,10 @@ jobs:
         env:
           BUILD_TOOLS_VERSION: "34.0.0"
 
+      - name: Rename APK
+        run: |
+          mv example/build/app/outputs/flutter-apk/*-signed.apk xiaoying_${{inputs.module}}.apk
+
       - name: Publish Android Artifact
         uses: actions/upload-artifact@v4
         with:

@@ -74,7 +74,9 @@ jobs:
       - name: Rename APK
         run: |
           current_date_hour=$(TZ="Asia/Shanghai" date +"%y%m%d%H")
-          mv example/build/app/outputs/flutter-apk/*-signed.apk xiaoying_${{inputs.module}}_${current_date_hour}.apk
+          new_name="xiaoying_${{inputs.module}}_${current_date_hour}.apk"
+          mv build/app/outputs/flutter-apk/*-signed.apk ${new_name}
+          ls ${after_name}
 
       - name: Publish Android Artifact
         uses: actions/upload-artifact@v4

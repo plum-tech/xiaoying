@@ -33,7 +33,6 @@ class Init {
   static late CookieJar schoolCookieJar;
   static late CookieJar cookieJar;
   static late Dio schoolDio;
-  static late Dio mimirDio;
   static late Dio dioNoCookie;
   static late SsoSession ssoSession;
   static late UgRegistrationSession ugRegSession;
@@ -67,8 +66,6 @@ class Init {
       },
       validateStatus: (status) => status! < 400,
     )).withDebugging();
-
-    mimirDio = Dio(BaseOptions()).withCookieJar(cookieJar).withDebugging();
 
     ssoSession = SsoSession(
       inputCaptcha: _inputCaptcha,

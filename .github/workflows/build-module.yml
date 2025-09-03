@@ -52,7 +52,6 @@ jobs:
         with:
           channel: stable
           cache: true
-          flutter-version-file: pubspec.yaml
 
       - name: Build APK
         run: |

@@ -69,20 +69,8 @@ jobs:
           mv example/build/app/outputs/flutter-apk/*.apk example/build/app/outputs/flutter-apk/${new_name}
           ls ${after_name}
 
-      - name: Sign APK
-        uses: r0adkll/sign-android-release@v1
-        id: sign_apk
-        with:
-          releaseDirectory: example/build/app/outputs/flutter-apk
-          signingKeyBase64: ${{ secrets.APK_SIGN_JKS_BASE64 }}
-          keyStorePassword: ${{ secrets.APK_SIGN_JKS_PASSWORD }}
-          keyPassword: ${{ secrets.APK_SIGN_ALIAS_PASS }}
-          alias: ${{ secrets.APK_SIGN_ALIAS }}
-        env:
-          BUILD_TOOLS_VERSION: "34.0.0"
-
       - name: Publish Android Artifact
         uses: actions/upload-artifact@v4
         with:
           name: xiaoying_${{ inputs.module }}
-          path: example/build/app/outputs/flutter-apk/*-signed.apk
+          path: example/build/app/outputs/flutter-apk/*.apk

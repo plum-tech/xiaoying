@@ -11,7 +11,6 @@ import 'package:mimir/credentials/init.dart';
 import 'package:mimir/credentials/utils.dart';
 import 'package:mimir/design/adaptive/dialog.dart';
 import 'package:mimir/design/adaptive/multiplatform.dart';
-import 'package:mimir/design/animation/animated.dart';
 import 'package:mimir/login/utils.dart';
 import 'package:mimir/school/utils.dart';
 import 'package:mimir/school/widget/campus.dart';
@@ -52,13 +51,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   OaUserType? estimatedUserType;
   int? admissionYear;
 
-  // bool? schoolServerConnected;
-
   @override
   void initState() {
     super.initState();
     $account.addListener(onAccountChange);
-    // checkSchoolServerConnectivity();
   }
 
   @override
@@ -67,14 +63,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     $password.dispose();
     super.dispose();
   }
-
-  // Future<void> checkSchoolServerConnectivity() async {
-  //   final connected = await Init.ssoSession.checkConnectivity();
-  //   if (!mounted) return;
-  //   setState(() {
-  //     schoolServerConnected = connected;
-  //   });
-  // }
 
   void onAccountChange() {
     var account = $account.text;
@@ -166,14 +154,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           buildLoginForm(),
           const SizedBox(height: 10),
           const OaLoginDisclaimerCard(),
-          AnimatedShowUp(
-            when: estimatedUserType == OaUserType.freshman,
-            builder: (ctx) => const OaLoginFreshmanSystemTipCard(),
-          ),
-          AnimatedShowUp(
-            when: estimatedUserType == OaUserType.undergraduate && admissionYear == DateTime.now().year,
-            builder: (ctx) => const OaLoginFreshmanTipCard(),
-          ),
           buildLoginButton(),
           const ForgotPasswordButton(url: oaForgotLoginPasswordUrl),
         ].column(mas: MainAxisSize.min).scrolled().padH(10).center(),
@@ -192,14 +172,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             buildHeader(),
             const CampusSelector(),
             const OaLoginDisclaimerCard(),
-            AnimatedShowUp(
-              when: estimatedUserType == OaUserType.freshman,
-              builder: (ctx) => const OaLoginFreshmanSystemTipCard(),
-            ),
-            AnimatedShowUp(
-              when: estimatedUserType == OaUserType.undergraduate && admissionYear == DateTime.now().year,
-              builder: (ctx) => const OaLoginFreshmanTipCard(),
-            ),
           ].column(maa: MainAxisAlignment.start).scrolled().expanded(),
           const VerticalDivider(),
           [
@@ -337,32 +309,6 @@ class OaLoginDisclaimerCard extends StatelessWidget {
     return [
       FeaturedMarkdownWidget(
         data: _i18n.disclaimer,
-      ),
-    ].column(caa: CrossAxisAlignment.stretch).padAll(12).inOutlinedCard();
-  }
-}
-
-class OaLoginFreshmanSystemTipCard extends StatelessWidget {
-  const OaLoginFreshmanSystemTipCard({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return [
-      FeaturedMarkdownWidget(
-        data: _i18n.freshmanSystemTip,
-      ),
-    ].column(caa: CrossAxisAlignment.stretch).padAll(12).inOutlinedCard();
-  }
-}
-
-class OaLoginFreshmanTipCard extends StatelessWidget {
-  const OaLoginFreshmanTipCard({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return [
-      FeaturedMarkdownWidget(
-        data: _i18n.freshmanTip,
       ),
     ].column(caa: CrossAxisAlignment.stretch).padAll(12).inOutlinedCard();
   }

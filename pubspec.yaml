@@ -121,6 +121,9 @@ dev_dependencies:
   test: ^1.24.9
   msix: ^3.16.8
 
+dependency_overrides:
+  sqflite_android: 2.4.1
+
 # ------------------------------------------------------------------------------
 
 flutter:

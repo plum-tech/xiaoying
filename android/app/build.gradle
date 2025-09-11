@@ -48,7 +48,7 @@ android {
 
   defaultConfig {
     applicationId "net.liplum.mimir_trial"
-    minSdkVersion 23
+    minSdkVersion flutter.minSdkVersion
     targetSdkVersion flutter.compileSdkVersion
     versionCode flutterVersionCode.toInteger()
     versionName flutterVersionName

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mimir/credentials/entity/user_type.dart';
 import 'package:mimir/credentials/init.dart';
+import 'package:mimir/design/adaptive/multiplatform.dart';
 import 'package:mimir/school/event.dart';
 import 'package:mimir/school/exam_arrange/card.dart';
 import 'package:mimir/school/exam_result/card.pg.dart';
@@ -35,6 +37,12 @@ class _SchoolPageState extends ConsumerState<SchoolPage> {
                 snap: true,
                 title: i18n.navigation.text(),
                 forceElevated: innerBoxIsScrolled,
+                actions: [
+                  IconButton(
+                    onPressed: () => context.push("/settings"),
+                    icon: Icon(context.icons.settings),
+                  ),
+                ],
               ),
             ),
           ];

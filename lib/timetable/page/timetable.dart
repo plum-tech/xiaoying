@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mimir/design/adaptive/menu.dart';
 import 'package:mimir/design/animation/progress.dart';
 import 'package:rettulf/rettulf.dart';
 import '../entity/display.dart';
@@ -12,7 +12,6 @@ import '../entity/timetable_entity.dart';
 import '../init.dart';
 import '../entity/pos.dart';
 import '../utils.dart';
-import '../widget/focus.dart';
 import '../widget/timetable/board.dart';
 
 class TimetableBoardPage extends ConsumerStatefulWidget {
@@ -58,7 +57,12 @@ class _TimetableBoardPageState extends ConsumerState<TimetableBoardPage> {
         title: $currentPos >> (ctx, pos) => i18n.weekOrderedName(number: pos.weekIndex + 1).text(),
         actions: [
           buildSwitchViewButton(),
-          buildMoreActionsButton(),
+          PlatformTextButton(
+            child: "你的课程表".text(),
+            onPressed: () async {
+              await context.push("/timetable/mine");
+            },
+          )
         ],
       ),
       floatingActionButton: TimetableJumpButton(
@@ -96,28 +100,6 @@ class _TimetableBoardPageState extends ConsumerState<TimetableBoardPage> {
                 $displayMode.value = mode.toggle();
               },
             );
-  }
-
-  Widget buildMoreActionsButton() {
-    return PullDownMenuButton(
-      itemBuilder: (ctx) => [
-        PullDownItem(
-          icon: Icons.calendar_month,
-          title: i18n.mine.title,
-          onTap: () async {
-            await context.push("/timetable/mine");
-          },
-        ),
-        PullDownItem(
-          icon: Icons.view_comfortable_outlined,
-          title: i18n.p13n.cell.title,
-          onTap: () async {
-            await context.push("/timetable/cell-style");
-          },
-        ),
-        ...buildFocusPopupActions(context),
-      ],
-    );
   }
 }
 

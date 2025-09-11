@@ -37,6 +37,8 @@ import 'package:mimir/timetable/page/import.dart';
 import 'package:mimir/timetable/page/index.dart';
 import 'package:mimir/timetable/page/mine.dart';
 
+import 'index.dart';
+
 final $TimetableShellKey = GlobalKey<NavigatorState>();
 final $SchoolShellKey = GlobalKey<NavigatorState>();
 
@@ -276,9 +278,18 @@ RoutingConfig buildTimetableFocusRouter() {
         path: "/",
         redirect: (ctx, state) => _getRootRoute(),
       ),
-      _timetableShellRoute,
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) {
+          return MainStagePage(navigationShell: navigationShell);
+        },
+        branches: [
+          StatefulShellBranch(
+            routes: [_timetableShellRoute],
+          ),
+          StatefulShellBranch(routes: [_schoolShellRoute]),
+        ],
+      ),
       ..._timetableRoutes,
-      _schoolShellRoute,
       _webviewRoute,
       _settingsRoute,
       _oaAnnounceRoute,

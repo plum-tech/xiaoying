@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mimir/credentials/entity/user_type.dart';
 import 'package:mimir/credentials/init.dart';
-import 'package:mimir/design/adaptive/menu.dart';
 import 'package:mimir/design/adaptive/multiplatform.dart';
 import 'package:mimir/design/animation/progress.dart';
 import 'package:mimir/design/entity/dual_color.dart';
@@ -32,7 +31,6 @@ import '../init.dart';
 import '../utils/export.dart';
 import '../utils/freshman.dart';
 import '../utils/import.dart';
-import '../widget/focus.dart';
 import 'import.dart';
 import 'preview.dart';
 
@@ -75,9 +73,6 @@ class _MyTimetableListPageState extends ConsumerState<MyTimetableListPage> {
     return Scaffold(
       appBar: AppBar(
         title: i18n.mine.title.text(),
-        actions: [
-          buildMoreActionsButton(),
-        ],
       ),
       floatingActionButton: buildFab(),
       body: LeavingBlank(
@@ -186,21 +181,6 @@ class _MyTimetableListPageState extends ConsumerState<MyTimetableListPage> {
     if (timetable == null) return null;
     if (!mounted) return null;
     return timetable;
-  }
-
-  Widget buildMoreActionsButton() {
-    return PullDownMenuButton(
-      itemBuilder: (ctx) => [
-        PullDownItem(
-          icon: Icons.view_comfortable_outlined,
-          title: i18n.p13n.cell.title,
-          onTap: () async {
-            await context.push("/timetable/cell-style");
-          },
-        ),
-        ...buildFocusPopupActions(context),
-      ],
-    );
   }
 }
 

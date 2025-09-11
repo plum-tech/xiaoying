@@ -36,7 +36,7 @@ class _AboutSettingsPageState extends ConsumerState<AboutSettingsPage> {
                 title: i18n.about.termsOfService.text(),
                 trailing: const Icon(Icons.open_in_browser),
                 onTap: () async {
-                  await guardLaunchUrlString(context, "https://www.xiaoying.life/tos");
+                  await guardLaunchUrlString(context, "https://www.xiaoying.life/terms-of-service");
                 },
               ),
               ListTile(

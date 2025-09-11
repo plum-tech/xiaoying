@@ -3,7 +3,6 @@ import 'package:flame/palette.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-import 'package:go_router/go_router.dart';
 import 'package:mimir/r.dart';
 import 'package:mimir/utils/color.dart';
 import 'package:mimir/utils/guard_launch.dart';
@@ -96,17 +95,6 @@ class _RestyledHtmlWidgetState extends State<RestyledHtmlWidget> with AutomaticK
         }
         if (!context.mounted) return true;
         return await guardLaunchUrlString(context, url);
-      },
-      onTapImage: (ImageMetadata image) {
-        final url = image.sources.toList().firstOrNull?.url;
-        final title = image.title ?? image.alt;
-        context.push(
-          Uri(path: "/image", queryParameters: {
-            if (title != null && title.isNotEmpty) "title": title,
-            if (url?.startsWith("http") == true) "origin": url,
-          }).toString(),
-          extra: url,
-        );
       },
     );
   }

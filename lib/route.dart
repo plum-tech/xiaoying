@@ -36,7 +36,6 @@ import 'package:mimir/school/index.dart';
 import 'package:mimir/timetable/page/import.dart';
 import 'package:mimir/timetable/page/index.dart';
 import 'package:mimir/timetable/page/mine.dart';
-import 'package:mimir/widget/image.dart';
 
 final $TimetableShellKey = GlobalKey<NavigatorState>();
 final $SchoolShellKey = GlobalKey<NavigatorState>();
@@ -185,21 +184,6 @@ final _ywbRoute = GoRoute(
   ],
 );
 
-final _imageRoute = GoRoute(
-  path: "/image",
-  builder: (ctx, state) {
-    final extra = state.extra;
-    final data = state.uri.queryParameters["origin"] ?? extra as String?;
-    if (data != null) {
-      return ImageViewPage(
-        data,
-        title: state.uri.queryParameters["title"],
-      );
-    }
-    throw 400;
-  },
-);
-
 final _oaLoginRoute = GoRoute(
   path: "/oa/login",
   builder: (ctx, state) {
@@ -302,7 +286,6 @@ RoutingConfig buildTimetableFocusRouter() {
       _examResultRoute,
       _examArrange,
       _oaLoginRoute,
-      _imageRoute,
     ],
   );
 }

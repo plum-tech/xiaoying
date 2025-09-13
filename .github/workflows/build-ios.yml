@@ -81,7 +81,7 @@ jobs:
 
       - name: Build xArchive
         run: |
-          xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner -configuration Release DEVELOPMENT_TEAM="TGBYYVM7AB" -sdk 'iphoneos' -destination 'generic/platform=iOS' -archivePath build-output/app.xcarchive PROVISIONING_PROFILE="05f6171f-60f5-45f4-a6e8-40d042c29e91" clean archive CODE_SIGN_IDENTITY="Apple Distribution: Shanghai Plum Technology Ltd. (TGBYYVM7AB)"
+          xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner -configuration Release DEVELOPMENT_TEAM="TGBYYVM7AB" -sdk 'iphoneos' -destination 'generic/platform=iOS' -archivePath build-output/app.xcarchive PROVISIONING_PROFILE="c8aa0008-691f-4716-8014-4bcca287e4a1" clean archive CODE_SIGN_IDENTITY="Apple Distribution: Shanghai Plum Technology Ltd. (TGBYYVM7AB)"
 
       - name: Export ipa
         run: |

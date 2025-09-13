@@ -70,7 +70,7 @@ jobs:
           path: build/app/outputs/flutter-apk/*-signed.apk
 
   after_build:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     if: ${{ inputs.publish_version }}
     needs: [ build_android ]
     steps:

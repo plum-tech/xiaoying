@@ -1,0 +1,111 @@
+name: Flutter Build Android
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish_version:
+        description: 'Publish the preview version'
+        required: true
+        default: true
+        type: boolean
+      ref:
+        description: 'Branch, tag or commit to build'
+        default: ""
+        type: string
+
+jobs:
+  build_android:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: plum-tech/xiaoying-x
+          ref: ${{ inputs.ref }}
+          token: ${{ secrets.MIMIR_GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      # Configure Git with PAT for subsequent steps
+      # This is the crucial step that sets up global credentials.
+      - name: Configure Git for private dependencies
+        run: |
+          git config --global url."https://${{ secrets.MIMIR_GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"
+
+      - name: Install JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+          flutter-version-file: pubspec.yaml
+
+      - name: Build APK
+        run: |
+          flutter config --no-cli-animations
+          flutter build apk --release --target-platform android-arm,android-arm64
+          flutter build apk --release --target-platform android-arm,android-arm64 --split-per-abi
+
+      - name: Sign APK
+        uses: r0adkll/sign-android-release@v1
+        id: sign_apk
+        with:
+          releaseDirectory: build/app/outputs/flutter-apk
+          signingKeyBase64: ${{ secrets.APK_SIGN_JKS_BASE64 }}
+          keyStorePassword: ${{ secrets.APK_SIGN_JKS_PASSWORD }}
+          keyPassword: ${{ secrets.APK_SIGN_ALIAS_PASS }}
+          alias: ${{ secrets.APK_SIGN_ALIAS }}
+        env:
+          BUILD_TOOLS_VERSION: "34.0.0"
+
+      - name: Publish Android Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Android-release
+          path: build/app/outputs/flutter-apk/*-signed.apk
+
+  after_build:
+    runs-on: ubuntu-latest
+    if: ${{ inputs.publish_version }}
+    needs: [ build_android ]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: plum-tech/xiaoying-x
+          token: ${{ secrets.MIMIR_GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+          cache-dependency-path: tools/pnpm-lock.yaml
+
+      - name: Pnpm install
+        run: |
+          cd tools && pnpm i && pnpm build && cd ..
+
+      - name: Get Android Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: Android-release
+          path: build/
+
+      - name: Publish preview version
+        continue-on-error: true
+        timeout-minutes: 5
+        if: ${{ inputs.publish_version }}
+        env:
+          XY_VERSION_ADMIN_TOKEN: ${{ secrets.XY_VERSION_ADMIN_TOKEN }}
+        run: |
+          pnpm run publish-preview --upload build/app-release-signed.apk

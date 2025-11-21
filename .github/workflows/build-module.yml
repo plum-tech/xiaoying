@@ -1,0 +1,76 @@
+name: Flutter Build Module
+
+on:
+  workflow_dispatch:
+    inputs:
+      module:
+        description: 'The module'
+        required: true
+        type: choice
+        options:
+          - 'timetable'
+          - 'game_2048'
+          - 'game_minesweeper'
+          - 'mailbox'
+          - '10259'
+          - '13871'
+          - '12587'
+          - 'auth'
+          - 'trade'
+      ref:
+        description: 'Branch, tag or commit to build'
+        default: ""
+        type: string
+
+jobs:
+  build_android:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: plum-tech/xiaoying_${{ inputs.module }}
+          ref: ${{ inputs.ref }}
+          token: ${{ secrets.MIMIR_GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      # Configure Git with PAT for subsequent steps
+      # This is the crucial step that sets up global credentials.
+      - name: Configure Git for private dependencies
+        run: |
+          git config --global url."https://${{ secrets.MIMIR_GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"
+
+      - name: Install JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Build APK
+        run: |
+          flutter config --no-cli-animations
+          pwd
+          cd example
+          pwd
+          flutter build apk --release --target-platform android-arm64 --split-per-abi
+
+      - name: Rename APK
+        run: |
+          pwd
+          current_date_hour=$(TZ="Asia/Shanghai" date +"%y%m%d%H")
+          new_name="xiaoying_${{inputs.module}}-${current_date_hour}.apk"
+          mv example/build/app/outputs/flutter-apk/*.apk example/build/app/outputs/flutter-apk/${new_name}
+          ls ${after_name}
+
+      - name: Publish Android Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: xiaoying_${{ inputs.module }}
+          path: example/build/app/outputs/flutter-apk/*.apk

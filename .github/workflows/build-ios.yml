@@ -1,0 +1,124 @@
+name: Flutter Build iOS
+
+on:
+  workflow_dispatch:
+    inputs:
+      deploy_app_store:
+        description: 'Deploy on App Store connect'
+        required: true
+        default: true
+        type: boolean
+      ref:
+        description: 'Branch, tag or commit to build'
+        default: ""
+        type: string
+jobs:
+  build_ios:
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: plum-tech/xiaoying-x
+          ref: ${{ inputs.ref }}
+          token: ${{ secrets.MIMIR_GITHUB_TOKEN }}
+
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '26.1'
+
+      - name: Install iOS components
+        run: |
+          xcodebuild -downloadPlatform iOS
+
+      # Configure Git with PAT for subsequent steps
+      # This is the crucial step that sets up global credentials.
+      - name: Configure Git for private dependencies
+        run: |
+          git config --global url."https://${{ secrets.MIMIR_GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'pnpm'
+          cache-dependency-path: tools/pnpm-lock.yaml
+
+      - name: Pnpm install
+        run: |
+          cd tools && pnpm i && pnpm build && cd ..
+
+      - name: Install Apple Certificate
+        uses: apple-actions/import-codesign-certs@v5
+        with:
+          p12-file-base64: ${{ secrets.P12_BASE64 }}
+          p12-password: ${{ secrets.P12_PASSWORD }}
+
+      - name: Install the provisioning profile
+        run: |
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo "${{ secrets.PROVISIONING_PROFILE_BASE64 }}" | base64 -d > ~/Library/MobileDevice/Provisioning\ Profiles/build_pp.mobileprovision
+
+      - name: Install the provisioning profile of HomeWidget
+        run: |
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo "${{ secrets.PROVISIONING_PROFILE_HOME_WIDGET_BASE64 }}" | base64 -d > ~/Library/MobileDevice/Provisioning\ Profiles/build_home_widget_pp.mobileprovision
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+          flutter-version-file: pubspec.yaml
+
+      - name: Build iOS
+        run: |
+          flutter config --no-cli-animations
+          flutter build ios --release --no-codesign
+
+      - name: Build resolve Swift dependencies
+        run: |
+          xcodebuild -resolvePackageDependencies -workspace ios/Runner.xcworkspace -scheme Runner -configuration Release
+
+      - name: Build xArchive
+        run: |
+          xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner -configuration Release DEVELOPMENT_TEAM="TGBYYVM7AB" -sdk 'iphoneos' -destination 'generic/platform=iOS' -archivePath build-output/app.xcarchive PROVISIONING_PROFILE="c8aa0008-691f-4716-8014-4bcca287e4a1" clean archive CODE_SIGN_IDENTITY="Apple Distribution: Shanghai Plum Technology Ltd. (TGBYYVM7AB)"
+
+      - name: Export ipa
+        run: |
+          xcodebuild -exportArchive -archivePath build-output/app.xcarchive -exportPath build-output/ios -exportOptionsPlist ios/ExportOptions.plist
+
+      - name: Publish iOS Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: iOS-release
+          path: build-output/ios/life.mysit.SITLife.ipa
+
+  after_build:
+    runs-on: macos-latest
+    if: ${{ inputs.deploy_app_store }}
+    needs: [ build_ios ]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: plum-tech/xiaoying-x
+          ref: ${{ inputs.ref }}
+          token: ${{ secrets.MIMIR_GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Get iOS Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: iOS-release
+          path: build/
+
+      - name: Deploy to App Store (TestFlight)
+        uses: apple-actions/upload-testflight-build@v3.0.0
+        with:
+          app-path: ${{ github.workspace }}/build/life.mysit.SITLife.ipa
+          issuer-id: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          api-key-id: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          api-private-key: ${{ secrets.APP_STORE_CONNECT_API_PRIVATE_KEY }}

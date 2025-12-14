@@ -28,7 +28,7 @@ jobs:
     if: github.ref == 'refs/heads/master'
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           repository: plum-tech/xiaoying_${{ inputs.module }}
           ref: ${{ inputs.ref }}

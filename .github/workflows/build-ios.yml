@@ -92,7 +92,7 @@ jobs:
           xcodebuild -exportArchive -archivePath build-output/app.xcarchive -exportPath build-output/ios -exportOptionsPlist ios/ExportOptions.plist
 
       - name: Publish iOS Artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: iOS-release
           path: build-output/ios/life.mysit.SITLife.ipa

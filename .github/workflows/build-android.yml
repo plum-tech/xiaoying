@@ -19,7 +19,7 @@ jobs:
     if: github.ref == 'refs/heads/master'
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           repository: plum-tech/xiaoying-x
           ref: ${{ inputs.ref }}
@@ -74,7 +74,7 @@ jobs:
     if: ${{ inputs.publish_version }}
     needs: [ build_android ]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           repository: plum-tech/xiaoying-x
           token: ${{ secrets.MIMIR_GITHUB_TOKEN }}

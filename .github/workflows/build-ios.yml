@@ -16,7 +16,7 @@ jobs:
   build_ios:
     runs-on: macos-26
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           repository: plum-tech/xiaoying-x
           ref: ${{ inputs.ref }}
@@ -102,7 +102,7 @@ jobs:
     if: ${{ inputs.deploy_app_store }}
     needs: [ build_ios ]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           repository: plum-tech/xiaoying-x
           ref: ${{ inputs.ref }}

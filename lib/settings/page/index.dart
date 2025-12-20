@@ -80,7 +80,6 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
       all.add(const Divider());
     }
     all.add(const ThemeModeTile());
-    all.add(const ThemeColorTile());
     all.add(const Divider());
 
     if (agreementAccepted) {
@@ -107,19 +106,6 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     ));
     all[all.length - 1] = all.last.safeArea(t: false);
     return all;
-  }
-}
-
-class ThemeColorTile extends StatelessWidget {
-  const ThemeColorTile({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return PageNavigationTile(
-      leading: const Icon(Icons.color_lens_outlined),
-      title: i18n.themeColor.text(),
-      path: "/settings/theme-color",
-    );
   }
 }
 

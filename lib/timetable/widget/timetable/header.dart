@@ -17,7 +17,7 @@ Color? getTimetableHeaderColor(
 Color? getTimetableHeaderDashLinedColor(
   BuildContext context,
 ) {
-  return context.colorScheme.surfaceTint.withOpacity(0.35);
+  return context.colorScheme.surfaceTint.withValues(alpha: 0.35);
 }
 
 class TimetableHeader extends StatelessWidget {

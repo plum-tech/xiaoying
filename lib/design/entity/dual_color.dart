@@ -1,5 +1,4 @@
 import 'package:copy_with_extension/copy_with_extension.dart';
-import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/widgets.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:rettulf/rettulf.dart';
@@ -29,11 +28,6 @@ class ColorEntry {
   factory ColorEntry.fromJson(Map<String, dynamic> json) => _$ColorEntryFromJson(json);
 
   Map<String, dynamic> toJson() => _$ColorEntryToJson(this);
-
-  @override
-  String toString() {
-    return "ColorEntry${inverseText ? ".inverse" : ""}(Color(0x${color.hexAlpha}))";
-  }
 }
 
 @JsonSerializable()

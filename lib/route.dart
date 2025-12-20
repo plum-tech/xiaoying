@@ -17,7 +17,6 @@ import 'package:mimir/school/ywb/page/application.dart';
 import 'package:mimir/settings/page/about.dart';
 import 'package:mimir/settings/page/oa.dart';
 import 'package:mimir/login/page/index.dart';
-import 'package:mimir/settings/page/theme_color.dart';
 import 'package:mimir/timetable/entity/timetable.dart';
 import 'package:mimir/timetable/init.dart';
 import 'package:mimir/timetable/page/edit/editor.dart';
@@ -100,10 +99,6 @@ final _settingsRoute = GoRoute(
   path: "/settings",
   builder: (ctx, state) => const SettingsPage(),
   routes: [
-    GoRoute(
-      path: "theme-color",
-      builder: (ctx, state) => const ThemeColorPage(),
-    ),
     GoRoute(
       path: "oa",
       redirect: (ctx, state) {

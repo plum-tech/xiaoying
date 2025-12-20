@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:mimir/settings/settings.dart';
 import 'package:rettulf/rettulf.dart';
 import '../i18n.dart';
 
 class TimetableSettingsPage extends StatefulWidget {
-  const TimetableSettingsPage({
-    super.key,
-  });
+  const TimetableSettingsPage({super.key});
 
   @override
   State<TimetableSettingsPage> createState() => _TimetableSettingsPageState();
@@ -21,34 +18,10 @@ class _TimetableSettingsPageState extends State<TimetableSettingsPage> {
       body: CustomScrollView(
         physics: const RangeMaintainingScrollPhysics(),
         slivers: [
-          SliverAppBar.large(
-            pinned: true,
-            snap: false,
-            floating: false,
-            title: i18n.navigation.text(),
-          ),
-          SliverList.list(
-            children: [
-              const AutoUseImportedTile(),
-              const QuickLookCourseOnTapTile(),
-              const Divider(),
-              buildCellStyle(),
-            ],
-          ),
+          SliverAppBar.large(pinned: true, snap: false, floating: false, title: i18n.navigation.text()),
+          SliverList.list(children: const [AutoUseImportedTile(), QuickLookCourseOnTapTile()]),
         ],
       ),
-    );
-  }
-
-  Widget buildCellStyle() {
-    return ListTile(
-      leading: const Icon(Icons.view_comfortable_outlined),
-      title: i18n.settings.cellStyle.text(),
-      subtitle: i18n.settings.cellStyleDesc.text(),
-      trailing: const Icon(Icons.open_in_new),
-      onTap: () async {
-        await context.push("/timetable/cell-style");
-      },
     );
   }
 }

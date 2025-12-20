@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mimir/agreements/entity/agreements.dart';
@@ -12,7 +11,6 @@ import 'package:mimir/lifecycle.dart';
 import 'package:mimir/login/i18n.dart';
 import 'package:mimir/storage/hive/init.dart';
 import 'package:mimir/init.dart';
-import 'package:mimir/l10n/extension.dart';
 import 'package:mimir/settings/settings.dart';
 import 'package:mimir/school/widget/campus.dart';
 import 'package:rettulf/rettulf.dart';
@@ -79,9 +77,6 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
       }
       all.add(const Divider());
     }
-    all.add(const ThemeModeTile());
-    all.add(const Divider());
-
     if (agreementAccepted) {
       all.add(PageNavigationTile(
         leading: const Icon(Icons.calendar_month_outlined),
@@ -106,35 +101,6 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     ));
     all[all.length - 1] = all.last.safeArea(t: false);
     return all;
-  }
-}
-
-class ThemeModeTile extends ConsumerWidget {
-  const ThemeModeTile({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(Settings.theme.$themeMode) ?? ThemeMode.system;
-    return ListTile(
-      leading: switch (themeMode) {
-        ThemeMode.dark => const Icon(Icons.dark_mode),
-        ThemeMode.light => const Icon(Icons.light_mode),
-        ThemeMode.system => const Icon(Icons.brightness_auto),
-      },
-      isThreeLine: true,
-      title: i18n.themeModeTitle.text(),
-      subtitle: ThemeMode.values
-          .map((mode) => ChoiceChip(
-                label: mode.l10n().text(),
-                selected: Settings.theme.themeMode == mode,
-                onSelected: (value) async {
-                  ref.read(Settings.theme.$themeMode.notifier).set(mode);
-                  await HapticFeedback.mediumImpact();
-                },
-              ))
-          .toList()
-          .wrap(spacing: 4),
-    );
   }
 }
 

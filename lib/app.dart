@@ -1,5 +1,4 @@
-import 'dart:async';
-import 'dart:ui';
+import 'dart:math';
 
 import 'package:animations/animations.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -12,8 +11,6 @@ import 'package:mimir/lifecycle.dart';
 import 'package:mimir/r.dart';
 import 'package:mimir/router.dart';
 import 'package:mimir/settings/settings.dart';
-import 'package:mimir/utils/color.dart';
-import 'package:system_theme/system_theme.dart';
 import 'package:universal_platform/universal_platform.dart';
 
 class MimirApp extends ConsumerStatefulWidget {
@@ -26,71 +23,44 @@ class MimirApp extends ConsumerStatefulWidget {
 class _MimirAppState extends ConsumerState<MimirApp> {
   final $routingConfig = ValueNotifier(buildTimetableFocusRouter());
   late final router = buildRouter($routingConfig);
-  StreamSubscription? intentSub;
-  StreamSubscription? $appLink;
 
   @override
   void initState() {
     super.initState();
     if (UniversalPlatform.isAndroid) {
-      SystemChrome.setSystemUIOverlayStyle(
-        const SystemUiOverlayStyle(systemNavigationBarColor: Colors.transparent),
-      );
-      SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+      SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(systemNavigationBarColor: Colors.transparent));
+      SystemChrome.setEnabledSystemUIMode(.edgeToEdge);
     }
-  }
-
-  void onChanged() {
-    final config = router.routerDelegate.currentConfiguration;
-    debugPrint("${config.uri}");
   }
 
   @override
   void dispose() {
-    $appLink?.cancel();
-    intentSub?.cancel();
     router.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final themeColorFromSystem = ref.watch(Settings.theme.$themeColorFromSystem) ?? true;
-    final themeColor = themeColorFromSystem
-        ? SystemTheme.accentColor.maybeAccent
-        : ref.watch(Settings.theme.$themeColor) ?? SystemTheme.accentColor.maybeAccent;
-
     ThemeData bakeTheme(ThemeData origin) {
       return origin.copyWith(
         platform: R.debugCupertino ? TargetPlatform.iOS : null,
         menuTheme: MenuThemeData(
           style: (origin.menuTheme.style ?? const MenuStyle()).copyWith(
-            shape: WidgetStatePropertyAll<OutlinedBorder?>(
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-            ),
+            shape: WidgetStatePropertyAll<OutlinedBorder?>(RoundedRectangleBorder(borderRadius: .circular(12.0))),
           ),
         ),
-        colorScheme: themeColor == null
-            ? null
-            : ColorScheme.fromSeed(
-                seedColor: themeColor,
-                brightness: origin.brightness,
-              ),
+        colorScheme: ColorScheme.fromSeed(seedColor: _randomColor(R.uuid.hashCode), brightness: origin.brightness),
         visualDensity: VisualDensity.comfortable,
         splashFactory: InkSparkle.splashFactory,
-        navigationBarTheme: const NavigationBarThemeData(
-          height: 60,
-        ),
-        snackBarTheme: const SnackBarThemeData(
-          behavior: SnackBarBehavior.floating,
-        ),
+        navigationBarTheme: const NavigationBarThemeData(height: 60),
+        snackBarTheme: const SnackBarThemeData(behavior: SnackBarBehavior.floating),
         pageTransitionsTheme: const PageTransitionsTheme(
           builders: {
-            TargetPlatform.android: ZoomPageTransitionsBuilder(),
-            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-            TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
-            TargetPlatform.linux: SharedAxisPageTransitionsBuilder(transitionType: SharedAxisTransitionType.vertical),
-            TargetPlatform.windows: SharedAxisPageTransitionsBuilder(transitionType: SharedAxisTransitionType.vertical),
+            .android: ZoomPageTransitionsBuilder(),
+            .iOS: CupertinoPageTransitionsBuilder(),
+            .macOS: CupertinoPageTransitionsBuilder(),
+            .linux: SharedAxisPageTransitionsBuilder(transitionType: SharedAxisTransitionType.vertical),
+            .windows: SharedAxisPageTransitionsBuilder(transitionType: SharedAxisTransitionType.vertical),
           },
         ),
       );
@@ -103,33 +73,27 @@ class _MimirAppState extends ConsumerState<MimirApp> {
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
-      themeMode: ref.watch(Settings.theme.$themeMode),
-      theme: bakeTheme(ThemeData.light()),
-      darkTheme: bakeTheme(ThemeData.dark()),
-      builder: (ctx, child) => _PostServiceRunner(
-        key: const ValueKey("Post service runner"),
-        child: child ?? const SizedBox.shrink(),
-      ),
+      themeMode: .system,
+      theme: bakeTheme(.light()),
+      darkTheme: bakeTheme(.dark()),
+      builder: (ctx, child) =>
+          _PostServiceRunner(key: const ValueKey("Post service runner"), child: child ?? const SizedBox.shrink()),
       scrollBehavior: const MaterialScrollBehavior().copyWith(
-        dragDevices: {
-          PointerDeviceKind.mouse,
-          PointerDeviceKind.touch,
-          PointerDeviceKind.stylus,
-          PointerDeviceKind.trackpad,
-          PointerDeviceKind.unknown
-        },
+        dragDevices: {.mouse, .touch, .stylus, .trackpad, .unknown},
       ),
     );
   }
 }
 
+Color _randomColor(int seed) {
+  final rand = Random(seed);
+  return Color.fromRGBO(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256), 1);
+}
+
 class _PostServiceRunner extends ConsumerStatefulWidget {
   final Widget child;
 
-  const _PostServiceRunner({
-    super.key,
-    required this.child,
-  });
+  const _PostServiceRunner({super.key, required this.child});
 
   @override
   ConsumerState<_PostServiceRunner> createState() => _PostServiceRunnerState();

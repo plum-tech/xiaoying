@@ -96,7 +96,7 @@ jobs:
           cd tools && pnpm i && pnpm build && cd ..
 
       - name: Get Android Artifact
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: Android-release
           path: build/

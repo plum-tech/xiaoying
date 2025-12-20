@@ -73,7 +73,6 @@ class Init {
 
   static Future<void> initModules() async {
     debugPrint("Initializing modules");
-    CredentialsInit.init();
     OaAnnounceInit.init();
     YwbInit.init();
     LoginInit.init();
@@ -85,7 +84,6 @@ class Init {
     TimetableInit.initStorage();
     OaAnnounceInit.initStorage();
     YwbInit.initStorage();
-    LoginInit.initStorage();
   }
 
   static void registerCustomEditor() {
@@ -106,11 +104,6 @@ class Init {
 
 Future<String?> _inputCaptcha(Uint8List imageBytes) async {
   final context = $key.currentContext!;
-// return await context.show$Sheet$(
-//   (ctx) => CaptchaSheetPage(
-//     captchaData: imageBytes,
-//   ),
-// );
   return await showAdaptiveDialog(
     context: context,
     barrierDismissible: false,

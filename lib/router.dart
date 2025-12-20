@@ -2,13 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mimir/credentials/entity/login_status.dart';
 import 'package:mimir/credentials/entity/user_type.dart';
 import 'package:mimir/credentials/init.dart';
-import 'package:mimir/init.dart';
 import 'package:mimir/lifecycle.dart';
 import 'package:mimir/school/ywb/entity/service.dart';
 import 'package:mimir/school/ywb/page/details.dart';
@@ -21,7 +19,6 @@ import 'package:mimir/timetable/entity/timetable.dart';
 import 'package:mimir/timetable/init.dart';
 import 'package:mimir/timetable/page/edit/editor.dart';
 import 'package:mimir/timetable/page/settings.dart';
-import 'package:mimir/widget/inapp_webview/page.dart';
 import 'package:mimir/widget/not_found.dart';
 import 'package:mimir/school/oa_announce/entity/announce.dart';
 import 'package:mimir/school/oa_announce/page/details.dart';
@@ -170,24 +167,6 @@ final _oaLoginRoute = GoRoute(
   },
 );
 
-final _webviewRoute = GoRoute(
-  path: "/webview",
-  builder: (ctx, state) {
-    var url = state.uri.queryParameters["url"] ?? state.extra;
-    if (url is String) {
-      if (!url.startsWith("http://") && !url.startsWith("https://")) {
-        url = "http://$url";
-      }
-      // return WebViewPage(initialUrl: url);
-      return InAppWebViewPage(
-        initialUri: WebUri(url),
-        cookieJar: Init.cookieJar,
-      );
-    }
-    throw 400;
-  },
-);
-
 GoRouter buildRouter(ValueNotifier<RoutingConfig> $routingConfig) {
   return GoRouter.routingConfig(
     routingConfig: $routingConfig,
@@ -230,7 +209,6 @@ RoutingConfig buildTimetableFocusRouter() {
         ],
       ),
       ..._timetableRoutes,
-      _webviewRoute,
       _settingsRoute,
       _oaAnnounceRoute,
       _ywbRoute,

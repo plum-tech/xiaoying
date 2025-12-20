@@ -12,8 +12,8 @@ documentation: https://github.com/plum-tech/xiaoying#readme
 
 publish_to: none
 environment:
-  sdk: '>=3.5.0 <4.0.0'
-  flutter: ^3.29.1
+  sdk: ^3.10.0
+  flutter: ^3.38.5
 
 dependencies:
   flutter: { sdk: flutter }
@@ -60,7 +60,6 @@ dependencies:
   dio_cookie_manager: ^3.2.0
 
   # Android, iOS, macOS, web
-  flutter_inappwebview: 6.1.5
   flutter_widget_from_html: ^0.15.2
   cookie_jar: ^4.0.8
 

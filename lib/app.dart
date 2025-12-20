@@ -10,7 +10,7 @@ import 'package:mimir/agreements/entity/agreements.dart';
 import 'package:mimir/agreements/page/privacy_policy.dart';
 import 'package:mimir/lifecycle.dart';
 import 'package:mimir/r.dart';
-import 'package:mimir/route.dart';
+import 'package:mimir/router.dart';
 import 'package:mimir/settings/settings.dart';
 import 'package:mimir/utils/color.dart';
 import 'package:system_theme/system_theme.dart';

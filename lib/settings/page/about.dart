@@ -57,7 +57,7 @@ class _AboutSettingsPageState extends ConsumerState<AboutSettingsPage> {
                 icon: SvgPicture.asset("assets/icon.svg").sizedAll(32),
                 applicationName: R.appNameL10n,
                 applicationVersion: R.meta.version.toString(),
-                applicationLegalese: "Copyright©️2023-2025 Plum Technology Ltd. All Rights Reserved.",
+                applicationLegalese: "Copyright©️2023-2026 Plum Technology Ltd. All Rights Reserved.",
               ),
             ],
           ),

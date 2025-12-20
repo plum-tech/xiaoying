@@ -12,6 +12,6 @@ The source codes and configurations are licensed under [Plum Technology Ltd. Sof
 
 ### Copyright
 
-Copyright©️2023-2025 [Plum Technology Ltd](https://www.liplum.net). All Rights Reserved.
+Copyright©️2023-2026 [Plum Technology Ltd](https://www.liplum.net). All Rights Reserved.
 
 </div>

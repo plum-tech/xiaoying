@@ -197,18 +197,6 @@ class Timetable implements WithUuid {
   factory Timetable.fromJson(Map<String, dynamic> json) => _$TimetableFromJson(json);
 
   Map<String, dynamic> toJson() => _$TimetableToJson(this);
-
-  bool isBasicInfoEqualTo(Timetable old) {
-    if (lastCourseKey != old.lastCourseKey) return false;
-    if (courses.length != old.courses.length) return false;
-    if (!courses.keys.toSet().equalsElements(old.courses.keys.toSet())) return false;
-    for (final MapEntry(:key, value: course) in courses.entries) {
-      final oldCourse = old.courses[key];
-      if (oldCourse == null) return false;
-      if (!course.isBasicInfoEqualTo(oldCourse)) return false;
-    }
-    return true;
-  }
 }
 
 @JsonSerializable()
@@ -313,16 +301,6 @@ class Course {
         Object.hashAll(teachers),
         hidden,
       );
-
-  bool isBasicInfoEqualTo(Course old) {
-    if (courseKey != old.courseKey) return false;
-    if (courseCode != old.courseCode) return false;
-    if (place != old.place) return false;
-    if (!weekIndices.equalsElements(old.weekIndices)) return false;
-    if (dayIndex != old.dayIndex) return false;
-    if (timeslots != old.timeslots) return false;
-    return true;
-  }
 }
 
 List<ClassTime> buildingTimetableOf(Campus campus, [String? place]) => getTeachingBuildingTimetable(campus, place);

@@ -19,7 +19,6 @@ import '../../entity/timetable_entity.dart';
 import '../../p13n/builtin.dart';
 import 'course_sheet.dart';
 import '../../utils.dart';
-import '../free.dart';
 import 'header.dart';
 import '../../entity/pos.dart';
 import '../../i18n.dart';
@@ -211,7 +210,7 @@ class TimetableOneWeek extends StatelessWidget {
     final cellSize = Size(fullSize.width / 7.62, fullSize.height / 11);
     final timetableWeek = timetable.getWeek(weekIndex);
 
-    final view = buildSingleWeekView(
+    return buildSingleWeekView(
       timetableWeek,
       context: context,
       cellSize: cellSize,
@@ -219,18 +218,6 @@ class TimetableOneWeek extends StatelessWidget {
       todayPos: todayPos,
       timetable: timetable,
     );
-    if (showFreeTip && timetableWeek.isFree) {
-      // free week
-      return [
-        view,
-        FreeWeekTip(
-          timetable: timetable,
-          weekIndex: weekIndex,
-        ).padOnly(t: fullSize.height * 0.2),
-      ].stack();
-    } else {
-      return view;
-    }
   }
 
   /// timeslots

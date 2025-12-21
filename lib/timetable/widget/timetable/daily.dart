@@ -9,7 +9,6 @@ import 'package:mimir/l10n/time.dart';
 import 'package:mimir/school/utils.dart';
 import 'package:mimir/school/entity/timetable.dart';
 import 'package:mimir/timetable/widget/timetable/course_sheet.dart';
-import 'package:mimir/timetable/widget/free.dart';
 import 'package:rettulf/rettulf.dart';
 
 import '../../entity/timetable.dart';
@@ -29,11 +28,7 @@ class DailyTimetable extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => DailyTimetableState();
 
-  const DailyTimetable({
-    super.key,
-    required this.timetable,
-    required this.$currentPos,
-  });
+  const DailyTimetable({super.key, required this.timetable, required this.$currentPos});
 }
 
 class DailyTimetableState extends State<DailyTimetable> {
@@ -83,15 +78,16 @@ class DailyTimetableState extends State<DailyTimetable> {
       DashLined(
         bottom: true,
         color: getTimetableHeaderDashLinedColor(context),
-        child: widget.$currentPos >>
+        child:
+            widget.$currentPos >>
             (ctx, cur) => TimetableHeader(
-                  selectedWeekday: cur.weekday,
-                  weekIndex: cur.weekIndex,
-                  startDate: timetable.type.startDate,
-                  onDayTap: (dayIndex) {
-                    eventBus.fire(JumpToPosEvent(TimetablePos(weekIndex: cur.weekIndex, weekday: dayIndex)));
-                  },
-                ),
+              selectedWeekday: cur.weekday,
+              weekIndex: cur.weekIndex,
+              startDate: timetable.type.startDate,
+              onDayTap: (dayIndex) {
+                eventBus.fire(JumpToPosEvent(TimetablePos(weekIndex: cur.weekIndex, weekday: dayIndex)));
+              },
+            ),
       ),
       PageView.builder(
         controller: _pageController,
@@ -169,51 +165,25 @@ class _TimetableOneDayPageState extends State<TimetableOneDayPage> with Automati
   Widget buildPage(BuildContext ctx) {
     int weekIndex = widget.weekIndex;
     final day = widget.timetable.getDay(weekIndex, widget.weekday);
-    if (!day.hasAnyLesson()) {
-      return FreeDayTip(
-        timetable: widget.timetable,
-        weekIndex: weekIndex,
-        weekday: widget.weekday,
-      ).scrolled().center();
-    } else {
-      final slotCount = day.timeslot2LessonSlot.length;
-      final builder = _LessonRowBuilder(
-        dividerBuilder: (dividerNumber) {
-          return BreakDivider(title: dividerNumber == 1 ? i18n.lunchtime : i18n.dinnertime);
-        },
-      );
-      for (int timeslot = 0; timeslot < slotCount; timeslot++) {
-        builder.add(
-          timeslot,
-          buildLessonsInTimeslot(
-            ctx,
-            day.timeslot2LessonSlot[timeslot].lessons,
-            timeslot,
-          ),
-        );
-      }
-      // Since the course list is small, no need to use [ListView.builder].
-      return ListView(
-        children: builder.build(),
-      );
+    final slotCount = day.timeslot2LessonSlot.length;
+    final builder = _LessonRowBuilder(
+      dividerBuilder: (dividerNumber) {
+        return BreakDivider(title: dividerNumber == 1 ? i18n.lunchtime : i18n.dinnertime);
+      },
+    );
+    for (int timeslot = 0; timeslot < slotCount; timeslot++) {
+      builder.add(timeslot, buildLessonsInTimeslot(ctx, day.timeslot2LessonSlot[timeslot].lessons, timeslot));
     }
+    // Since the course list is small, no need to use [ListView.builder].
+    return ListView(children: builder.build());
   }
 
-  Widget? buildLessonsInTimeslot(
-    BuildContext ctx,
-    List<TimetableLessonPart> lessonsInSlot,
-    int timeslot,
-  ) {
+  Widget? buildLessonsInTimeslot(BuildContext ctx, List<TimetableLessonPart> lessonsInSlot, int timeslot) {
     if (lessonsInSlot.isEmpty) {
       return null;
     } else if (lessonsInSlot.length == 1) {
       final lesson = lessonsInSlot[0];
-      return buildSingleLesson(
-        ctx,
-        timetable: widget.timetable,
-        lesson: lesson,
-        timeslot: timeslot,
-      ).padH(6);
+      return buildSingleLesson(ctx, timetable: widget.timetable, lesson: lesson, timeslot: timeslot).padH(6);
     } else {
       return LessonOverlapGroup(lessonsInSlot, timeslot, widget.timetable).padH(6);
     }
@@ -232,18 +202,8 @@ class _TimetableOneDayPageState extends State<TimetableOneDayPage> with Automati
     var color = colorEntry.colorBy(context);
     final classTime = calcBeginEndTimePointOfLesson(timeslot, timetable.campus, course.place);
     return [
-      ClassTimeCard(
-        color: color,
-        classTime: classTime,
-        textColor: textColor,
-      ),
-      LessonCard(
-        lesson: lesson,
-        timetable: timetable,
-        course: course,
-        color: color,
-        textColor: textColor,
-      ).expanded()
+      ClassTimeCard(color: color, classTime: classTime, textColor: textColor),
+      LessonCard(lesson: lesson, timetable: timetable, course: course, color: color, textColor: textColor).expanded(),
     ].row();
   }
 
@@ -254,10 +214,7 @@ class _TimetableOneDayPageState extends State<TimetableOneDayPage> with Automati
 class BreakDivider extends StatelessWidget {
   final String title;
 
-  const BreakDivider({
-    super.key,
-    required this.title,
-  });
+  const BreakDivider({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -305,10 +262,7 @@ class LessonCard extends StatelessWidget {
           );
         },
         textColor: textColor,
-        title: AutoSizeText(
-          course.courseName,
-          maxLines: 1,
-        ),
+        title: AutoSizeText(course.courseName, maxLines: 1),
         subtitle: [
           if (course.place.isNotEmpty)
             Text(beautifyPlace(course.place), softWrap: true, overflow: TextOverflow.ellipsis),
@@ -324,19 +278,18 @@ class ClassTimeCard extends StatelessWidget {
   final Color? textColor;
   final ClassTime classTime;
 
-  const ClassTimeCard({
-    super.key,
-    required this.color,
-    required this.classTime,
-    this.textColor,
-  });
+  const ClassTimeCard({super.key, required this.color, required this.classTime, this.textColor});
 
   @override
   Widget build(BuildContext context) {
     return Card.filled(
       color: color,
       child: [
-        classTime.begin.l10n(context).text(style: TextStyle(fontWeight: FontWeight.bold, color: textColor)),
+        classTime.begin
+            .l10n(context)
+            .text(
+              style: TextStyle(fontWeight: FontWeight.bold, color: textColor),
+            ),
         const SizedBox(height: 5),
         classTime.end.l10n(context).text(style: TextStyle(color: textColor)),
       ].column().padAll(10),
@@ -349,12 +302,7 @@ class LessonOverlapGroup extends StatelessWidget {
   final int timeslot;
   final TimetableEntity timetable;
 
-  const LessonOverlapGroup(
-    this.lessonsInSlot,
-    this.timeslot,
-    this.timetable, {
-    super.key,
-  });
+  const LessonOverlapGroup(this.lessonsInSlot, this.timeslot, this.timetable, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -368,12 +316,7 @@ class LessonOverlapGroup extends StatelessWidget {
       final colorEntry = timetable.resolveColor(palette, course);
       final color = colorEntry.colorBy(context);
       classTime = calcBeginEndTimePointOfLesson(timeslot, timetable.campus, course.place);
-      final row = LessonCard(
-        lesson: lesson,
-        course: course,
-        timetable: timetable,
-        color: color,
-      );
+      final row = LessonCard(lesson: lesson, course: course, timetable: timetable, color: color);
       all.add(row);
     }
     // [classTime] must be nonnull.
@@ -392,11 +335,7 @@ class LessonOverlapGroup extends StatelessWidget {
   }
 }
 
-enum _RowBuilderState {
-  row,
-  divider,
-  none;
-}
+enum _RowBuilderState { row, divider, none }
 
 class _LessonRowBuilder {
   final Widget Function(int dividerNumber) dividerBuilder;

@@ -37,7 +37,6 @@ dependencies:
   hive_ce_flutter: ^1.1.0
   json_annotation: ^4.9.0
   copy_with_extension: ^6.0.0
-  event_bus: ^2.0.1
 
   # String formatting
   format: ^1.5.2

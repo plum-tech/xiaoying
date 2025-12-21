@@ -13,7 +13,6 @@ import 'package:mimir/settings/settings.dart';
 import 'package:rettulf/rettulf.dart';
 import 'package:universal_platform/universal_platform.dart';
 
-import '../../events.dart';
 import '../../entity/timetable.dart';
 import '../../entity/timetable_entity.dart';
 import '../../p13n/builtin.dart';
@@ -47,7 +46,6 @@ class WeeklyTimetableState extends State<WeeklyTimetable> {
   TimetablePos get currentPos => widget.$currentPos.value;
 
   set currentPos(TimetablePos newValue) => widget.$currentPos.value = newValue;
-  late StreamSubscription<JumpToPosEvent> $jumpToPos;
 
   @override
   void initState() {
@@ -61,14 +59,10 @@ class WeeklyTimetableState extends State<WeeklyTimetable> {
           }
         });
       });
-    $jumpToPos = eventBus.on<JumpToPosEvent>().listen((event) {
-      jumpTo(event.where);
-    });
   }
 
   @override
   void dispose() {
-    $jumpToPos.cancel();
     pageController.dispose();
     super.dispose();
   }

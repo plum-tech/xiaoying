@@ -23,7 +23,6 @@ Color? getTimetableHeaderDashLinedColor(
 class TimetableHeader extends StatelessWidget {
   final int weekIndex;
   final Weekday? selectedWeekday;
-  final Function(Weekday dayIndex)? onDayTap;
   final DateTime startDate;
 
   const TimetableHeader({
@@ -31,7 +30,6 @@ class TimetableHeader extends StatelessWidget {
     required this.weekIndex,
     required this.startDate,
     this.selectedWeekday,
-    this.onDayTap,
   });
 
   @override
@@ -41,7 +39,6 @@ class TimetableHeader extends StatelessWidget {
       weekday: Weekday.monday,
       startDate: startDate,
     );
-    final onDayTap = this.onDayTap;
 
     return [
       Container(
@@ -55,11 +52,6 @@ class TimetableHeader extends StatelessWidget {
       ...Weekday.monday.genSequenceStartWithThis().map((weekday) {
         return Expanded(
           child: InkWell(
-            onTap: onDayTap != null
-                ? () {
-                    onDayTap.call(weekday);
-                  }
-                : null,
             child: HeaderCell(
               weekIndex: weekIndex,
               weekday: weekday,

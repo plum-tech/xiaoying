@@ -13,7 +13,6 @@ import '../entity/pos.dart';
 import '../widget/timetable/board.dart';
 
 import '../i18n.dart';
-import 'timetable.dart';
 
 class TimetablePreviewPage extends StatefulWidget {
   final TimetableEntity entity;
@@ -78,11 +77,6 @@ class _TimetablePreviewPageState extends State<TimetablePreviewPage> {
         timetable: entity,
         $displayMode: $displayMode,
         $currentPos: $currentPos,
-      ),
-      floatingActionButton: TimetableJumpButton(
-        $displayMode: $displayMode,
-        $currentPos: $currentPos,
-        timetable: timetable,
       ),
     );
   }

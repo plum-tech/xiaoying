@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:mimir/design/adaptive/foundation.dart';
@@ -12,7 +10,6 @@ import 'package:mimir/timetable/widget/timetable/course_sheet.dart';
 import 'package:rettulf/rettulf.dart';
 
 import '../../entity/timetable.dart';
-import '../../events.dart';
 import '../../entity/timetable_entity.dart';
 import '../../p13n/builtin.dart';
 import '../../utils.dart';
@@ -45,8 +42,6 @@ class DailyTimetableState extends State<DailyTimetable> {
 
   TimetablePos page2Pos(int page) => TimetablePos(weekIndex: page ~/ 7, weekday: Weekday.fromIndex(page % 7));
 
-  late StreamSubscription<JumpToPosEvent> $jumpToPos;
-
   @override
   void initState() {
     super.initState();
@@ -60,14 +55,10 @@ class DailyTimetableState extends State<DailyTimetable> {
           }
         });
       });
-    $jumpToPos = eventBus.on<JumpToPosEvent>().listen((event) {
-      jumpTo(event.where);
-    });
   }
 
   @override
   void dispose() {
-    $jumpToPos.cancel();
     _pageController.dispose();
     super.dispose();
   }
@@ -84,9 +75,6 @@ class DailyTimetableState extends State<DailyTimetable> {
               selectedWeekday: cur.weekday,
               weekIndex: cur.weekIndex,
               startDate: timetable.type.startDate,
-              onDayTap: (dayIndex) {
-                eventBus.fire(JumpToPosEvent(TimetablePos(weekIndex: cur.weekIndex, weekday: dayIndex)));
-              },
             ),
       ),
       PageView.builder(

@@ -36,21 +36,6 @@ jobs:
         run: |
           git config --global url."https://${{ secrets.MIMIR_GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
-
-      - uses: actions/setup-node@v6
-        with:
-          node-version: 24
-          cache: 'pnpm'
-          cache-dependency-path: tools/pnpm-lock.yaml
-
-      - name: Pnpm install
-        run: |
-          cd tools && pnpm i && pnpm build && cd ..
-
       - name: Install Apple Certificate
         uses: apple-actions/import-codesign-certs@v6
         with:

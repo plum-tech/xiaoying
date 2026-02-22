@@ -3,11 +3,6 @@ name: Flutter Build Android
 on:
   workflow_dispatch:
     inputs:
-      publish_version:
-        description: 'Publish the preview version'
-        required: true
-        default: true
-        type: boolean
       ref:
         description: 'Branch, tag or commit to build'
         default: ""
@@ -68,44 +63,3 @@ jobs:
         with:
           name: Android-release
           path: build/app/outputs/flutter-apk/*-signed.apk
-
-  after_build:
-    runs-on: ubuntu-latest
-    if: ${{ inputs.publish_version }}
-    needs: [ build_android ]
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          repository: plum-tech/xiaoying-x
-          token: ${{ secrets.MIMIR_GITHUB_TOKEN }}
-          fetch-depth: 0
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
-
-      - uses: actions/setup-node@v6
-        with:
-          node-version: 22
-          cache: 'pnpm'
-          cache-dependency-path: tools/pnpm-lock.yaml
-
-      - name: Pnpm install
-        run: |
-          cd tools && pnpm i && pnpm build && cd ..
-
-      - name: Get Android Artifact
-        uses: actions/download-artifact@v7
-        with:
-          name: Android-release
-          path: build/
-
-      - name: Publish preview version
-        continue-on-error: true
-        timeout-minutes: 5
-        if: ${{ inputs.publish_version }}
-        env:
-          XY_VERSION_ADMIN_TOKEN: ${{ secrets.XY_VERSION_ADMIN_TOKEN }}
-        run: |
-          pnpm run publish-preview --upload build/app-release-signed.apk

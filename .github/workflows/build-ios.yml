@@ -31,8 +31,13 @@ jobs:
 
       # 下载 iOS 运行环境组件
       - name: Install iOS components
-        run: |
-          xcodebuild -downloadPlatform iOS
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 20
+          max_attempts: 3
+          retry_wait_seconds: 20
+          shell: bash
+          command: xcodebuild -downloadPlatform iOS
 
       # 配置 Git 全局 URL 替换，确保私有依赖可以通过 PAT 正确拉取
       - name: Configure Git for private dependencies

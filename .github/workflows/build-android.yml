@@ -40,11 +40,23 @@ jobs:
           cache: true
           flutter-version-file: pubspec.yaml
 
-      - name: Build APK
+      - name: Configure Flutter CLI
         run: |
           flutter config --no-cli-animations
-          flutter build apk --release --target-platform android-arm,android-arm64
-          flutter build apk --release --target-platform android-arm,android-arm64 --split-per-abi
+
+      - name: Flutter pub get
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 20
+          max_attempts: 3
+          retry_wait_seconds: 20
+          shell: bash
+          command: flutter pub get
+
+      - name: Build APK
+        run: |
+          flutter build apk --release --target-platform android-arm,android-arm64 --no-pub
+          flutter build apk --release --target-platform android-arm,android-arm64 --split-per-abi --no-pub
 
       - name: Sign APK
         uses: r0adkll/sign-android-release@v1

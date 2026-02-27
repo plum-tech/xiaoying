@@ -71,11 +71,41 @@ jobs:
           cache: true
           flutter-version-file: pubspec.yaml
 
-      # 构建 Flutter iOS  release 版本，此处 --no-codesign 表示暂不签名
-      - name: Build iOS
+      # 关闭 Flutter CLI 动画（更干净的日志）
+      - name: Configure Flutter CLI
         run: |
           flutter config --no-cli-animations
-          flutter build ios --release --no-codesign
+
+      # 先拉取 Dart 依赖（可重试）
+      - name: Flutter pub get
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 20
+          max_attempts: 3
+          retry_wait_seconds: 20
+          shell: bash
+          command: flutter pub get
+
+      # 独立执行 pod install（可重试）
+      - name: CocoaPods install
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 20
+          max_attempts: 3
+          retry_wait_seconds: 20
+          shell: bash
+          command: |
+            if [ ! -f ios/Podfile ]; then
+              echo "Podfile not found, skipping pod install."
+              exit 0
+            fi
+            cd ios
+            COCOAPODS_DISABLE_STATS=true LANG=en_US.UTF-8 pod install --verbose
+
+      # 只生成 iOS 配置（可能会再次触发 pod install），不执行编译
+      - name: Prepare iOS project (config only)
+        run: |
+          flutter build ios --release --no-codesign --no-pub --config-only
 
       # 在 Xcode 中解析并下载 Swift Package 依赖
       - name: Build resolve Swift dependencies

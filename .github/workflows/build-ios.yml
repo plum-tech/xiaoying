@@ -153,7 +153,7 @@ jobs:
 
       # 下载 build_ios 阶段生成的安装包
       - name: Get iOS Artifact
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: iOS-release
           path: build/

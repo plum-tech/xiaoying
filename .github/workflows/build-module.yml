@@ -70,7 +70,7 @@ jobs:
           ls ${after_name}
 
       - name: Publish Android Artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: xiaoying_${{ inputs.module }}
           path: example/build/app/outputs/flutter-apk/*.apk

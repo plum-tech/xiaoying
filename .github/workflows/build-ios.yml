@@ -31,7 +31,7 @@ jobs:
 
       # 下载 iOS 运行环境组件
       - name: Install iOS components
-        uses: nick-fields/retry@v3
+        uses: nick-fields/retry@v4
         with:
           timeout_minutes: 20
           max_attempts: 3
@@ -78,7 +78,7 @@ jobs:
 
       # 先拉取 Dart 依赖（可重试）
       - name: Flutter pub get
-        uses: nick-fields/retry@v3
+        uses: nick-fields/retry@v4
         with:
           timeout_minutes: 20
           max_attempts: 3
@@ -88,7 +88,7 @@ jobs:
 
       # 独立执行 pod install（可重试）
       - name: CocoaPods install
-        uses: nick-fields/retry@v3
+        uses: nick-fields/retry@v4
         with:
           timeout_minutes: 20
           max_attempts: 3

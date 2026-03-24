@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:mimir/r.dart';
 import 'package:mimir/utils/guard_launch.dart';
-import 'package:mimir/utils/tel.dart';
 import 'package:rettulf/rettulf.dart';
 
 class RestyledHtmlWidget extends StatefulWidget {
@@ -13,7 +12,6 @@ class RestyledHtmlWidget extends StatefulWidget {
   final TextStyle? textStyle;
   final bool async;
   final bool keepOriginalFontSize;
-  final bool linkifyPhoneNumbers;
   final Uri? baseUri;
   final bool enableGoRoute;
 
@@ -24,7 +22,6 @@ class RestyledHtmlWidget extends StatefulWidget {
     this.textStyle,
     this.async = true,
     this.keepOriginalFontSize = false,
-    this.linkifyPhoneNumbers = false,
     this.baseUri,
     this.enableGoRoute = false,
   });
@@ -48,8 +45,7 @@ class _RestyledHtmlWidgetState extends State<RestyledHtmlWidget>
   @override
   void didUpdateWidget(RestyledHtmlWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.content != widget.content ||
-        oldWidget.linkifyPhoneNumbers != widget.linkifyPhoneNumbers) {
+    if (oldWidget.content != widget.content) {
       setState(() {
         html = buildHtml();
       });
@@ -57,11 +53,7 @@ class _RestyledHtmlWidgetState extends State<RestyledHtmlWidget>
   }
 
   String buildHtml() {
-    var html = widget.content;
-    if (widget.linkifyPhoneNumbers) {
-      html = linkifyPhoneNumbers(widget.content);
-    }
-    return html;
+    return widget.content;
   }
 
   @override

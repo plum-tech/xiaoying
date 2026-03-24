@@ -1,22 +1,5 @@
 import 'package:collection/collection.dart';
 
-String formatWithoutTrailingZeros(double amount, {int fractionDigits = 2}) {
-  if (amount == 0) return "0";
-  final number = amount.toStringAsFixed(fractionDigits);
-  if (number.contains('.')) {
-    int index = number.length - 1;
-    while (index >= 0 && number[index] == '0') {
-      index--;
-      if (index >= 0 && number[index] == '.') {
-        index--;
-        break;
-      }
-    }
-    return number.substring(0, index + 1);
-  }
-  return number;
-}
-
 final _trailingIntRe = RegExp(r"(.*\s+)(\d+)$");
 
 String getDuplicateFileName(String origin, {List<String>? all}) {

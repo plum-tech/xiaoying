@@ -30,8 +30,6 @@ class Files {
   static late final Directory cache;
   static late final Directory internal;
   static late final Directory user;
-
-  static const oaAnnounce = OaAnnounceFiles._();
 }
 
 extension DirectoryX on Directory {
@@ -40,15 +38,6 @@ extension DirectoryX on Directory {
 
   Directory subDir(String p1, [String? p2, String? p3, String? p4]) =>
       Directory(join(path, p1, p2, p3, p4));
-}
-
-class OaAnnounceFiles {
-  const OaAnnounceFiles._();
-
-  Directory attachmentDir(String uuid) =>
-      Files.internal.subDir("attachment", uuid);
-
-  Future<void> init() async {}
 }
 
 class TempDir {

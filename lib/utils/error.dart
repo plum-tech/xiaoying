@@ -24,7 +24,3 @@ void debugPrintError(Object? error, [StackTrace? stackTrace]) {
     debugPrintStack(stackTrace: stackTrace);
   }
 }
-
-Future<void> handleRequestError(Object? error, [StackTrace? stackTrace]) async {
-  debugPrintError(error, stackTrace);
-}

@@ -1,5 +1,3 @@
-import 'package:mimir/utils/weekday.dart';
-
 bool isLeapYear(int year) {
   if (year % 400 == 0) return true;
   if (year % 4 == 0 && year % 100 != 0) return true;
@@ -23,27 +21,6 @@ int daysInMonth({required int year, required int month}) {
     12 => 31,
     _ => 30,
   };
-}
-
-int daysInYear(int year) {
-  return isLeapYear(year) ? 366 : 365;
-}
-
-List<int> daysInEachMonth({required int year}) {
-  return [
-    31,
-    isLeapYear(year) ? 29 : 28,
-    31,
-    30,
-    31,
-    30,
-    31,
-    31,
-    30,
-    31,
-    30,
-    31,
-  ];
 }
 
 int daysPastInYear({required int year, required int month, required int day}) {
@@ -72,61 +49,6 @@ extension DateTimeX on DateTime {
   }
 }
 
-DateTime getDateOfFirstDayInWeek({required int year, required int week}) {
-  final day = (week - 1) * 7;
-  return DateTime(year, 1, day);
-}
-
-String formatDateSpan({
-  required DateTime from,
-  required DateTime to,
-  bool showYear = true,
-}) {
-  if (from.inTheSameDay(to)) {
-    return showYear ? formatChineseDate(from) : formatChineseMonthDay(from);
-  }
-
-  if (from.year == to.year) {
-    if (from.month == to.month) {
-      return showYear
-          ? "${from.year}年${from.month}月${from.day}日-${to.day}日"
-          : "${from.month}月${from.day}日-${to.day}日";
-    }
-    return showYear
-        ? "${from.year}年${from.month}月${from.day}日-${to.month}月${to.day}日"
-        : "${from.month}月${from.day}日-${to.month}月${to.day}日";
-  }
-
-  if (showYear) {
-    return "${formatChineseDate(from)}-${formatChineseDate(to)}";
-  }
-
-  return "${formatChineseMonthDay(from)}-${formatChineseMonthDay(to)}";
-}
-
-int dateTimeComparator(DateTime? timeA, DateTime? timeB) {
-  if (timeA == null || timeB == null) {
-    if (timeA != timeB) {
-      return timeA == null ? 1 : -1;
-    }
-    return 0;
-  }
-  return timeA.isAfter(timeB) ? 1 : -1;
-}
-
-String formatChineseYearMonth(DateTime date) {
-  return "${date.year}年${date.month}月";
-}
-
 String formatChineseDate(DateTime date) {
   return "${date.year}年${date.month}月${date.day}日";
-}
-
-String formatChineseMonthDay(DateTime date) {
-  return "${date.month}月${date.day}日";
-}
-
-String formatChineseDateWithWeekday(DateTime date) {
-  final weekday = Weekday.fromIndex(date.weekday - DateTime.monday);
-  return "${formatChineseDate(date)} ${weekday.label}";
 }

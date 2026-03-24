@@ -102,20 +102,3 @@ extension TimetableX on Timetable {
     return TimetablePos.locate(current, relativeTo: startDate);
   }
 }
-
-// TODO: finish timetable lesson pos
-class TimetableLessonPos {
-  final String courseCode;
-
-  /// starts with 0
-  final int weekIndex;
-
-  /// starts with 0
-  final Weekday weekday;
-
-  const TimetableLessonPos({
-    required this.courseCode,
-    required this.weekIndex,
-    required this.weekday,
-  });
-}

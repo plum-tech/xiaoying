@@ -66,14 +66,6 @@ String mapChinesePunctuations(String name) {
   return b.toString();
 }
 
-int? getAdmissionYearFromStudentId(String? studentId) {
-  if (studentId == null) return null;
-  if (studentId.length < 2) return null;
-  final fromID = int.tryParse(studentId.substring(0, 2));
-  if (fromID == null) return null;
-  return 2000 + fromID;
-}
-
 SemesterInfo estimateSemesterInfo([DateTime? date]) {
   date ??= DateTime.now();
   return SemesterInfo(

@@ -17,12 +17,6 @@ import '../entity/timetable.dart';
 import '../utils.dart';
 import 'parse.ug.dart';
 
-Future<Timetable?> _readTimetableFromFile(String path) async {
-  final file = File(path);
-  final bytes = await file.readAsBytes();
-  return readTimetableFromBytes(bytes);
-}
-
 Future<Timetable?> readTimetableFromBytes(Uint8List bytes) async {
   // timetable file should be encoding in utf-8.
   final content = const Utf8Decoder().convert(bytes.toList());
@@ -38,16 +32,6 @@ Future<Timetable?> readTimetableFromBytes(Uint8List bytes) async {
       defaultCampus: Campus.defaultCampus,
     );
   }
-}
-
-Future<Timetable?> readTimetableFromFileWithPrompt(
-  BuildContext context,
-  String path,
-) async {
-  return readTimetableWithPrompt(
-    context,
-    get: () => _readTimetableFromFile(path),
-  );
 }
 
 Future<Timetable?> readSampleTimetableWithPrompt(

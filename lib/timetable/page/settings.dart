@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mimir/settings/settings.dart';
 import 'package:rettulf/rettulf.dart';
-import '../i18n.dart';
 
 class TimetableSettingsPage extends StatefulWidget {
   const TimetableSettingsPage({super.key});
@@ -18,8 +17,15 @@ class _TimetableSettingsPageState extends State<TimetableSettingsPage> {
       body: CustomScrollView(
         physics: const RangeMaintainingScrollPhysics(),
         slivers: [
-          SliverAppBar.large(pinned: true, snap: false, floating: false, title: i18n.navigation.text()),
-          SliverList.list(children: const [AutoUseImportedTile(), QuickLookCourseOnTapTile()]),
+          SliverAppBar.large(
+            pinned: true,
+            snap: false,
+            floating: false,
+            title: "课程表".text(),
+          ),
+          SliverList.list(
+            children: const [AutoUseImportedTile(), QuickLookCourseOnTapTile()],
+          ),
         ],
       ),
     );
@@ -34,8 +40,8 @@ class QuickLookCourseOnTapTile extends ConsumerWidget {
     final on = ref.watch(Settings.timetable.$quickLookLessonOnTap);
     return SwitchListTile.adaptive(
       secondary: const Icon(Icons.touch_app),
-      title: i18n.settings.quickLookLessonOnTap.text(),
-      subtitle: i18n.settings.quickLookLessonOnTapDesc.text(),
+      title: "点击快速查看一节课".text(),
+      subtitle: "在周课程表中长按查看完整课程".text(),
       value: on,
       onChanged: (newV) {
         ref.read(Settings.timetable.$quickLookLessonOnTap.notifier).set(newV);
@@ -52,8 +58,8 @@ class AutoUseImportedTile extends ConsumerWidget {
     final on = ref.watch(Settings.timetable.$autoUseImported);
     return SwitchListTile.adaptive(
       secondary: const Icon(Icons.calendar_month),
-      title: i18n.settings.autoUseImported.text(),
-      subtitle: i18n.settings.autoUseImportedDesc.text(),
+      title: "自动使用新课程表".text(),
+      subtitle: "自动使用新导入的课程表".text(),
       value: on,
       onChanged: (newV) {
         ref.read(Settings.timetable.$autoUseImported.notifier).set(newV);

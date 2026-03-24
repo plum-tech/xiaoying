@@ -45,11 +45,8 @@ class PullDownItem implements PullDownEntry {
     this.destructive = false,
   });
 
-  const PullDownItem.delete({
-    required this.title,
-    this.onTap,
-    this.icon,
-  }) : destructive = true;
+  const PullDownItem.delete({required this.title, this.onTap, this.icon})
+    : destructive = true;
 
   @override
   PullDownMenuEntry buildCupertino(BuildContext context) {
@@ -67,7 +64,13 @@ class PullDownItem implements PullDownEntry {
     return MenuItemButton(
       leadingIcon: icon == null ? null : Icon(icon),
       onPressed: onTap,
-      child: title.text(style: context.textTheme.titleMedium?.copyWith(color: context.colorScheme.onSurface)).padH(8),
+      child: title
+          .text(
+            style: context.textTheme.titleMedium?.copyWith(
+              color: context.colorScheme.onSurface,
+            ),
+          )
+          .padH(8),
     );
   }
 }
@@ -130,7 +133,11 @@ class PullDownSelectable implements PullDownEntry {
       leading: icon == null ? null : Icon(icon),
       selected: selected,
       onTap: onTap,
-      child: title.text(style: context.textTheme.titleMedium?.copyWith(color: context.colorScheme.onSurface)),
+      child: title.text(
+        style: context.textTheme.titleMedium?.copyWith(
+          color: context.colorScheme.onSurface,
+        ),
+      ),
     );
   }
 }
@@ -166,7 +173,10 @@ class _PullDownMenuButtonState extends State<PullDownMenuButton> {
   Widget build(BuildContext context) {
     if (isCupertino) {
       return PullDownButton(
-        itemBuilder: (context) => widget.itemBuilder(context).map((item) => item.buildCupertino(context)).toList(),
+        itemBuilder: (context) => widget
+            .itemBuilder(context)
+            .map((item) => item.buildCupertino(context))
+            .toList(),
         buttonBuilder: (context, showMenu) => CupertinoButton(
           onPressed: showMenu,
           padding: EdgeInsets.zero,
@@ -177,7 +187,10 @@ class _PullDownMenuButtonState extends State<PullDownMenuButton> {
       return MenuAnchor(
         childFocusNode: _focus,
         clipBehavior: Clip.hardEdge,
-        menuChildren: widget.itemBuilder(context).map((item) => item.buildMaterial(context)).toList(),
+        menuChildren: widget
+            .itemBuilder(context)
+            .map((item) => item.buildMaterial(context))
+            .toList(),
         consumeOutsideTap: true,
         builder: (ctx, controller, child) {
           return IconButton(

@@ -1,9 +1,8 @@
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:mimir/l10n/time.dart';
+import 'package:mimir/utils/weekday.dart';
 
 import 'timetable.dart';
-import '../i18n.dart';
 
 part "pos.g.dart";
 
@@ -16,30 +15,27 @@ class TimetablePos {
   /// starts with 0
   final Weekday weekday;
 
-  const TimetablePos({
-    required this.weekIndex,
-    required this.weekday,
-  });
+  const TimetablePos({required this.weekIndex, required this.weekday});
 
   const TimetablePos.fromDayIndex(int dayIndex)
-      : this(
-          weekIndex: dayIndex ~/ 7,
-          weekday: dayIndex % 7 == 0
-              ? Weekday.monday
-              : dayIndex % 7 == 1
-                  ? Weekday.tuesday
-                  : dayIndex % 7 == 2
-                      ? Weekday.wednesday
-                      : dayIndex % 7 == 3
-                          ? Weekday.thursday
-                          : dayIndex % 7 == 4
-                              ? Weekday.friday
-                              : dayIndex % 7 == 5
-                                  ? Weekday.saturday
-                                  : dayIndex % 7 == 6
-                                      ? Weekday.sunday
-                                      : Weekday.monday,
-        );
+    : this(
+        weekIndex: dayIndex ~/ 7,
+        weekday: dayIndex % 7 == 0
+            ? Weekday.monday
+            : dayIndex % 7 == 1
+            ? Weekday.tuesday
+            : dayIndex % 7 == 2
+            ? Weekday.wednesday
+            : dayIndex % 7 == 3
+            ? Weekday.thursday
+            : dayIndex % 7 == 4
+            ? Weekday.friday
+            : dayIndex % 7 == 5
+            ? Weekday.saturday
+            : dayIndex % 7 == 6
+            ? Weekday.sunday
+            : Weekday.monday,
+      );
 
   static const initial = TimetablePos(weekIndex: 0, weekday: Weekday.monday);
 
@@ -49,27 +45,32 @@ class TimetablePos {
     TimetablePos? fallback,
   }) {
     // calculate how many days have passed.
-    int totalDays = current.clearTime().difference(relativeTo.clearTime()).inDays;
+    int totalDays = current
+        .clearTime()
+        .difference(relativeTo.clearTime())
+        .inDays;
 
     int week = totalDays ~/ 7 + 1;
     int day = totalDays % 7 + 1;
     if (totalDays >= 0 && 1 <= week && week <= 20 && 1 <= day && day <= 7) {
-      return TimetablePos(weekIndex: week - 1, weekday: Weekday.fromIndex(day - 1));
+      return TimetablePos(
+        weekIndex: week - 1,
+        weekday: Weekday.fromIndex(day - 1),
+      );
     } else {
       // if out of range, fallback will be return.
       return fallback ?? initial;
     }
   }
 
-  String l10n() {
-    return "${i18n.weekOrderedName(number: weekIndex + 1)} ${weekday.l10n()}";
-  }
+  String get label => "第 ${weekIndex + 1} 周 ${weekday.label}";
 
   String toDartCode() {
     return "TimetablePos(weekIndex:$weekIndex,weekday:$weekday)";
   }
 
-  factory TimetablePos.fromJson(Map<String, dynamic> json) => _$TimetablePosFromJson(json);
+  factory TimetablePos.fromJson(Map<String, dynamic> json) =>
+      _$TimetablePosFromJson(json);
 
   Map<String, dynamic> toJson() => _$TimetablePosToJson(this);
 

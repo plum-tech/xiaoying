@@ -16,16 +16,12 @@ class ColorEntry {
   final Color color;
   final bool inverseText;
 
-  const ColorEntry(
-    this.color, {
-    this.inverseText = false,
-  });
+  const ColorEntry(this.color, {this.inverseText = false});
 
-  const ColorEntry.inverse(
-    this.color,
-  ) : inverseText = true;
+  const ColorEntry.inverse(this.color) : inverseText = true;
 
-  factory ColorEntry.fromJson(Map<String, dynamic> json) => _$ColorEntryFromJson(json);
+  factory ColorEntry.fromJson(Map<String, dynamic> json) =>
+      _$ColorEntryFromJson(json);
 
   Map<String, dynamic> toJson() => _$ColorEntryToJson(this);
 }
@@ -36,18 +32,14 @@ class DualColor {
   final ColorEntry light;
   final ColorEntry dark;
 
-  const DualColor({
-    required this.light,
-    required this.dark,
-  });
+  const DualColor({required this.light, required this.dark});
 
-  DualColor.plain({
-    required Color light,
-    required Color dark,
-  })  : light = ColorEntry(light),
-        dark = ColorEntry(dark);
+  DualColor.plain({required Color light, required Color dark})
+    : light = ColorEntry(light),
+      dark = ColorEntry(dark);
 
-  factory DualColor.fromJson(Map<String, dynamic> json) => _$DualColorFromJson(json);
+  factory DualColor.fromJson(Map<String, dynamic> json) =>
+      _$DualColorFromJson(json);
 
   Map<String, dynamic> toJson() => _$DualColorToJson(this);
 
@@ -58,16 +50,21 @@ class DualColor {
 }
 
 extension ColorEntryX on ColorEntry {
-  Color textColor(BuildContext context) =>
-      inverseText ? context.colorScheme.onInverseSurface : context.colorScheme.onSurface;
+  Color textColor(BuildContext context) => inverseText
+      ? context.colorScheme.onInverseSurface
+      : context.colorScheme.onSurface;
 }
 
 extension DualColorX on DualColor {
-  ColorEntry byBrightness(Brightness brightness) => brightness == Brightness.dark ? dark : light;
+  ColorEntry byBrightness(Brightness brightness) =>
+      brightness == Brightness.dark ? dark : light;
 
-  ColorEntry byContext(BuildContext context) => context.isDarkMode ? dark : light;
+  ColorEntry byContext(BuildContext context) =>
+      context.isDarkMode ? dark : light;
 
-  Color colorBy(BuildContext context) => (context.isDarkMode ? dark : light).color;
+  Color colorBy(BuildContext context) =>
+      (context.isDarkMode ? dark : light).color;
 
-  Color textColorBy(BuildContext context) => (context.isDarkMode ? dark : light).textColor(context);
+  Color textColorBy(BuildContext context) =>
+      (context.isDarkMode ? dark : light).textColor(context);
 }

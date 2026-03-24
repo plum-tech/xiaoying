@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:mimir/storage/hive/type_id.dart';
 
@@ -16,7 +15,11 @@ enum Semester implements Comparable<Semester> {
   @HiveField(2)
   term2;
 
-  String l10n() => "school.semester.$name".tr();
+  String get label => switch (this) {
+    Semester.all => "整学年",
+    Semester.term1 => "第一学期",
+    Semester.term2 => "第二学期",
+  };
 
   @override
   int compareTo(Semester other) {
@@ -55,10 +58,7 @@ class SemesterInfo implements Comparable<SemesterInfo> {
   @HiveField(1)
   final Semester semester;
 
-  const SemesterInfo({
-    required this.year,
-    required this.semester,
-  });
+  const SemesterInfo({required this.year, required this.semester});
 
   static const all = SemesterInfo(year: null, semester: Semester.all);
 
@@ -74,14 +74,14 @@ class SemesterInfo implements Comparable<SemesterInfo> {
     return "$year:$semester";
   }
 
-  static String allYearL10n() => "school.allYear".tr();
+  static String get allYearLabel => "所有学年";
 
-  String l10n() {
+  String get label {
     final year = this.year;
     if (year == null) {
-      return "${allYearL10n()} ${semester.l10n()}";
+      return "$allYearLabel ${semester.label}";
     } else {
-      return "$year–${year + 1} ${semester.l10n()}";
+      return "$year–${year + 1} ${semester.label}";
     }
   }
 
@@ -117,13 +117,18 @@ class SemesterInfo implements Comparable<SemesterInfo> {
 @JsonEnum()
 enum StudentType {
   undergraduate,
-  postgraduate,
-  ;
+  postgraduate;
 
-  static final name2enum = Map.fromEntries(values.map((v) => MapEntry(v.name, v)));
+  static final name2enum = Map.fromEntries(
+    values.map((v) => MapEntry(v.name, v)),
+  );
 
-  String l10n() => "school.studentType.$name".tr();
-  static String l10nTitle() => "school.studentType.title".tr();
+  String get label => switch (this) {
+    StudentType.undergraduate => "本科生",
+    StudentType.postgraduate => "研究生",
+  };
+
+  static String get titleLabel => "学生类型";
 }
 
 @HiveType(typeId: CacheHiveType.courseCat)
@@ -159,7 +164,16 @@ enum CourseCat {
   @HiveField(7)
   practicalInstruction;
 
-  String l10n() => "school.courseCat.$name".tr();
+  String get label => switch (this) {
+    CourseCat.none => "无",
+    CourseCat.genEd => "通识课",
+    CourseCat.publicCore => "公共基础课",
+    CourseCat.specializedCore => "学科专业基础课",
+    CourseCat.specializedCompulsory => "专业必修课",
+    CourseCat.specializedElective => "专业选修课",
+    CourseCat.integratedPractice => "综合实践",
+    CourseCat.practicalInstruction => "实践教学",
+  };
 
   static CourseCat parse(String? str) {
     return switch (str) {

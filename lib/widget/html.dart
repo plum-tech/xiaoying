@@ -35,7 +35,8 @@ class RestyledHtmlWidget extends StatefulWidget {
 
 final _goRoute = Uri(scheme: R.scheme, host: "go");
 
-class _RestyledHtmlWidgetState extends State<RestyledHtmlWidget> with AutomaticKeepAliveClientMixin {
+class _RestyledHtmlWidgetState extends State<RestyledHtmlWidget>
+    with AutomaticKeepAliveClientMixin {
   late String html;
 
   @override
@@ -47,7 +48,8 @@ class _RestyledHtmlWidgetState extends State<RestyledHtmlWidget> with AutomaticK
   @override
   void didUpdateWidget(RestyledHtmlWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.content != widget.content || oldWidget.linkifyPhoneNumbers != widget.linkifyPhoneNumbers) {
+    if (oldWidget.content != widget.content ||
+        oldWidget.linkifyPhoneNumbers != widget.linkifyPhoneNumbers) {
       setState(() {
         html = buildHtml();
       });
@@ -156,7 +158,8 @@ class RestyledWidgetFactory extends WidgetFactory {
 
   /// Returns a [NetworkImage].
   @override
-  ImageProvider? imageProviderFromNetwork(String url) => url.isNotEmpty ? CachedNetworkImageProvider(url) : null;
+  ImageProvider? imageProviderFromNetwork(String url) =>
+      url.isNotEmpty ? CachedNetworkImageProvider(url) : null;
 }
 
 BoxBorder? _restyleBorder(BoxBorder? border, Color? color) {

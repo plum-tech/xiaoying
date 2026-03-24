@@ -10,7 +10,6 @@ import 'package:mimir/school/utils.dart';
 import 'package:mimir/school/widget/semester.dart';
 import 'package:rettulf/rettulf.dart';
 
-import '../i18n.dart';
 import '../entity/timetable.dart';
 import '../utils/import.dart';
 import 'edit/editor.dart';
@@ -37,11 +36,11 @@ class _ImportTimetablePageState extends ConsumerState<ImportTimetablePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: i18n.import.title.text(),
+        title: "导入课程表".text(),
         actions: [
           PlatformTextButton(
             onPressed: importSampleTimetable,
-            child: i18n.import.sampleBtn.text(),
+            child: "导入示例课程表".text(),
           ),
         ],
       ),

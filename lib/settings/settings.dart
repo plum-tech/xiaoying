@@ -27,9 +27,13 @@ class SettingsImpl {
 
   set campus(Campus newV) => box.safePut<Campus>(_K.campus, newV);
 
-  late final $campus = box.providerWithDefault<Campus>(_K.campus, () => Campus.defaultCampus);
+  late final $campus = box.providerWithDefault<Campus>(
+    _K.campus,
+    () => Campus.defaultCampus,
+  );
 
   String? get lastSignature => box.safeGet<String>(_K.lastSignature);
 
-  set lastSignature(String? value) => box.safePut<String>(_K.lastSignature, value);
+  set lastSignature(String? value) =>
+      box.safePut<String>(_K.lastSignature, value);
 }

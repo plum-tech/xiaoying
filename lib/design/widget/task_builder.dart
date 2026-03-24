@@ -5,7 +5,8 @@ typedef Task = Future<void> Function();
 class TaskBuilder extends StatefulWidget {
   final Task? task;
   final void Function(dynamic error, StackTrace stackTrace)? onError;
-  final Widget Function(BuildContext context, Task? task, bool? running) builder;
+  final Widget Function(BuildContext context, Task? task, bool? running)
+  builder;
 
   const TaskBuilder({
     super.key,

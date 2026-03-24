@@ -10,11 +10,11 @@ import 'package:mimir/design/entity/dual_color.dart';
 import 'package:mimir/design/widget/common.dart';
 import 'package:mimir/design/adaptive/dialog.dart';
 import 'package:mimir/design/widget/entry_card.dart';
-import 'package:mimir/l10n/extension.dart';
 import 'package:mimir/school/entity/school.dart';
 import 'package:rettulf/rettulf.dart';
 import 'package:mimir/settings/settings.dart';
 import 'package:mimir/timetable/widget/course.dart';
+import 'package:mimir/utils/date.dart';
 import 'package:mimir/utils/format.dart';
 import 'package:text_scroll/text_scroll.dart';
 import 'package:universal_platform/universal_platform.dart';
@@ -22,7 +22,6 @@ import 'package:uuid/uuid.dart';
 
 import '../p13n/builtin.dart';
 import '../p13n/entity/palette.dart';
-import '../i18n.dart';
 import '../entity/timetable.dart';
 import '../init.dart';
 import '../utils/export.dart';
@@ -61,21 +60,21 @@ class _MyTimetableListPageState extends ConsumerState<MyTimetableListPage> {
   Widget buildFab() {
     return FloatingActionButton.extended(
       onPressed: importSampleTimetable,
-      label: Text(i18n.import.sample),
+      label: const Text("示例课程表"),
       icon: Icon(context.icons.add),
     );
   }
 
   Widget buildEmptyTimetableBody() {
     return Scaffold(
-      appBar: AppBar(title: i18n.mine.title.text()),
+      appBar: AppBar(title: "你的课程表".text()),
       floatingActionButton: buildFab(),
       body: LeavingBlank(
         icon: Icons.calendar_month_rounded,
-        desc: i18n.mine.emptyTip,
+        desc: "快去导入一个课程表吧！",
         action: FilledButton(
           onPressed: importSampleTimetable,
-          child: i18n.import.sampleBtn.text(),
+          child: "导入示例课程表".text(),
         ),
       ),
     );
@@ -90,7 +89,7 @@ class _MyTimetableListPageState extends ConsumerState<MyTimetableListPage> {
       floatingActionButton: buildFab(),
       body: CustomScrollView(
         slivers: [
-          SliverAppBar.medium(title: i18n.mine.title.text()),
+          SliverAppBar.medium(title: "你的课程表".text()),
           SliverList.builder(
             itemCount: timetables.length,
             itemBuilder: (ctx, i) {
@@ -158,21 +157,21 @@ class TimetableCard extends StatelessWidget {
       title: timetable.name,
       selected: selected,
       selectAction: (ctx) => EntrySelectAction(
-        selectLabel: i18n.use,
-        selectedLabel: i18n.used,
+        selectLabel: "使用",
+        selectedLabel: "已使用",
         action: () async {
           TimetableInit.storage.timetable.selectedId = timetable.uuid;
         },
       ),
       deleteAction: (ctx) => EntryAction.delete(
-        label: i18n.delete,
+        label: "删除",
         icon: context.icons.delete,
         action: () async {
           final confirm = await ctx.showActionRequest(
-            title: i18n.mine.deleteRequest,
-            action: i18n.delete,
-            desc: i18n.mine.deleteRequestDesc,
-            cancel: i18n.cancel,
+            title: "确定删除？",
+            action: "删除",
+            desc: "这个课程表将被永久删除",
+            cancel: "取消",
             destructive: true,
           );
           if (confirm != true) return;
@@ -187,7 +186,7 @@ class TimetableCard extends StatelessWidget {
         if (!selected)
           EntryAction(
             main: true,
-            label: i18n.preview,
+            label: "预览",
             icon: ctx.icons.preview,
             activator: const SingleActivator(LogicalKeyboardKey.keyP),
             action: () async {
@@ -196,7 +195,7 @@ class TimetableCard extends StatelessWidget {
             },
           ),
         EntryAction.edit(
-          label: i18n.edit,
+          label: "编辑",
           icon: context.icons.edit,
           activator: const SingleActivator(LogicalKeyboardKey.keyE),
           action: () async {
@@ -215,7 +214,7 @@ class TimetableCard extends StatelessWidget {
         // share_plus: sharing files is not supported on Linux
         if (!UniversalPlatform.isLinux)
           EntryAction(
-            label: i18n.share,
+            label: "分享",
             icon: context.icons.share,
             type: EntryActionType.share,
             action: () async {
@@ -225,7 +224,7 @@ class TimetableCard extends StatelessWidget {
         if (kDebugMode)
           EntryAction(
             icon: context.icons.copy,
-            label: "Copy Dart code",
+            label: "复制 Dart 代码",
             action: () async {
               final code = timetable.toDartCode();
               debugPrint(code);
@@ -233,7 +232,7 @@ class TimetableCard extends StatelessWidget {
             },
           ),
         EntryAction(
-          label: i18n.duplicate,
+          label: "创建副本",
           oneShot: true,
           icon: context.icons.copy,
           activator: const SingleActivator(LogicalKeyboardKey.keyD),
@@ -272,13 +271,13 @@ class TimetableInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = context.textTheme;
     final year = '${timetable.schoolYear}–${timetable.schoolYear + 1}';
-    final semester = timetable.semester.l10n();
+    final semester = timetable.semester.label;
     final author = [timetable.studentId, timetable.signature].join(" ");
     return [
       timetable.name.text(style: textTheme.titleLarge),
       "$year, $semester".text(style: textTheme.titleMedium),
       if (author.isNotEmpty) author.text(style: textTheme.bodyMedium),
-      "${i18n.startWith} ${context.formatYmdText(timetable.startDate)}".text(
+      "起始于 ${formatChineseDate(timetable.startDate)}".text(
         style: textTheme.bodyMedium,
       ),
     ].column(caa: CrossAxisAlignment.start);
@@ -321,28 +320,28 @@ class TimetableDetailsPage extends ConsumerWidget {
             children: [
               ListTile(
                 leading: const Icon(Icons.drive_file_rename_outline),
-                title: i18n.editor.name.text(),
+                title: "名称".text(),
                 subtitle: timetable.name.text(),
               ),
               ListTile(
                 leading: const Icon(Icons.date_range),
-                title: i18n.startWith.text(),
-                subtitle: context.formatYmdText(timetable.startDate).text(),
+                title: "起始于".text(),
+                subtitle: formatChineseDate(timetable.startDate).text(),
               ),
               ListTile(
                 leading: const Icon(Icons.create),
-                title: i18n.createdWhen.text(),
-                subtitle: context.formatYmdText(timetable.createdTime).text(),
+                title: "创建于".text(),
+                subtitle: formatChineseDate(timetable.createdTime).text(),
               ),
               ListTile(
                 leading: const Icon(Icons.person),
-                title: i18n.signature.text(),
+                title: "签名".text(),
                 subtitle: timetable.signature.text(),
               ),
               ListTile(
                 leading: const Icon(Icons.school),
-                title: StudentType.l10nTitle().text(),
-                subtitle: timetable.studentType.l10n().text(),
+                title: StudentType.titleLabel.text(),
+                subtitle: timetable.studentType.label.text(),
               ),
             ],
           ),

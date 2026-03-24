@@ -20,13 +20,10 @@ class SwipeAction {
     this.color = Colors.green,
   });
 
-  const SwipeAction.delete({
-    required this.action,
-    this.icon,
-    this.label,
-  })  : destructive = true,
-        fullSwipeAction = true,
-        color = null;
+  const SwipeAction.delete({required this.action, this.icon, this.label})
+    : destructive = true,
+      fullSwipeAction = true,
+      color = null;
 
   w.SwipeAction build(BuildContext context) {
     return w.SwipeAction(
@@ -66,14 +63,10 @@ class WithSwipeAction extends StatelessWidget {
       backgroundColor: Colors.transparent,
       leadingActions: left == null
           ? null
-          : <w.SwipeAction>[
-              left.build(context),
-            ],
+          : <w.SwipeAction>[left.build(context)],
       trailingActions: right == null
           ? null
-          : <w.SwipeAction>[
-              right.build(context),
-            ],
+          : <w.SwipeAction>[right.build(context)],
       child: child,
     );
   }

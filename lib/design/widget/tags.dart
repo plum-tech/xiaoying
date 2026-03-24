@@ -4,10 +4,7 @@ import 'package:rettulf/rettulf.dart';
 class TagsGroup extends StatelessWidget {
   final List<String> tags;
 
-  const TagsGroup(
-    this.tags, {
-    super.key,
-  });
+  const TagsGroup(this.tags, {super.key});
 
   @override
   Widget build(BuildContext context) {

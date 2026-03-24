@@ -26,9 +26,7 @@ class _TimetablePageState extends ConsumerState<TimetablePage> {
       // If no timetable selected, navigate to Mine page to select/import one.
       return const MyTimetableListPage();
     } else {
-      return TimetableBoardPage(
-        timetable: selected,
-      );
+      return TimetableBoardPage(timetable: selected);
     }
   }
 }

@@ -2,18 +2,9 @@ import 'dart:ui';
 import 'package:flutter/widgets.dart';
 import 'package:rettulf/rettulf.dart';
 
-enum LinePosition {
-  left,
-  top,
-  right,
-  bottom;
-}
+enum LinePosition { left, top, right, bottom }
 
-enum Shape {
-  line,
-  box,
-  circle;
-}
+enum Shape { line, box, circle }
 
 class DashDecoration extends Decoration {
   final Set<LinePosition> borders;
@@ -28,24 +19,24 @@ class DashDecoration extends Decoration {
     required this.color,
     this.dash = const <int>[5, 5],
     this.strokeWidth = 1,
-  })  : shape = Shape.line,
-        borderRadius = null;
+  }) : shape = Shape.line,
+       borderRadius = null;
 
   const DashDecoration.circle({
     required this.color,
     this.dash = const <int>[5, 5],
     this.strokeWidth = 1,
-  })  : shape = Shape.circle,
-        borders = const {},
-        borderRadius = null;
+  }) : shape = Shape.circle,
+       borders = const {},
+       borderRadius = null;
 
   const DashDecoration.box({
     required this.color,
     this.borderRadius,
     this.dash = const <int>[5, 5],
     this.strokeWidth = 1,
-  })  : shape = Shape.box,
-        borders = const {};
+  }) : shape = Shape.box,
+       borders = const {};
 
   @override
   BoxPainter createBoxPainter([VoidCallback? onChanged]) {
@@ -90,10 +81,16 @@ class _DashPainter extends BoxPainter {
           outPath.lineTo(offset.dx + configuration.size!.width, offset.dy);
         } else if (border == LinePosition.right) {
           outPath.moveTo(offset.dx + configuration.size!.width, offset.dy);
-          outPath.lineTo(offset.dx + configuration.size!.width, offset.dy + configuration.size!.height);
+          outPath.lineTo(
+            offset.dx + configuration.size!.width,
+            offset.dy + configuration.size!.height,
+          );
         } else {
           outPath.moveTo(offset.dx, offset.dy + configuration.size!.height);
-          outPath.lineTo(offset.dx + configuration.size!.width, offset.dy + configuration.size!.height);
+          outPath.lineTo(
+            offset.dx + configuration.size!.width,
+            offset.dy + configuration.size!.height,
+          );
         }
       }
     } else if (shape == Shape.box) {
@@ -109,12 +106,14 @@ class _DashPainter extends BoxPainter {
       );
       outPath.addRRect(rect);
     } else if (shape == Shape.circle) {
-      outPath.addOval(Rect.fromLTWH(
-        offset.dx,
-        offset.dy,
-        configuration.size!.width,
-        configuration.size!.height,
-      ));
+      outPath.addOval(
+        Rect.fromLTWH(
+          offset.dx,
+          offset.dy,
+          configuration.size!.width,
+          configuration.size!.height,
+        ),
+      );
     }
 
     PathMetrics metrics = outPath.computeMetrics(forceClosed: false);
@@ -129,18 +128,22 @@ class _DashPainter extends BoxPainter {
         to = to > totalLength ? totalLength : to;
         bool isEven = index % 2 == 0;
         if (isEven) {
-          drawPath.addPath(me.extractPath(start, to, startWithMoveTo: true), Offset.zero);
+          drawPath.addPath(
+            me.extractPath(start, to, startWithMoveTo: true),
+            Offset.zero,
+          );
         }
         start = to;
       }
     }
 
     canvas.drawPath(
-        drawPath,
-        Paint()
-          ..color = color
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = strokeWidth);
+      drawPath,
+      Paint()
+        ..color = color
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = strokeWidth,
+    );
   }
 }
 
@@ -170,10 +173,10 @@ class DashLined extends StatelessWidget {
     this.child,
     this.color,
     this.strokeWidth = 1.0,
-  })  : top = enabled,
-        bottom = enabled,
-        left = enabled,
-        right = enabled;
+  }) : top = enabled,
+       bottom = enabled,
+       left = enabled,
+       right = enabled;
 
   @override
   Widget build(BuildContext context) {

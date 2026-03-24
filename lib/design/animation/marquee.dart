@@ -92,7 +92,9 @@ class AnimatedDualSwitcherController {
 
   void _attach(_AnimatedDualSwitcherState state) {
     if (_attached != null) {
-      throw FlutterError("$AnimatedDualSwitcherController should be attached only one at the same time.");
+      throw FlutterError(
+        "$AnimatedDualSwitcherController should be attached only one at the same time.",
+      );
     }
     _attached = state;
   }
@@ -130,7 +132,8 @@ class AnimatedDualSwitcher extends StatefulWidget {
   State<AnimatedDualSwitcher> createState() => _AnimatedDualSwitcherState();
 }
 
-class _AnimatedDualSwitcherState extends State<AnimatedDualSwitcher> with SingleTickerProviderStateMixin {
+class _AnimatedDualSwitcherState extends State<AnimatedDualSwitcher>
+    with SingleTickerProviderStateMixin {
   late Ticker marqueeTicker;
   var lastElapsed = Duration.zero;
   var passed = Duration.zero;
@@ -187,7 +190,8 @@ class _AnimatedDualSwitcherState extends State<AnimatedDualSwitcher> with Single
     super.didUpdateWidget(oldWidget);
     if (widget.controller != controller) {
       controller.dispose();
-      controller = (widget.controller ?? AnimatedDualSwitcherController()).._attach(this);
+      controller = (widget.controller ?? AnimatedDualSwitcherController())
+        .._attach(this);
     }
     if (oldWidget.switchDuration != widget.switchDuration) {
       passed = Duration.zero;

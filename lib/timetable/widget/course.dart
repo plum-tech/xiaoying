@@ -3,9 +3,8 @@ import 'package:rettulf/rettulf.dart';
 import 'package:mimir/design/widget/card.dart';
 import 'package:mimir/design/widget/expansion_tile.dart';
 import 'package:mimir/entity/campus.dart';
-import 'package:mimir/l10n/time.dart';
 import 'package:mimir/timetable/entity/timetable.dart';
-import '../i18n.dart';
+import 'package:mimir/utils/weekday.dart';
 
 class TimetableCourseCard extends StatelessWidget {
   final String courseName;
@@ -28,23 +27,31 @@ class TimetableCourseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final allHidden = courses.every((c) => c.hidden);
-    final templateStyle = TextStyle(color: allHidden ? context.theme.disabledColor : null);
+    final templateStyle = TextStyle(
+      color: allHidden ? context.theme.disabledColor : null,
+    );
     return AnimatedExpansionTile(
       title: courseName.text(style: templateStyle),
       subtitle: [
-        if (courseCode.isNotEmpty) "${i18n.course.courseCode} $courseCode".text(style: templateStyle),
-        if (classCode.isNotEmpty) "${i18n.course.classCode} $classCode".text(style: templateStyle),
+        if (courseCode.isNotEmpty)
+          "课程代码 $courseCode".text(style: templateStyle),
+        if (classCode.isNotEmpty) "教学班 $classCode".text(style: templateStyle),
       ].column(caa: CrossAxisAlignment.start),
       children: courses.map((course) {
-        final weekNumbers = course.weekIndices.l10n();
-        final (:begin, :end) = calcBeginEndTimePoint(course.timeslots, campus, course.place);
+        final weekNumbers = course.weekIndices.labels;
+        final (:begin, :end) = calcBeginEndTimePoint(
+          course.timeslots,
+          campus,
+          course.place,
+        );
         return ListTile(
           isThreeLine: true,
           enabled: !course.hidden,
           title: course.place.text(),
           trailing: course.teachers.join(", ").text(),
           subtitle: [
-            "${Weekday.fromIndex(course.dayIndex).l10n()} ${begin.l10n(context)}–${end.l10n(context)}".text(),
+            "${Weekday.fromIndex(course.dayIndex).label} ${begin.label}–${end.label}"
+                .text(),
             ...weekNumbers.map((n) => n.text()),
           ].column(mas: MainAxisSize.min, caa: CrossAxisAlignment.start),
         );

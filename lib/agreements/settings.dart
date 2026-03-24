@@ -15,11 +15,17 @@ class AgreementsSettings {
 
   AgreementsSettings(this.box);
 
-  bool? getBasicAcceptanceOf(AgreementVersion version) =>
-      box.safeGet<bool>(_AgreementsK.acceptanceKeyOf(AgreementType.basic, version));
+  bool? getBasicAcceptanceOf(AgreementVersion version) => box.safeGet<bool>(
+    _AgreementsK.acceptanceKeyOf(AgreementType.basic, version),
+  );
 
-  Future<void> setBasicAcceptanceOf(AgreementVersion version, bool? newV) async =>
-      await box.safePut<bool>(_AgreementsK.acceptanceKeyOf(AgreementType.basic, version), newV);
+  Future<void> setBasicAcceptanceOf(
+    AgreementVersion version,
+    bool? newV,
+  ) async => await box.safePut<bool>(
+    _AgreementsK.acceptanceKeyOf(AgreementType.basic, version),
+    newV,
+  );
 
   late final $basicAcceptanceOf = box.providerFamily<bool, AgreementVersion>(
     (version) => _AgreementsK.acceptanceKeyOf(AgreementType.basic, version),
@@ -27,11 +33,17 @@ class AgreementsSettings {
     set: setBasicAcceptanceOf,
   );
 
-  bool? getAccountAcceptanceOf(AgreementVersion version) =>
-      box.safeGet<bool>(_AgreementsK.acceptanceKeyOf(AgreementType.account, version));
+  bool? getAccountAcceptanceOf(AgreementVersion version) => box.safeGet<bool>(
+    _AgreementsK.acceptanceKeyOf(AgreementType.account, version),
+  );
 
-  Future<void> setAccountAcceptanceOf(AgreementVersion version, bool? newV) async =>
-      await box.safePut<bool>(_AgreementsK.acceptanceKeyOf(AgreementType.account, version), newV);
+  Future<void> setAccountAcceptanceOf(
+    AgreementVersion version,
+    bool? newV,
+  ) async => await box.safePut<bool>(
+    _AgreementsK.acceptanceKeyOf(AgreementType.account, version),
+    newV,
+  );
 
   late final $accountAcceptanceOf = box.providerFamily<bool, AgreementVersion>(
     (version) => _AgreementsK.acceptanceKeyOf(AgreementType.account, version),

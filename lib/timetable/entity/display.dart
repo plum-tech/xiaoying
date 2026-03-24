@@ -1,5 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
-
 /// 课表显示模式
 enum DisplayMode {
   weekly,
@@ -16,5 +14,8 @@ enum DisplayMode {
 
   DisplayMode toggle() => DisplayMode.values[(index + 1) & 1];
 
-  String l10n() => "timetable.displayMode.$name".tr();
+  String get label => switch (this) {
+    DisplayMode.weekly => "周",
+    DisplayMode.daily => "日",
+  };
 }

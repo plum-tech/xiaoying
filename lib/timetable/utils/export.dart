@@ -21,8 +21,7 @@ Future<void> exportTimetableFileAndShare(
   final timetableFi = Files.temp.subFile(fileName);
   final sharePositionOrigin = context.getSharePositionOrigin();
   await timetableFi.writeAsString(content);
-  await Share.shareXFiles(
-    [XFile(timetableFi.path)],
-    sharePositionOrigin: sharePositionOrigin,
-  );
+  await Share.shareXFiles([
+    XFile(timetableFi.path),
+  ], sharePositionOrigin: sharePositionOrigin);
 }

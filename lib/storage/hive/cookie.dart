@@ -12,7 +12,9 @@ class HiveCookieJar implements Storage {
   @override
   Future<void> init(bool persistSession, bool ignoreExpires) async {
     if (R.debugNetwork) {
-      debugPrint("[$HiveCookieJar] persistSession=$persistSession, ignoreExpires=$ignoreExpires");
+      debugPrint(
+        "[$HiveCookieJar] persistSession=$persistSession, ignoreExpires=$ignoreExpires",
+      );
     }
   }
 

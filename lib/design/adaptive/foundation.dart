@@ -14,9 +14,7 @@ extension $BuildContextEx$ on BuildContext {
     bool useRootNavigator = true,
   }) async {
     if (isCupertino) {
-      return await showCupertinoSheet(
-        context: this, builder: builder,
-      );
+      return await showCupertinoSheet(context: this, builder: builder);
     } else {
       var enableDrag = dismissible;
       var showDragHandle = enableDrag;
@@ -86,7 +84,12 @@ class $Dialog$ extends StatelessWidget {
     final second = secondary;
     if (isCupertino) {
       dialog = CupertinoAlertDialog(
-        title: title?.text(style: TextStyle(fontWeight: FontWeight.w600, color: serious ? context.$red$ : null)),
+        title: title?.text(
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            color: serious ? context.$red$ : null,
+          ),
+        ),
         content: desc(context),
         actions: [
           if (second != null)
@@ -105,14 +108,19 @@ class $Dialog$ extends StatelessWidget {
               primary.onPressed?.call();
             },
             child: primary.text.text(),
-          )
+          ),
         ],
       );
     } else {
       // For other platform
       dialog = AlertDialog(
         backgroundColor: context.theme.dialogTheme.backgroundColor,
-        title: title?.text(style: TextStyle(fontWeight: FontWeight.w600, color: serious ? context.$red$ : null)),
+        title: title?.text(
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            color: serious ? context.$red$ : null,
+          ),
+        ),
         content: desc(context),
         actions: [
           if (second != null)
@@ -129,16 +137,17 @@ class $Dialog$ extends StatelessWidget {
               ),
             ),
           TextButton(
-              onPressed: () {
-                primary.onPressed?.call();
-              },
-              child: primary.text.text(
-                textAlign: TextAlign.end,
-                style: TextStyle(
-                  color: primary.warning ? context.$red$ : null,
-                  fontWeight: primary.isDefault ? FontWeight.w600 : null,
-                ),
-              )),
+            onPressed: () {
+              primary.onPressed?.call();
+            },
+            child: primary.text.text(
+              textAlign: TextAlign.end,
+              style: TextStyle(
+                color: primary.warning ? context.$red$ : null,
+                fontWeight: primary.isDefault ? FontWeight.w600 : null,
+              ),
+            ),
+          ),
         ],
         actionsAlignment: MainAxisAlignment.spaceEvenly,
       );
@@ -282,5 +291,6 @@ const Border _kDefaultRoundedBorder = Border(
 );
 
 extension ColorEx on BuildContext {
-  Color get $red$ => isCupertino ? CupertinoColors.destructiveRed : Colors.redAccent;
+  Color get $red$ =>
+      isCupertino ? CupertinoColors.destructiveRed : Colors.redAccent;
 }

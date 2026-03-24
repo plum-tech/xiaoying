@@ -10,8 +10,6 @@ import 'package:mimir/storage/hive/init.dart';
 import 'package:mimir/init.dart';
 import 'package:mimir/settings/settings.dart';
 import 'package:rettulf/rettulf.dart';
-
-import '../i18n.dart';
 import '../../design/widget/navigation.dart';
 
 class SettingsPage extends ConsumerStatefulWidget {
@@ -32,11 +30,9 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
             pinned: true,
             snap: false,
             floating: false,
-            title: i18n.title.text(),
+            title: "设置".text(),
           ),
-          SliverList.list(
-            children: buildEntries(),
-          ),
+          SliverList.list(children: buildEntries()),
         ],
       ),
     );
@@ -44,24 +40,32 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
 
   List<Widget> buildEntries() {
     final all = <Widget>[];
-    final agreementAccepted = ref.watch(Settings.agreements.$basicAcceptanceOf(AgreementVersion.current)) ?? false;
+    final agreementAccepted =
+        ref.watch(
+          Settings.agreements.$basicAcceptanceOf(AgreementVersion.current),
+        ) ??
+        false;
     if (agreementAccepted) {
-      all.add(PageNavigationTile(
-        leading: const Icon(Icons.calendar_month_outlined),
-        title: i18n.app.navigation.timetable.text(),
-        path: "/settings/timetable",
-      ));
+      all.add(
+        PageNavigationTile(
+          leading: const Icon(Icons.calendar_month_outlined),
+          title: "课程表".text(),
+          path: "/settings/timetable",
+        ),
+      );
       all.add(const Divider());
     }
     if (agreementAccepted) {
       all.add(const ClearCacheTile());
       all.add(const WipeDataTile());
     }
-    all.add(PageNavigationTile(
-      title: i18n.about.title.text(),
-      leading: Icon(context.icons.info),
-      path: "/settings/about",
-    ));
+    all.add(
+      PageNavigationTile(
+        title: "关于".text(),
+        leading: Icon(context.icons.info),
+        path: "/settings/about",
+      ),
+    );
     all[all.length - 1] = all.last.safeArea(t: false);
     return all;
   }
@@ -73,8 +77,8 @@ class ClearCacheTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: i18n.clearCacheTitle.text(),
-      subtitle: i18n.clearCacheDesc.text(),
+      title: "清空缓存".text(),
+      subtitle: "清空使用过程中产生的离线缓存和 Cookies".text(),
       leading: const Icon(Icons.folder_delete_outlined),
       onTap: () {
         _onClearCache(context);
@@ -85,9 +89,9 @@ class ClearCacheTile extends StatelessWidget {
 
 void _onClearCache(BuildContext context) async {
   final confirm = await context.showActionRequest(
-    action: i18n.clearCacheTitle,
-    desc: i18n.clearCacheRequest,
-    cancel: i18n.cancel,
+    action: "清空缓存",
+    desc: "清空缓存后，相关离线数据需要重新生成。",
+    cancel: "取消",
     destructive: true,
   );
   if (confirm == true) {
@@ -101,8 +105,8 @@ class WipeDataTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: i18n.wipeDataTitle.text(),
-      subtitle: i18n.wipeDataDesc.text(),
+      title: "擦除数据".text(),
+      subtitle: "擦除所有本地数据".text(),
       leading: const Icon(Icons.delete_forever_rounded),
       onTap: _onWipeData,
     );
@@ -113,9 +117,9 @@ Future<void> _onWipeData() async {
   final navigateCtx = $key.currentContext;
   if (navigateCtx == null || !navigateCtx.mounted) return;
   final confirm = await navigateCtx.showActionRequest(
-    action: i18n.wipeDataRequest,
-    desc: i18n.wipeDataRequestDesc,
-    cancel: i18n.cancel,
+    action: "擦除所有数据",
+    desc: "此操作将永久擦除你的缓存和其他本地信息，如已导入的课程表。",
+    cancel: "取消",
     destructive: true,
   );
   if (confirm == true) {

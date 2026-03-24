@@ -23,10 +23,7 @@ class IncrementalIdGenerator<T> implements IdGenerator<int, T> {
   final String key;
   final Box box;
 
-  const IncrementalIdGenerator({
-    required this.key,
-    required this.box,
-  });
+  const IncrementalIdGenerator({required this.key, required this.box});
 
   @override
   int alloc(T row) {
@@ -98,7 +95,10 @@ const _kIdList = "idList";
 const _kRows = "rows";
 const _kSelectedId = "selectedId";
 
-typedef UseJson<T> = ({T Function(Map<String, dynamic> json) fromJson, Map<String, dynamic> Function(T row) toJson});
+typedef UseJson<T> = ({
+  T Function(Map<String, dynamic> json) fromJson,
+  Map<String, dynamic> Function(T row) toJson,
+});
 
 class HiveTable<TId, T> {
   final String base;
@@ -125,9 +125,9 @@ class HiveTable<TId, T> {
     required this.idAllocator,
     this.external,
     this.useJson,
-  })  : _idListK = "$base/$_kIdList",
-        _rowsK = "$base/$_kRows",
-        _selectedIdK = "$base/$_kSelectedId";
+  }) : _idListK = "$base/$_kIdList",
+       _rowsK = "$base/$_kRows",
+       _selectedIdK = "$base/$_kSelectedId";
 
   static HiveTable<int, T> incremental<T>({
     required String base,
@@ -212,7 +212,10 @@ class HiveTable<TId, T> {
     if (useJson == null || newValue == null) {
       await box.safePut<T>(_rowK(id), newValue);
     } else {
-      await box.safePut<String>(_rowK(id), jsonEncode(useJson.toJson(newValue)));
+      await box.safePut<String>(
+        _rowK(id),
+        jsonEncode(useJson.toJson(newValue)),
+      );
     }
     if (selectedId == id) {
       $selected.notifier();
@@ -311,20 +314,14 @@ class HiveTable<TId, T> {
     set: (id, v) => this[id] = v,
   );
 
-  late final $rows = $any.provider<List<T>>(
-    get: getRows,
-  );
+  late final $rows = $any.provider<List<T>>(get: getRows);
   late final $rowsWithId = $any.provider<List<({TId id, T row})>>(
     get: getRowsWithId,
   );
-  late final $selectedId = $selected.provider<TId?>(
-    get: () => selectedId,
-  );
-  late final $selectedRow = $selected.provider<T?>(
-    get: () => selectedRow,
-  );
-// TODO: compose them
-// late final $selectedRowWithId = Provider((ref){
-//   return (id: ref.watch<int?>($selectedId));
-// });
+  late final $selectedId = $selected.provider<TId?>(get: () => selectedId);
+  late final $selectedRow = $selected.provider<T?>(get: () => selectedRow);
+  // TODO: compose them
+  // late final $selectedRowWithId = Provider((ref){
+  //   return (id: ref.watch<int?>($selectedId));
+  // });
 }

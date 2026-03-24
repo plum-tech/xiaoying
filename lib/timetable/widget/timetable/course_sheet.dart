@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:rettulf/rettulf.dart';
 import 'package:mimir/entity/campus.dart';
-import 'package:mimir/l10n/time.dart';
 import 'package:text_scroll/text_scroll.dart';
+import 'package:mimir/utils/weekday.dart';
 import '../../entity/timetable_entity.dart';
 
-import '../../i18n.dart';
 import '../../entity/timetable.dart';
 
 class TimetableCourseSheetPage extends StatelessWidget {
@@ -30,20 +29,12 @@ class TimetableCourseSheetPage extends StatelessWidget {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          SliverAppBar.medium(
-            title: TextScroll(
-              courses[0].courseName,
-            ),
-          ),
+          SliverAppBar.medium(title: TextScroll(courses[0].courseName)),
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
-            sliver: SliverToBoxAdapter(
-              child: buildTable(courses),
-            ),
+            sliver: SliverToBoxAdapter(child: buildTable(courses)),
           ),
-          const SliverToBoxAdapter(
-            child: Divider(),
-          ),
+          const SliverToBoxAdapter(child: Divider()),
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             sliver: SliverList.builder(
@@ -78,24 +69,12 @@ class TimetableCourseSheetPage extends StatelessWidget {
   Widget buildTable(List<Course> courses) {
     final teachers = courses.expand((course) => course.teachers).toSet();
     return Table(
-      columnWidths: const {
-        0: FlexColumnWidth(1),
-        1: FlexColumnWidth(2),
-      },
+      columnWidths: const {0: FlexColumnWidth(1), 1: FlexColumnWidth(2)},
       children: [
-        TableRow(children: [
-          i18n.course.courseCode.text(),
-          courseCode.text(),
-        ]),
-        TableRow(children: [
-          i18n.course.classCode.text(),
-          courses[0].classCode.text(),
-        ]),
+        TableRow(children: ["课程代码".text(), courseCode.text()]),
+        TableRow(children: ["教学班".text(), courses[0].classCode.text()]),
         if (teachers.isNotEmpty)
-          TableRow(children: [
-            i18n.course.teacher(teachers.length).text(),
-            teachers.join(", ").text(),
-          ]),
+          TableRow(children: ["教师".text(), teachers.join(", ").text()]),
       ],
     );
   }
@@ -115,18 +94,25 @@ class CourseDescTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final weekNumbers = course.weekIndices.l10n();
-    final (:begin, :end) = calcBeginEndTimePoint(course.timeslots, campus, course.place);
+    final weekNumbers = course.weekIndices.labels;
+    final (:begin, :end) = calcBeginEndTimePoint(
+      course.timeslots,
+      campus,
+      course.place,
+    );
     return ListTile(
       isThreeLine: true,
       selected: selected,
       title: course.place.text(),
       subtitle: [
-        "${Weekday.fromIndex(course.dayIndex).l10n()} ${begin.l10n(context)}–${end.l10n(context)}".text(),
+        "${Weekday.fromIndex(course.dayIndex).label} ${begin.label}–${end.label}"
+            .text(),
         if (course.teachers.length > 1) course.teachers.join(", ").text(),
         ...weekNumbers.map((n) => n.text()),
       ].column(mas: MainAxisSize.min, caa: CrossAxisAlignment.start),
-      trailing: course.teachers.length == 1 ? course.teachers.first.text() : null,
+      trailing: course.teachers.length == 1
+          ? course.teachers.first.text()
+          : null,
     );
   }
 }

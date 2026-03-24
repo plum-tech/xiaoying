@@ -28,13 +28,16 @@ extension DioEx on Dio {
       history.add(cur);
       // Prevent the redirect being processed by HttpClient, with the 302 response caught manually.
       final headerLocations = cur.headers['location'];
-      if (cur.statusCode == 302 && headerLocations != null && headerLocations.isNotEmpty) {
+      if (cur.statusCode == 302 &&
+          headerLocations != null &&
+          headerLocations.isNotEmpty) {
         var location = headerLocations[0];
         if (location.isEmpty) return cur;
         final locationUri = Uri.parse(location);
         if (!locationUri.isAbsolute) {
           // to prevent double-slash issue
-          location = '${cur.requestOptions.uri.origin.removeSuffix("/")}/${location.removePrefix("/")}';
+          location =
+              '${cur.requestOptions.uri.origin.removeSuffix("/")}/${location.removePrefix("/")}';
         }
         cur = await get(
           location,
@@ -63,17 +66,12 @@ extension DioEx on Dio {
       url,
       queryParameters: queryParameters,
       data: data?.call(),
-      options: (options ?? Options()).copyWith(
-        followRedirects: false,
-      ),
+      options: (options ?? Options()).copyWith(followRedirects: false),
       onSendProgress: onSendProgress,
       onReceiveProgress: onReceiveProgress,
     );
     history.add(res);
-    final finalRes = await processRedirect(
-      res,
-      history: history,
-    );
+    final finalRes = await processRedirect(res, history: history);
     return finalRes;
   }
 }

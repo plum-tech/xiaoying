@@ -34,7 +34,8 @@ class Bouncing extends StatefulWidget {
   State<Bouncing> createState() => _BouncingState();
 }
 
-class _BouncingState extends State<Bouncing> with SingleTickerProviderStateMixin {
+class _BouncingState extends State<Bouncing>
+    with SingleTickerProviderStateMixin {
   /// Animation controller
   late AnimationController _controller;
 
@@ -67,14 +68,15 @@ class _BouncingState extends State<Bouncing> with SingleTickerProviderStateMixin
   /// value changes
   @override
   void initState() {
-    _controller = AnimationController(
-      vsync: this,
-      duration: duration,
-      lowerBound: 0.0,
-      upperBound: 0.1,
-    )..addListener(() {
-        setState(() {});
-      });
+    _controller =
+        AnimationController(
+          vsync: this,
+          duration: duration,
+          lowerBound: 0.0,
+          upperBound: 0.1,
+        )..addListener(() {
+          setState(() {});
+        });
 
     super.initState();
   }
@@ -110,11 +112,7 @@ class _BouncingState extends State<Bouncing> with SingleTickerProviderStateMixin
       onVerticalDragEnd: _onDragEnd,
       onHorizontalDragUpdate: (details) => _onDragUpdate(details, context),
       onVerticalDragUpdate: (details) => _onDragUpdate(details, context),
-      child: Transform.scale(
-        key: _childKey,
-        scale: _scale,
-        child: child,
-      ),
+      child: Transform.scale(key: _childKey, scale: _scale, child: child),
     );
   }
 
@@ -177,7 +175,8 @@ class _BouncingState extends State<Bouncing> with SingleTickerProviderStateMixin
   /// Method called when we need to now if a specific touch position is inside the given
   /// child render box
   bool _isOutsideChildBox(Offset touchPosition) {
-    final RenderBox? childRenderBox = _childKey.currentContext?.findRenderObject() as RenderBox?;
+    final RenderBox? childRenderBox =
+        _childKey.currentContext?.findRenderObject() as RenderBox?;
     if (childRenderBox == null) {
       return true;
     }
@@ -198,12 +197,11 @@ extension BouncingEx on Widget {
     double scale = 1,
     Duration duration = const Duration(milliseconds: 200),
     bool stayOnBottom = false,
-  }) =>
-      Bouncing(
-        onPressed: onTap,
-        scaleFactor: scale,
-        duration: duration,
-        stayOnBottom: stayOnBottom,
-        child: this,
-      );
+  }) => Bouncing(
+    onPressed: onTap,
+    scaleFactor: scale,
+    duration: duration,
+    stayOnBottom: stayOnBottom,
+    child: this,
+  );
 }

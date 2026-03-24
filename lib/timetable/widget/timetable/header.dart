@@ -1,22 +1,16 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:mimir/l10n/time.dart';
 import 'package:mimir/school/utils.dart';
+import 'package:mimir/utils/weekday.dart';
 import 'package:rettulf/rettulf.dart';
 
-Color? getTimetableHeaderColor(
-  BuildContext context, {
-  bool selected = false,
-}) {
+Color? getTimetableHeaderColor(BuildContext context, {bool selected = false}) {
   if (selected) {
     return context.colorScheme.secondaryContainer;
   }
   return null;
 }
 
-Color? getTimetableHeaderDashLinedColor(
-  BuildContext context,
-) {
+Color? getTimetableHeaderDashLinedColor(BuildContext context) {
   return context.colorScheme.surfaceTint.withValues(alpha: 0.35);
 }
 
@@ -42,12 +36,8 @@ class TimetableHeader extends StatelessWidget {
 
     return [
       Container(
-        decoration: BoxDecoration(
-          color: getTimetableHeaderColor(context),
-        ),
-        child: MonthHeaderCellTextBox(
-          month: date.month,
-        ),
+        decoration: BoxDecoration(color: getTimetableHeaderColor(context)),
+        child: MonthHeaderCellTextBox(month: date.month),
       ).expanded(),
       ...Weekday.monday.genSequenceStartWithThis().map((weekday) {
         return Expanded(
@@ -122,36 +112,19 @@ class HeaderCellTextBox extends StatelessWidget {
     );
     final day = date.month == firstDateInWeek.month || date.day != 1
         ? "${date.day}"
-        : DateFormat("MMM", context.locale.toString()).format(DateTime(0, date.month));
-    return CustomHeaderCellTextBox(
-      line1: weekday.l10nShort(),
-      line2: day,
-    );
+        : "${date.month}月";
+    return CustomHeaderCellTextBox(line1: weekday.shortLabel, line2: day);
   }
 }
-
-final _monthAbbr = DateFormat("MMM");
 
 class MonthHeaderCellTextBox extends StatelessWidget {
   final int month;
 
-  const MonthHeaderCellTextBox({
-    super.key,
-    required this.month,
-  });
+  const MonthHeaderCellTextBox({super.key, required this.month});
 
   @override
   Widget build(BuildContext context) {
-    if (context.locale.languageCode == "zh") {
-      return CustomHeaderCellTextBox(
-        line1: "$month",
-        line2: "月",
-      );
-    }
-    return CustomHeaderCellTextBox(
-      line1: "",
-      line2: _monthAbbr.format(DateTime(0, month)),
-    );
+    return CustomHeaderCellTextBox(line1: "$month", line2: "月");
   }
 }
 

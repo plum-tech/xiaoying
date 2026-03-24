@@ -11,7 +11,8 @@ final _log = Logger(
     // Number of method calls to be displayed
     errorMethodCount: 8,
     // Print an emoji for each log message
-    dateTimeFormat: DateTimeFormat.onlyTimeAndSinceStart, // Should each log print contain a timestamp
+    dateTimeFormat: DateTimeFormat
+        .onlyTimeAndSinceStart, // Should each log print contain a timestamp
   ),
 );
 
@@ -57,7 +58,13 @@ class BoxFieldWithDefaultNotifier<T> extends StateNotifier<T> {
   final T Function() getDefault;
   final FutureOr<void> Function(T v) set;
 
-  BoxFieldWithDefaultNotifier(super._state, this.listenable, this.get, this.set, this.getDefault) {
+  BoxFieldWithDefaultNotifier(
+    super._state,
+    this.listenable,
+    this.get,
+    this.set,
+    this.getDefault,
+  ) {
     listenable.addListener(_refresh);
   }
 
@@ -117,7 +124,9 @@ class BoxChangeStreamNotifier extends ChangeNotifier {
   late StreamSubscription _subscription;
 
   BoxChangeStreamNotifier(this.stream, this.filter) {
-    _subscription = (filter != null ? stream.where(filter!) : stream).listen((event) {
+    _subscription = (filter != null ? stream.where(filter!) : stream).listen((
+      event,
+    ) {
       _refresh();
     });
   }
@@ -139,12 +148,13 @@ class BoxFieldStreamNotifier<T> extends StateNotifier<T?> {
   late StreamSubscription _subscription;
 
   BoxFieldStreamNotifier(super._state, this.boxStream, this.filter) {
-    _subscription = (filter != null ? boxStream.where(filter!) : boxStream).listen((event) {
-      final v = event.value;
-      if (v is T?) {
-        state = v;
-      }
-    });
+    _subscription = (filter != null ? boxStream.where(filter!) : boxStream)
+        .listen((event) {
+          final v = event.value;
+          if (v is T?) {
+            state = v;
+          }
+        });
   }
 
   @override
@@ -172,7 +182,8 @@ extension BoxProviderX on Box {
   }
 
   /// For generic class, like [List] or [Map], please specify the [get] for type conversion.
-  StateNotifierProvider<BoxFieldWithDefaultNotifier<T>, T> providerWithDefault<T>(
+  StateNotifierProvider<BoxFieldWithDefaultNotifier<T>, T>
+  providerWithDefault<T>(
     dynamic key,
     T Function() getDefault, {
     T? Function()? get,
@@ -190,12 +201,16 @@ extension BoxProviderX on Box {
   }
 
   /// For generic class, like [List] or [Map], please specify the [get] for type conversion.
-  StateNotifierProviderFamily<BoxFieldNotifier<T>, T?, Arg> providerFamily<T, Arg>(
+  StateNotifierProviderFamily<BoxFieldNotifier<T>, T?, Arg>
+  providerFamily<T, Arg>(
     dynamic Function(Arg arg) keyOf, {
     T? Function(Arg arg)? get,
     FutureOr<void> Function(Arg arg, T? v)? set,
   }) {
-    return StateNotifierProvider.family<BoxFieldNotifier<T>, T?, Arg>((ref, arg) {
+    return StateNotifierProvider.family<BoxFieldNotifier<T>, T?, Arg>((
+      ref,
+      arg,
+    ) {
       return BoxFieldNotifier(
         get != null ? get.call(arg) : safeGet<T>(arg),
         listenable(keys: [keyOf(arg)]),
@@ -205,17 +220,14 @@ extension BoxProviderX on Box {
     });
   }
 
-  ChangeNotifierProvider changeProvider(
-    List<dynamic> keys,
-  ) {
+  ChangeNotifierProvider changeProvider(List<dynamic> keys) {
     return ChangeNotifierProvider((ref) {
       return BoxChangeNotifier(listenable(keys: keys));
     });
   }
 
-  StateNotifierProvider<BoxFieldExistsChangeNotifier, bool> existsChangeProvider(
-    dynamic key,
-  ) {
+  StateNotifierProvider<BoxFieldExistsChangeNotifier, bool>
+  existsChangeProvider(dynamic key) {
     return StateNotifierProvider((ref) {
       return BoxFieldExistsChangeNotifier(
         containsKey(key),
@@ -225,9 +237,8 @@ extension BoxProviderX on Box {
     });
   }
 
-  StateNotifierProviderFamily<BoxFieldExistsChangeNotifier, bool, Arg> existsChangeProviderFamily<Arg>(
-    dynamic Function(Arg arg) keyOf,
-  ) {
+  StateNotifierProviderFamily<BoxFieldExistsChangeNotifier, bool, Arg>
+  existsChangeProviderFamily<Arg>(dynamic Function(Arg arg) keyOf) {
     return StateNotifierProvider.family((ref, arg) {
       return BoxFieldExistsChangeNotifier(
         containsKey(keyOf(arg)),
@@ -246,24 +257,31 @@ extension BoxProviderX on Box {
     });
   }
 
-  StateNotifierProviderFamily<BoxFieldStreamNotifier<T>, T?, Arg> streamProviderFamily<T, Arg>({
+  StateNotifierProviderFamily<BoxFieldStreamNotifier<T>, T?, Arg>
+  streamProviderFamily<T, Arg>({
     required T? Function(Arg arg) initial,
     required bool Function(BoxEvent event, Arg arg) filter,
   }) {
-    return StateNotifierProvider.family<BoxFieldStreamNotifier<T>, T?, Arg>((ref, arg) {
-      return BoxFieldStreamNotifier(initial(arg), watch(), (event) => filter(event, arg));
+    return StateNotifierProvider.family<BoxFieldStreamNotifier<T>, T?, Arg>((
+      ref,
+      arg,
+    ) {
+      return BoxFieldStreamNotifier(
+        initial(arg),
+        watch(),
+        (event) => filter(event, arg),
+      );
     });
   }
 
-  ChangeNotifierProvider streamChangeProvider({
-    BoxEventFilter? filter,
-  }) {
+  ChangeNotifierProvider streamChangeProvider({BoxEventFilter? filter}) {
     return ChangeNotifierProvider((ref) {
       return BoxChangeStreamNotifier(watch(), filter);
     });
   }
 
-  ChangeNotifierProviderFamily<BoxChangeStreamNotifier, Arg> streamChangeProviderFamily<Arg>(
+  ChangeNotifierProviderFamily<BoxChangeStreamNotifier, Arg>
+  streamChangeProviderFamily<Arg>(
     bool Function(BoxEvent event, Arg arg) filter,
   ) {
     return ChangeNotifierProvider.family((ref, arg) {

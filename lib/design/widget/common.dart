@@ -25,7 +25,8 @@ class LeavingBlank extends StatelessWidget {
     Widget? action,
   }) {
     return LeavingBlank.builder(
-      iconBuilder: (ctx) => icon.make(size: size, color: ctx.colorScheme.primary),
+      iconBuilder: (ctx) =>
+          icon.make(size: size, color: ctx.colorScheme.primary),
       desc: desc,
       subtitle: subtitle,
       action: action,
@@ -43,7 +44,8 @@ class LeavingBlank extends StatelessWidget {
     Widget? action,
   }) {
     return LeavingBlank.builder(
-      iconBuilder: (ctx) => SvgPicture.asset(assetName, width: width, height: height),
+      iconBuilder: (ctx) =>
+          SvgPicture.asset(assetName, width: width, height: height),
       desc: desc,
       subtitle: subtitle,
       action: action,
@@ -57,19 +59,18 @@ class LeavingBlank extends StatelessWidget {
     final subtitle = this.subtitle;
     Widget icon = iconBuilder(context).padAll(20);
     return [
-      icon,
-      if (desc != null) buildDesc(context, desc),
-      if (subtitle != null) subtitle,
-      if (action != null) action,
-    ].column(maa: MainAxisAlignment.spaceAround, mas: MainAxisSize.min).center();
+          icon,
+          if (desc != null) buildDesc(context, desc),
+          if (subtitle != null) subtitle,
+          if (action != null) action,
+        ]
+        .column(maa: MainAxisAlignment.spaceAround, mas: MainAxisSize.min)
+        .center();
   }
 
   Widget buildDesc(BuildContext ctx, String desc) {
     return desc
-        .text(
-          style: ctx.textTheme.titleLarge,
-          textAlign: TextAlign.center,
-        )
+        .text(style: ctx.textTheme.titleLarge, textAlign: TextAlign.center)
         .center()
         .padAll(10);
   }

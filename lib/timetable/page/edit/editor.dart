@@ -11,24 +11,20 @@ import 'package:mimir/design/adaptive/swipe.dart';
 import 'package:mimir/design/widget/card.dart';
 import 'package:mimir/design/widget/expansion_tile.dart';
 import 'package:mimir/entity/campus.dart';
-import 'package:mimir/l10n/extension.dart';
 import 'package:rettulf/rettulf.dart';
-import 'package:mimir/l10n/time.dart';
 import 'package:mimir/settings/settings.dart';
+import 'package:mimir/utils/date.dart';
 import 'package:mimir/utils/save.dart';
+import 'package:mimir/utils/weekday.dart';
 
 import '../../entity/timetable.dart';
-import '../../i18n.dart';
 import 'course_editor.dart';
 import '../preview.dart';
 
 class TimetableEditorPage extends StatefulWidget {
   final Timetable timetable;
 
-  const TimetableEditorPage({
-    super.key,
-    required this.timetable,
-  });
+  const TimetableEditorPage({super.key, required this.timetable});
 
   @override
   State<TimetableEditorPage> createState() => _TimetableEditorPageState();
@@ -38,7 +34,9 @@ class _TimetableEditorPageState extends State<TimetableEditorPage> {
   final _formKey = GlobalKey<FormState>();
   late final $name = TextEditingController(text: widget.timetable.name);
   late final $startDate = ValueNotifier(widget.timetable.startDate);
-  late final $signature = TextEditingController(text: widget.timetable.signature);
+  late final $signature = TextEditingController(
+    text: widget.timetable.signature,
+  );
   late var courses = Map.of(widget.timetable.courses);
   late var campus = widget.timetable.campus;
   late var lastCourseKey = widget.timetable.lastCourseKey;
@@ -84,16 +82,10 @@ class _TimetableEditorPageState extends State<TimetableEditorPage> {
         body: CustomScrollView(
           slivers: [
             SliverAppBar.medium(
-              title: i18n.import.timetableInfo.text(),
+              title: "课程表信息".text(),
               actions: [
-                PlatformTextButton(
-                  onPressed: onPreview,
-                  child: i18n.preview.text(),
-                ),
-                PlatformTextButton(
-                  onPressed: onSave,
-                  child: i18n.save.text(),
-                ),
+                PlatformTextButton(onPressed: onPreview, child: "预览".text()),
+                PlatformTextButton(onPressed: onSave, child: "保存".text()),
               ],
             ),
             if (navIndex == 0) ...buildInfoTab() else ...buildAdvancedTab(),
@@ -101,16 +93,16 @@ class _TimetableEditorPageState extends State<TimetableEditorPage> {
         ),
         bottomNavigationBar: NavigationBar(
           selectedIndex: navIndex,
-          destinations: [
+          destinations: const [
             NavigationDestination(
-              icon: const Icon(Icons.info_outline),
-              selectedIcon: const Icon(Icons.info),
-              label: i18n.editor.infoTab,
+              icon: Icon(Icons.info_outline),
+              selectedIcon: Icon(Icons.info),
+              label: "信息",
             ),
             NavigationDestination(
-              icon: const Icon(Icons.calendar_month_outlined),
-              selectedIcon: const Icon(Icons.calendar_month),
-              label: i18n.editor.advancedTab,
+              icon: Icon(Icons.calendar_month_outlined),
+              selectedIcon: Icon(Icons.calendar_month),
+              label: "高级",
             ),
           ],
           onDestinationSelected: (newIndex) {
@@ -125,44 +117,48 @@ class _TimetableEditorPageState extends State<TimetableEditorPage> {
 
   List<Widget> buildInfoTab() {
     return [
-      SliverList.list(children: [
-        buildDescForm(),
-        buildStartDate(),
-        buildCampus(),
-        buildSignature(),
-      ]),
+      SliverList.list(
+        children: [
+          buildDescForm(),
+          buildStartDate(),
+          buildCampus(),
+          buildSignature(),
+        ],
+      ),
     ];
   }
 
   Widget buildCampus() {
     return ListTile(
-      title: i18n.course.campus.text(),
+      title: "校区".text(),
       subtitle: Campus.values
-          .map((c) => ChoiceChip(
-                label: c.l10n().text(),
-                selected: c == campus,
-                onSelected: (value) {
-                  setState(() {
-                    campus = c;
-                  });
-                },
-              ))
+          .map(
+            (c) => ChoiceChip(
+              label: c.label.text(),
+              selected: c == campus,
+              onSelected: (value) {
+                setState(() {
+                  campus = c;
+                });
+              },
+            ),
+          )
           .toList()
           .wrap(spacing: 4),
     );
   }
 
   List<Widget> buildAdvancedTab() {
-    final code2Courses = courses.values.groupListsBy((c) => c.courseCode).entries.toList();
+    final code2Courses = courses.values
+        .groupListsBy((c) => c.courseCode)
+        .entries
+        .toList();
     code2Courses.sortBy((p) => p.key);
     for (var p in code2Courses) {
       p.value.sortBy((l) => l.courseCode);
     }
     return [
-      SliverList.list(children: [
-        addCourseTile(),
-        const Divider(thickness: 2),
-      ]),
+      SliverList.list(children: [addCourseTile(), const Divider(thickness: 2)]),
       SliverList.builder(
         itemCount: code2Courses.length,
         itemBuilder: (ctx, i) {
@@ -184,14 +180,11 @@ class _TimetableEditorPageState extends State<TimetableEditorPage> {
 
   Widget addCourseTile() {
     return ListTile(
-      title: i18n.editor.addCourse.text(),
+      title: "添加一个课程".text(),
       trailing: Icon(context.icons.add),
       onTap: () async {
         final newCourse = await context.showSheet<Course>(
-          (ctx) => SitCourseEditorPage(
-            title: i18n.editor.newCourse,
-            course: null,
-          ),
+          (ctx) => const SitCourseEditorPage(title: "创建课程", course: null),
         );
         if (newCourse == null) return;
         onCourseAdded(newCourse);
@@ -227,9 +220,7 @@ class _TimetableEditorPageState extends State<TimetableEditorPage> {
 
   void onCourseAdded(Course course) {
     markChanged();
-    course = course.copyWith(
-      courseKey: lastCourseKey++,
-    );
+    course = course.copyWith(courseKey: lastCourseKey++);
     setState(() {
       courses["${course.courseKey}"] = course;
     });
@@ -248,11 +239,14 @@ class _TimetableEditorPageState extends State<TimetableEditorPage> {
   Widget buildStartDate() {
     return ListTile(
       leading: const Icon(Icons.alarm),
-      title: i18n.startWith.text(),
+      title: "起始于".text(),
       trailing: FilledButton(
-        child: $startDate >> (ctx, value) => ctx.formatYmdText(value).text(),
+        child: $startDate >> (ctx, value) => formatChineseDate(value).text(),
         onPressed: () async {
-          final date = await _pickTimetableStartDate(context, initial: $startDate.value);
+          final date = await _pickTimetableStartDate(
+            context,
+            initial: $startDate.value,
+          );
           if (date != null) {
             $startDate.value = DateTime(date.year, date.month, date.day);
           }
@@ -265,12 +259,10 @@ class _TimetableEditorPageState extends State<TimetableEditorPage> {
     return ListTile(
       isThreeLine: true,
       leading: const Icon(Icons.drive_file_rename_outline),
-      title: i18n.signature.text(),
+      title: "签名".text(),
       subtitle: TextField(
         controller: $signature,
-        decoration: InputDecoration(
-          hintText: i18n.signaturePlaceholder,
-        ),
+        decoration: const InputDecoration(hintText: "你的名字"),
       ),
     );
   }
@@ -322,9 +314,9 @@ class _TimetableEditorPageState extends State<TimetableEditorPage> {
               LengthLimitingTextInputFormatter(Timetable.maxNameLength),
               FilteringTextInputFormatter.deny("\n"),
             ],
-            decoration: InputDecoration(
-              labelText: i18n.editor.name,
-              border: const OutlineInputBorder(),
+            decoration: const InputDecoration(
+              labelText: "名称",
+              border: OutlineInputBorder(),
             ),
           ).padAll(10),
         ],
@@ -344,7 +336,8 @@ Future<DateTime?> _pickTimetableStartDate(
     currentDate: now,
     firstDate: DateTime(now.year - 4),
     lastDate: DateTime(now.year + 2),
-    selectableDayPredicate: (DateTime dataTime) => dataTime.weekday == DateTime.monday,
+    selectableDayPredicate: (DateTime dataTime) =>
+        dataTime.weekday == DateTime.monday,
   );
 }
 
@@ -372,15 +365,18 @@ class TimetableEditableCourseCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final onCourseRemoved = this.onCourseRemoved;
     final allHidden = courses.every((c) => c.hidden);
-    final templateStyle = TextStyle(color: allHidden ? context.theme.disabledColor : null);
+    final templateStyle = TextStyle(
+      color: allHidden ? context.theme.disabledColor : null,
+    );
     return AnimatedExpansionTile(
       visualDensity: VisualDensity.compact,
       rotateTrailing: false,
       title: template.courseName.text(style: templateStyle),
       subtitle: [
         if (template.courseCode.isNotEmpty)
-          "${i18n.course.courseCode} ${template.courseCode}".text(style: templateStyle),
-        if (template.classCode.isNotEmpty) "${i18n.course.classCode} ${template.classCode}".text(style: templateStyle),
+          "课程代码 ${template.courseCode}".text(style: templateStyle),
+        if (template.classCode.isNotEmpty)
+          "教学班 ${template.classCode}".text(style: templateStyle),
       ].column(caa: CrossAxisAlignment.start),
       trailing: [
         PlatformIconButton(
@@ -390,7 +386,7 @@ class TimetableEditableCourseCard extends StatelessWidget {
             final tempItem = template.createSubItem(courseKey: 0);
             final newItem = await context.showSheet(
               (context) => SitCourseEditorPage(
-                title: i18n.editor.newCourse,
+                title: "创建课程",
                 course: tempItem,
                 editable: const SitCourseEditable.item(),
               ),
@@ -405,7 +401,7 @@ class TimetableEditableCourseCard extends StatelessWidget {
           onPressed: () async {
             final newTemplate = await context.showSheet<Course>(
               (context) => SitCourseEditorPage(
-                title: i18n.editor.editCourse,
+                title: "编辑课程",
                 editable: const SitCourseEditable.template(),
                 course: template,
               ),
@@ -418,8 +414,12 @@ class TimetableEditableCourseCard extends StatelessWidget {
 
       // sub-courses
       children: courses.mapIndexed((i, course) {
-        final weekNumbers = course.weekIndices.l10n();
-        final (:begin, :end) = calcBeginEndTimePoint(course.timeslots, campus, course.place);
+        final weekNumbers = course.weekIndices.labels;
+        final (:begin, :end) = calcBeginEndTimePoint(
+          course.timeslots,
+          campus,
+          course.place,
+        );
         return WithSwipeAction(
           childKey: ValueKey(course.courseKey),
           right: onCourseRemoved == null
@@ -437,7 +437,8 @@ class TimetableEditableCourseCard extends StatelessWidget {
             title: course.place.text(),
             subtitle: [
               course.teachers.join(", ").text(),
-              "${Weekday.fromIndex(course.dayIndex).l10n()} ${begin.l10n(context)}–${end.l10n(context)}".text(),
+              "${Weekday.fromIndex(course.dayIndex).label} ${begin.label}–${end.label}"
+                  .text(),
               ...weekNumbers.map((n) => n.text()),
             ].column(mas: MainAxisSize.min, caa: CrossAxisAlignment.start),
             trailing: PlatformIconButton(
@@ -446,7 +447,7 @@ class TimetableEditableCourseCard extends StatelessWidget {
               onPressed: () async {
                 final newItem = await context.showSheet<Course>(
                   (context) => SitCourseEditorPage(
-                    title: i18n.editor.editCourse,
+                    title: "编辑课程",
                     course: course,
                     editable: const SitCourseEditable.item(),
                   ),
@@ -467,9 +468,7 @@ class TimetableEditableCourseCard extends StatelessWidget {
 }
 
 extension _SitCourseX on Course {
-  Course createSubItem({
-    required int courseKey,
-  }) {
+  Course createSubItem({required int courseKey}) {
     return Course(
       courseKey: courseKey,
       courseName: courseName,

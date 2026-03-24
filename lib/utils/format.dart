@@ -1,9 +1,6 @@
 import 'package:collection/collection.dart';
 
-String formatWithoutTrailingZeros(
-  double amount, {
-  int fractionDigits = 2,
-}) {
+String formatWithoutTrailingZeros(double amount, {int fractionDigits = 2}) {
   if (amount == 0) return "0";
   final number = amount.toStringAsFixed(fractionDigits);
   if (number.contains('.')) {
@@ -24,7 +21,9 @@ final _trailingIntRe = RegExp(r"(.*\s+)(\d+)$");
 
 String getDuplicateFileName(String origin, {List<String>? all}) {
   assert(all == null || all.contains(origin));
-  final (name: originName, number: originNumber) = _extractTrailingNumber(origin);
+  final (name: originName, number: originNumber) = _extractTrailingNumber(
+    origin,
+  );
   if (originNumber != null && (all == null || all.length <= 1)) {
     return "$originName${originNumber + 1}";
   }
@@ -33,7 +32,9 @@ String getDuplicateFileName(String origin, {List<String>? all}) {
   for (final file in all) {
     final (:name, :number) = _extractTrailingNumber(file);
     if (number == null) continue;
-    if (file == origin || (originNumber == null && name == "$originName ") || name == originName) {
+    if (file == origin ||
+        (originNumber == null && name == "$originName ") ||
+        name == originName) {
       numbers.add(number);
     }
   }

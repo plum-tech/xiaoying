@@ -3,7 +3,6 @@ import 'package:rettulf/rettulf.dart';
 import 'package:mimir/school/utils.dart';
 
 import '../entity/school.dart';
-import "../i18n.dart";
 
 class SemesterSelector extends StatefulWidget {
   final int? baseYear;
@@ -48,10 +47,10 @@ class _SemesterSelectorState extends State<SemesterSelector> {
 
   @override
   Widget build(BuildContext context) {
-    return [
-      buildYearSelector().padH(4),
-      buildSemesterSelector().padH(4),
-    ].row(caa: CrossAxisAlignment.start, mas: MainAxisSize.min).padSymmetric(v: 5).center();
+    return [buildYearSelector().padH(4), buildSemesterSelector().padH(4)]
+        .row(caa: CrossAxisAlignment.start, mas: MainAxisSize.min)
+        .padSymmetric(v: 5)
+        .center();
   }
 
   /// generate semesters in reverse order
@@ -72,19 +71,21 @@ class _SemesterSelectorState extends State<SemesterSelector> {
     final List<int> yearList = _generateYearList().toList();
 
     return DropdownMenu<int>(
-      label: i18n.course.schoolYear.text(),
+      label: "学年".text(),
       initialSelection: selectedYear,
       onSelected: (int? newSelection) {
         if (newSelection != null && newSelection != selectedYear) {
           setState(() => selectedYear = newSelection);
-          widget.onSelected?.call(SemesterInfo(year: newSelection, semester: selectedSemester));
+          widget.onSelected?.call(
+            SemesterInfo(year: newSelection, semester: selectedSemester),
+          );
         }
       },
       dropdownMenuEntries: yearList
-          .map((year) => DropdownMenuEntry<int>(
-                value: year,
-                label: "$year–${year + 1}",
-              ))
+          .map(
+            (year) =>
+                DropdownMenuEntry<int>(value: year, label: "$year–${year + 1}"),
+          )
           .toList(),
     );
   }
@@ -94,19 +95,23 @@ class _SemesterSelectorState extends State<SemesterSelector> {
         ? const [Semester.all, Semester.term1, Semester.term2]
         : const [Semester.term1, Semester.term2];
     return DropdownMenu<Semester>(
-      label: i18n.course.semester.text(),
+      label: "学期".text(),
       initialSelection: selectedSemester,
       onSelected: (Semester? newSelection) {
         if (newSelection != null && newSelection != selectedSemester) {
           setState(() => selectedSemester = newSelection);
-          widget.onSelected?.call(SemesterInfo(year: selectedYear, semester: newSelection));
+          widget.onSelected?.call(
+            SemesterInfo(year: selectedYear, semester: newSelection),
+          );
         }
       },
       dropdownMenuEntries: semesters
-          .map((semester) => DropdownMenuEntry<Semester>(
-                value: semester,
-                label: semester.l10n(),
-              ))
+          .map(
+            (semester) => DropdownMenuEntry<Semester>(
+              value: semester,
+              label: semester.label,
+            ),
+          )
           .toList(),
     );
   }

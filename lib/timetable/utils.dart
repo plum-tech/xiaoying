@@ -1,14 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:rettulf/rettulf.dart';
 import 'package:mimir/design/adaptive/dialog.dart';
-import 'package:mimir/l10n/time.dart';
 import 'package:mimir/school/entity/school.dart';
 import 'package:mimir/timetable/entity/pos.dart';
+import 'package:mimir/utils/weekday.dart';
 import 'entity/timetable.dart';
 
 import 'dart:math';
-
-import 'i18n.dart';
 
 const maxWeekLength = 20;
 
@@ -21,7 +19,10 @@ DateTime estimateStartDate(int year, Semester semester) {
   if (semester == Semester.term1) {
     return findFirstWeekdayInCurrentMonth(DateTime(year, 9), DateTime.monday);
   } else {
-    return findFirstWeekdayInCurrentMonth(DateTime(year + 1, 2), DateTime.monday);
+    return findFirstWeekdayInCurrentMonth(
+      DateTime(year + 1, 2),
+      DateTime.monday,
+    );
   }
 }
 
@@ -34,7 +35,9 @@ DateTime findFirstWeekdayInCurrentMonth(DateTime current, int weekday) {
   int daysUntilWeekday = (weekday - firstDayOfMonth.weekday + 7) % 7;
 
   // Calculate the date of the first occurrence of the desired weekday in the current month.
-  DateTime firstWeekdayInMonth = firstDayOfMonth.add(Duration(days: daysUntilWeekday));
+  DateTime firstWeekdayInMonth = firstDayOfMonth.add(
+    Duration(days: daysUntilWeekday),
+  );
 
   return firstWeekdayInMonth;
 }
@@ -47,23 +50,29 @@ Future<int?> selectWeekInTimetable({
 }) async {
   final todayPos = timetable.locate(DateTime.now());
   final todayIndex = todayPos.weekIndex;
-  final controller = FixedExtentScrollController(initialItem: initialWeekIndex ?? todayIndex);
-  final selectedWeek = await context.showPicker(
+  final controller = FixedExtentScrollController(
+    initialItem: initialWeekIndex ?? todayIndex,
+  );
+  final selectedWeek =
+      await context.showPicker(
         count: 20,
         controller: controller,
         ok: submitLabel,
         okDefault: true,
         actions: [
           (ctx, curSelected) => CupertinoActionSheetAction(
-                onPressed: () {
-                  controller.animateToItem(todayIndex,
-                      duration: const Duration(milliseconds: 500), curve: Curves.fastEaseInToSlowEaseOut);
-                },
-                child: i18n.findToday.text(),
-              )
+            onPressed: () {
+              controller.animateToItem(
+                todayIndex,
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.fastEaseInToSlowEaseOut,
+              );
+            },
+            child: "找到今天".text(),
+          ),
         ],
         make: (ctx, i) {
-          return Text(i18n.weekOrderedName(number: i + 1));
+          return Text("第 ${i + 1} 周");
         },
       ) ??
       initialWeekIndex;
@@ -82,35 +91,50 @@ Future<TimetablePos?> selectDayInTimetable({
   final todayPos = timetable.locate(DateTime.now());
   final todayWeekIndex = todayPos.weekIndex;
   final todayDayIndex = todayPos.weekday.index;
-  final $week = FixedExtentScrollController(initialItem: initialPos?.weekIndex ?? todayWeekIndex);
-  final $day = FixedExtentScrollController(initialItem: initialDayIndex ?? todayDayIndex);
-  final (selectedWeek, selectedDay) = await context.showDualPicker(
+  final $week = FixedExtentScrollController(
+    initialItem: initialPos?.weekIndex ?? todayWeekIndex,
+  );
+  final $day = FixedExtentScrollController(
+    initialItem: initialDayIndex ?? todayDayIndex,
+  );
+  final (selectedWeek, selectedDay) =
+      await context.showDualPicker(
         countA: 20,
         countB: 7,
         controllerA: $week,
         controllerB: $day,
         ok: submitLabel,
         okDefault: true,
-        okEnabled: (weekSelected, daySelected) => weekSelected != initialWeekIndex || daySelected != initialDayIndex,
+        okEnabled: (weekSelected, daySelected) =>
+            weekSelected != initialWeekIndex || daySelected != initialDayIndex,
         actions: [
           (ctx, week, day) => CupertinoActionSheetAction(
-                onPressed: () {
-                  $week.animateToItem(todayWeekIndex,
-                      duration: const Duration(milliseconds: 500), curve: Curves.fastEaseInToSlowEaseOut);
+            onPressed: () {
+              $week.animateToItem(
+                todayWeekIndex,
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.fastEaseInToSlowEaseOut,
+              );
 
-                  $day.animateToItem(todayDayIndex,
-                      duration: const Duration(milliseconds: 500), curve: Curves.fastEaseInToSlowEaseOut);
-                },
-                child: i18n.findToday.text(),
-              )
+              $day.animateToItem(
+                todayDayIndex,
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.fastEaseInToSlowEaseOut,
+              );
+            },
+            child: "找到今天".text(),
+          ),
         ],
-        makeA: (ctx, i) => i18n.weekOrderedName(number: i + 1).text(),
-        makeB: (ctx, i) => Weekday.fromIndex(i).l10n().text(),
+        makeA: (ctx, i) => "第 ${i + 1} 周".text(),
+        makeB: (ctx, i) => Weekday.fromIndex(i).label.text(),
       ) ??
       (initialWeekIndex, initialDayIndex);
   $week.dispose();
   $day.dispose();
   return selectedWeek != null && selectedDay != null
-      ? TimetablePos(weekIndex: selectedWeek, weekday: Weekday.fromIndex(selectedDay))
+      ? TimetablePos(
+          weekIndex: selectedWeek,
+          weekday: Weekday.fromIndex(selectedDay),
+        )
       : null;
 }

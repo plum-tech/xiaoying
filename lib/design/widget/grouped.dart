@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
-typedef HeaderBuilder = Widget Function(
-  BuildContext context,
-  bool expanded,
-  VoidCallback toggleExpand,
-  Widget defaultTrailing,
-);
+typedef HeaderBuilder =
+    Widget Function(
+      BuildContext context,
+      bool expanded,
+      VoidCallback toggleExpand,
+      Widget defaultTrailing,
+    );
 
 class GroupedSection extends StatefulWidget {
   final bool initialExpanded;
@@ -45,7 +46,9 @@ class _GroupedSectionState extends State<GroupedSection> {
                   expanded = !expanded;
                 });
               },
-              expanded ? const Icon(Icons.expand_less) : const Icon(Icons.expand_more),
+              expanded
+                  ? const Icon(Icons.expand_less)
+                  : const Icon(Icons.expand_more),
             ),
           ),
         ),
@@ -60,7 +63,7 @@ class _GroupedSectionState extends State<GroupedSection> {
                     childCount: widget.itemCount,
                   ),
           ),
-        )
+        ),
       ],
     );
   }
@@ -133,8 +136,8 @@ class _AsyncGroupSectionState<T> extends State<AsyncGroupSection<T>> {
               trailing: isFetching
                   ? const CircularProgressIndicator.adaptive()
                   : expanded
-                      ? const Icon(Icons.expand_less)
-                      : const Icon(Icons.expand_more),
+                  ? const Icon(Icons.expand_less)
+                  : const Icon(Icons.expand_more),
             ),
           ),
         ),
@@ -144,15 +147,15 @@ class _AsyncGroupSectionState<T> extends State<AsyncGroupSection<T>> {
           child: SliverList(
             delegate: !expanded || items == null
                 ? const SliverChildListDelegate.fixed([])
-                : SliverChildBuilderDelegate(
-                    childCount: items.length,
-                    (ctx, i) {
-                      final item = items[i];
-                      return widget.itemBuilder(ctx, i, item);
-                    },
-                  ),
+                : SliverChildBuilderDelegate(childCount: items.length, (
+                    ctx,
+                    i,
+                  ) {
+                    final item = items[i];
+                    return widget.itemBuilder(ctx, i, item);
+                  }),
           ),
-        )
+        ),
       ],
     );
   }

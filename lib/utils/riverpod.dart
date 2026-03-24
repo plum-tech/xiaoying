@@ -2,13 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 extension BuildContextRiverpodX on BuildContext {
-  ProviderContainer riverpod({
-    bool listen = true,
-  }) =>
-      ProviderScope.containerOf(
-        this,
-        listen: listen,
-      );
+  ProviderContainer riverpod({bool listen = true}) =>
+      ProviderScope.containerOf(this, listen: listen);
 }
 
 class ListenableStateNotifier<T> extends StateNotifier<T> {
@@ -37,12 +32,7 @@ extension ListenableRiverpodX on Listenable {
     void Function(T v)? set,
   }) {
     return StateNotifierProvider<ListenableStateNotifier<T>, T>((ref) {
-      return ListenableStateNotifier(
-        get(),
-        this,
-        get,
-        set,
-      );
+      return ListenableStateNotifier(get(), this, get, set);
     });
   }
 }

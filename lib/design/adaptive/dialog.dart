@@ -6,8 +6,14 @@ import 'package:universal_platform/universal_platform.dart';
 
 import 'foundation.dart';
 
-typedef PickerActionWidgetBuilder = Widget Function(BuildContext context, int? selectedIndex);
-typedef DualPickerActionWidgetBuilder = Widget Function(BuildContext context, int? selectedIndexA, int? selectedIndexB);
+typedef PickerActionWidgetBuilder =
+    Widget Function(BuildContext context, int? selectedIndex);
+typedef DualPickerActionWidgetBuilder =
+    Widget Function(
+      BuildContext context,
+      int? selectedIndexA,
+      int? selectedIndexB,
+    );
 
 extension DialogEx on BuildContext {
   /// return: whether the button was hit
@@ -41,16 +47,17 @@ extension DialogEx on BuildContext {
       barrierDismissible: dismissible,
       context: this,
       builder: (ctx) => $Dialog$(
-          title: title,
-          serious: serious,
-          desc: desc,
-          primary: $Action$(
-            warning: highlight,
-            text: primary,
-            onPressed: () {
-              ctx.navigator.pop(true);
-            },
-          )),
+        title: title,
+        serious: serious,
+        desc: desc,
+        primary: $Action$(
+          warning: highlight,
+          text: primary,
+          onPressed: () {
+            ctx.navigator.pop(true);
+          },
+        ),
+      ),
     );
     return confirm == true;
   }
@@ -295,11 +302,18 @@ class _SoloPickerState extends State<SoloPicker> {
         },
         squeeze: 1.5,
         itemExtent: 32.0,
-        children: List<Widget>.generate(widget.count, (index) => widget.make(context, index)),
+        children: List<Widget>.generate(
+          widget.count,
+          (index) => widget.make(context, index),
+        ),
       ).sized(h: widget.targetHeight),
       actions: widget.actions
           ?.map(
-              (e) => ValueListenableBuilder(valueListenable: $selected, builder: (ctx, value, child) => e(ctx, value)))
+            (e) => ValueListenableBuilder(
+              valueListenable: $selected,
+              builder: (ctx, value, child) => e(ctx, value),
+            ),
+          )
           .toList(),
       cancelButton: ok == null
           ? null
@@ -375,7 +389,10 @@ class _DualPickerState extends State<DualPicker> {
           },
           squeeze: 1.5,
           itemExtent: 32.0,
-          children: List<Widget>.generate(widget.countA, (index) => widget.makeA(context, index)),
+          children: List<Widget>.generate(
+            widget.countA,
+            (index) => widget.makeA(context, index),
+          ),
         ).expanded(),
         CupertinoPicker(
           scrollController: widget.controllerB,
@@ -387,10 +404,19 @@ class _DualPickerState extends State<DualPicker> {
           },
           squeeze: 1.5,
           itemExtent: 32.0,
-          children: List<Widget>.generate(widget.countB, (index) => widget.makeB(context, index)),
+          children: List<Widget>.generate(
+            widget.countB,
+            (index) => widget.makeB(context, index),
+          ),
         ).expanded(),
       ].row().sized(h: widget.targetHeight),
-      actions: widget.actions?.map((e) => $selectedA >> (ctx, a) => $selectedB >> (ctx, b) => e(ctx, a, b)).toList(),
+      actions: widget.actions
+          ?.map(
+            (e) =>
+                $selectedA >>
+                (ctx, a) => $selectedB >> (ctx, b) => e(ctx, a, b),
+          )
+          .toList(),
       cancelButton: ok == null
           ? null
           : CupertinoActionSheetAction(

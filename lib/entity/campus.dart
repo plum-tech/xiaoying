@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:mimir/storage/hive/type_id.dart';
 
 part 'campus.g.dart';
@@ -10,5 +9,5 @@ enum Campus {
 
   const Campus();
 
-  String l10n() => "campus.$name".tr();
+  String get label => "默认校区";
 }

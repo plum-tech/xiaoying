@@ -30,7 +30,10 @@ String? encodeJsonObject<T>(T? obj, [dynamic Function(T obj)? transform]) {
   }
 }
 
-List<T>? decodeJsonList<T>(dynamic json, T Function(dynamic element) transform) {
+List<T>? decodeJsonList<T>(
+  dynamic json,
+  T Function(dynamic element) transform,
+) {
   if (json == null) return null;
   try {
     if (json is String) {
@@ -46,7 +49,10 @@ List<T>? decodeJsonList<T>(dynamic json, T Function(dynamic element) transform) 
   }
 }
 
-String? encodeJsonList<T>(List<T>? list, [dynamic Function(T element)? transform]) {
+String? encodeJsonList<T>(
+  List<T>? list, [
+  dynamic Function(T element)? transform,
+]) {
   if (list == null) return null;
   try {
     final json = list.map(transform ?? (e) => (e as dynamic).toJson()).toList();

@@ -75,7 +75,8 @@ class AnimatedExpansionTile extends StatefulWidget {
   AnimatedExpansionTileState createState() => AnimatedExpansionTileState();
 }
 
-class AnimatedExpansionTileState extends State<AnimatedExpansionTile> with TickerProviderStateMixin {
+class AnimatedExpansionTileState extends State<AnimatedExpansionTile>
+    with TickerProviderStateMixin {
   late bool _expanded;
   bool? _rotateTrailing;
   bool? _noTrailing;
@@ -169,7 +170,9 @@ class AnimatedExpansionTileState extends State<AnimatedExpansionTile> with Ticke
             sizeCurve: widget.sizeCurve ?? Curves.fastEaseInToSlowEaseOut,
             firstChild: widget.children[i],
             secondChild: const SizedBox.shrink(),
-            crossFadeState: _expanded ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+            crossFadeState: _expanded
+                ? CrossFadeState.showFirst
+                : CrossFadeState.showSecond,
           ),
         ),
       ],
@@ -180,7 +183,10 @@ class AnimatedExpansionTileState extends State<AnimatedExpansionTile> with Ticke
   Widget? _trailingIcon() {
     final trailing = widget.trailing ?? const Icon(Icons.keyboard_arrow_down);
     if (_rotateTrailing!) {
-      return RotationTransition(turns: Tween(begin: 0.0, end: 0.5).animate(_iconController), child: trailing);
+      return RotationTransition(
+        turns: Tween(begin: 0.0, end: 0.5).animate(_iconController),
+        child: trailing,
+      );
     } else {
       // If developer sets rotateTrailing to false the widget will just be returned.
       return trailing;

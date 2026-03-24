@@ -29,7 +29,10 @@ class VersionAdapter extends TypeAdapter<Version> {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is VersionAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
+      identical(this, other) ||
+      other is VersionAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
 }
 
 class ThemeModeAdapter extends TypeAdapter<ThemeMode> {
@@ -52,7 +55,10 @@ class ThemeModeAdapter extends TypeAdapter<ThemeMode> {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is ThemeModeAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
+      identical(this, other) ||
+      other is ThemeModeAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
 }
 
 /// There is no need to consider revision
@@ -78,5 +84,8 @@ class SizeAdapter extends TypeAdapter<Size> {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is SizeAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
+      identical(this, other) ||
+      other is SizeAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
 }

@@ -35,15 +35,18 @@ class Files {
 }
 
 extension DirectoryX on Directory {
-  File subFile(String p1, [String? p2, String? p3, String? p4]) => File(join(path, p1, p2, p3, p4));
+  File subFile(String p1, [String? p2, String? p3, String? p4]) =>
+      File(join(path, p1, p2, p3, p4));
 
-  Directory subDir(String p1, [String? p2, String? p3, String? p4]) => Directory(join(path, p1, p2, p3, p4));
+  Directory subDir(String p1, [String? p2, String? p3, String? p4]) =>
+      Directory(join(path, p1, p2, p3, p4));
 }
 
 class OaAnnounceFiles {
   const OaAnnounceFiles._();
 
-  Directory attachmentDir(String uuid) => Files.internal.subDir("attachment", uuid);
+  Directory attachmentDir(String uuid) =>
+      Files.internal.subDir("attachment", uuid);
 
   Future<void> init() async {}
 }
@@ -58,7 +61,9 @@ class TempDir {
     return _realDir ??= Files._temp.createTempSync(R.appId);
   }
 
-  File subFile(String p1, [String? p2, String? p3, String? p4]) => dir().subFile(p1, p2, p3, p4);
+  File subFile(String p1, [String? p2, String? p3, String? p4]) =>
+      dir().subFile(p1, p2, p3, p4);
 
-  Directory subDir(String p1, [String? p2, String? p3, String? p4]) => dir().subDir(p1, p2, p3, p4);
+  Directory subDir(String p1, [String? p2, String? p3, String? p4]) =>
+      dir().subDir(p1, p2, p3, p4);
 }

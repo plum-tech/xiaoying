@@ -12,15 +12,10 @@ import '../entity/timetable_entity.dart';
 import '../entity/pos.dart';
 import '../widget/timetable/board.dart';
 
-import '../i18n.dart';
-
 class TimetablePreviewPage extends StatefulWidget {
   final TimetableEntity entity;
 
-  const TimetablePreviewPage({
-    super.key,
-    required this.entity,
-  });
+  const TimetablePreviewPage({super.key, required this.entity});
 
   @override
   State<StatefulWidget> createState() => _TimetablePreviewPageState();
@@ -58,7 +53,8 @@ class _TimetablePreviewPageState extends State<TimetablePreviewPage> {
         title: AnimatedDualSwitcher(
           transitionDuration: Durations.medium4,
           switchDuration: const Duration(milliseconds: 2000),
-          trueChild: $currentPos >> (ctx, pos) => i18n.weekOrderedName(number: pos.weekIndex + 1).text(),
+          trueChild:
+              $currentPos >> (ctx, pos) => "第 ${pos.weekIndex + 1} 周".text(),
           falseChild: TextScroll(timetable.name),
           alwaysSwitchTo: false,
           initial: false,
@@ -70,7 +66,7 @@ class _TimetablePreviewPageState extends State<TimetablePreviewPage> {
             onPressed: () {
               $displayMode.value = $displayMode.value.toggle();
             },
-          )
+          ),
         ],
       ),
       body: TimetableBoard(
@@ -90,8 +86,6 @@ Future<void> previewTimetable(
 }) async {
   assert(timetable != null || entity != null);
   await context.showSheet(
-    (context) => TimetablePreviewPage(
-      entity: entity ?? timetable!.resolve(),
-    ),
+    (context) => TimetablePreviewPage(entity: entity ?? timetable!.resolve()),
   );
 }

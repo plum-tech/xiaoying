@@ -20,19 +20,29 @@ class TimetableStorage {
   final timetable = HiveTable.withUuid<Timetable>(
     base: _K.timetable,
     box: HiveInit.timetable,
-    useJson: (fromJson: Timetable.fromJson, toJson: (timetable) => timetable.toJson()),
+    useJson: (
+      fromJson: Timetable.fromJson,
+      toJson: (timetable) => timetable.toJson(),
+    ),
   );
 
   final palette = HiveTable.withUuid<TimetablePalette>(
     base: _K.palette,
     box: HiveInit.timetable,
-    useJson: (fromJson: TimetablePalette.fromJson, toJson: (palette) => palette.toJson()),
-    external: ExternalTable.unmodifiableMap(BuiltinTimetablePalettes.uuid2palette),
+    useJson: (
+      fromJson: TimetablePalette.fromJson,
+      toJson: (palette) => palette.toJson(),
+    ),
+    external: ExternalTable.unmodifiableMap(
+      BuiltinTimetablePalettes.uuid2palette,
+    ),
   );
 
   TimetableStorage();
 
-  DisplayMode? get lastDisplayMode => DisplayMode.at(box.safeGet(_K.lastDisplayMode));
+  DisplayMode? get lastDisplayMode =>
+      DisplayMode.at(box.safeGet(_K.lastDisplayMode));
 
-  set lastDisplayMode(DisplayMode? newValue) => box.safePut(_K.lastDisplayMode, newValue?.index);
+  set lastDisplayMode(DisplayMode? newValue) =>
+      box.safePut(_K.lastDisplayMode, newValue?.index);
 }

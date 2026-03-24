@@ -1,5 +1,5 @@
-import 'package:mimir/l10n/time.dart';
 import 'package:mimir/school/entity/school.dart';
+import 'package:mimir/utils/weekday.dart';
 
 /// 将 "第几周、周几" 转换为日期. 如, 开学日期为 2021-9-1, 那么将第一周周一转换为 2021-9-1
 DateTime reflectWeekDayIndexToDate({
@@ -19,7 +19,11 @@ String reformatPlace(String place) {
   if (matched == null) return place;
   final inParentheses = matched.group(1);
   if (inParentheses == null) return place;
-  if (!inParentheses.contains("一教") && !inParentheses.contains("二教") && !inParentheses.contains("三教")) return place;
+  if (!inParentheses.contains("一教") &&
+      !inParentheses.contains("二教") &&
+      !inParentheses.contains("三教")) {
+    return place;
+  }
   final outParentheses = place.replaceRange(matched.start, matched.end, "");
   return "$inParentheses($outParentheses)";
 }

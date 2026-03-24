@@ -48,7 +48,8 @@ class UndergraduateCourseRaw {
   @JsonKey(name: 'kch')
   final String courseCode;
 
-  factory UndergraduateCourseRaw.fromJson(Map<String, dynamic> json) => _$UndergraduateCourseRawFromJson(json);
+  factory UndergraduateCourseRaw.fromJson(Map<String, dynamic> json) =>
+      _$UndergraduateCourseRawFromJson(json);
 
   const UndergraduateCourseRaw({
     required this.courseName,

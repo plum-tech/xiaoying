@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:mimir/design/animation/progress.dart';
 import 'package:rettulf/rettulf.dart';
 import '../entity/display.dart';
-import '../i18n.dart';
 import '../entity/timetable_entity.dart';
 import '../init.dart';
 import '../entity/pos.dart';
@@ -14,17 +13,16 @@ import '../widget/timetable/board.dart';
 class TimetableBoardPage extends ConsumerStatefulWidget {
   final TimetableEntity timetable;
 
-  const TimetableBoardPage({
-    super.key,
-    required this.timetable,
-  });
+  const TimetableBoardPage({super.key, required this.timetable});
 
   @override
   ConsumerState<TimetableBoardPage> createState() => _TimetableBoardPageState();
 }
 
 class _TimetableBoardPageState extends ConsumerState<TimetableBoardPage> {
-  final $displayMode = ValueNotifier(TimetableInit.storage.lastDisplayMode ?? DisplayMode.weekly);
+  final $displayMode = ValueNotifier(
+    TimetableInit.storage.lastDisplayMode ?? DisplayMode.weekly,
+  );
   late final ValueNotifier<TimetablePos> $currentPos;
   var syncing = false;
 
@@ -51,7 +49,7 @@ class _TimetableBoardPageState extends ConsumerState<TimetableBoardPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: $currentPos >> (ctx, pos) => i18n.weekOrderedName(number: pos.weekIndex + 1).text(),
+        title: $currentPos >> (ctx, pos) => "第 ${pos.weekIndex + 1} 周".text(),
         actions: [
           buildSwitchViewButton(),
           PlatformTextButton(
@@ -59,7 +57,7 @@ class _TimetableBoardPageState extends ConsumerState<TimetableBoardPage> {
             onPressed: () async {
               await context.push("/timetable/mine");
             },
-          )
+          ),
         ],
       ),
       body: BlockWhenLoading(
@@ -76,21 +74,23 @@ class _TimetableBoardPageState extends ConsumerState<TimetableBoardPage> {
   Widget buildSwitchViewButton() {
     return $displayMode >>
         (ctx, mode) => SegmentedButton<DisplayMode>(
-              showSelectedIcon: false,
-              style: ButtonStyle(
-                padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 4)),
-                visualDensity: VisualDensity.compact,
-              ),
-              segments: DisplayMode.values
-                  .map((e) => ButtonSegment<DisplayMode>(
-                        value: e,
-                        label: e.l10n().text(),
-                      ))
-                  .toList(),
-              selected: <DisplayMode>{mode},
-              onSelectionChanged: (newSelection) {
-                $displayMode.value = mode.toggle();
-              },
-            );
+          showSelectedIcon: false,
+          style: ButtonStyle(
+            padding: WidgetStateProperty.all(
+              const EdgeInsets.symmetric(horizontal: 4),
+            ),
+            visualDensity: VisualDensity.compact,
+          ),
+          segments: DisplayMode.values
+              .map(
+                (e) =>
+                    ButtonSegment<DisplayMode>(value: e, label: e.label.text()),
+              )
+              .toList(),
+          selected: <DisplayMode>{mode},
+          onSelectionChanged: (newSelection) {
+            $displayMode.value = mode.toggle();
+          },
+        );
   }
 }

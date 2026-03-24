@@ -17,18 +17,26 @@ class TimetableSettings {
 
   TimetableSettings(this.box);
 
-  bool get autoUseImported => box.safeGet<bool>(_K.autoUseImported) ?? _kAutoUseImported;
+  bool get autoUseImported =>
+      box.safeGet<bool>(_K.autoUseImported) ?? _kAutoUseImported;
 
   set autoUseImported(bool newV) => box.safePut<bool>(_K.autoUseImported, newV);
 
-  late final $autoUseImported = box.providerWithDefault<bool>(_K.autoUseImported, () => _kAutoUseImported);
+  late final $autoUseImported = box.providerWithDefault<bool>(
+    _K.autoUseImported,
+    () => _kAutoUseImported,
+  );
 
   ValueListenable listenCellStyle() => box.listenable(keys: [_K.cellStyle]);
 
-  bool get quickLookLessonOnTap => box.safeGet<bool>(_K.quickLookLessonOnTap) ?? _kQuickLookCourseOnTap;
+  bool get quickLookLessonOnTap =>
+      box.safeGet<bool>(_K.quickLookLessonOnTap) ?? _kQuickLookCourseOnTap;
 
-  set quickLookLessonOnTap(bool newV) => box.safePut<bool>(_K.quickLookLessonOnTap, newV);
+  set quickLookLessonOnTap(bool newV) =>
+      box.safePut<bool>(_K.quickLookLessonOnTap, newV);
 
-  late final $quickLookLessonOnTap =
-      box.providerWithDefault<bool>(_K.quickLookLessonOnTap, () => _kQuickLookCourseOnTap);
+  late final $quickLookLessonOnTap = box.providerWithDefault<bool>(
+    _K.quickLookLessonOnTap,
+    () => _kQuickLookCourseOnTap,
+  );
 }

@@ -14,7 +14,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
 
 import '../entity/timetable.dart';
-import '../i18n.dart';
 import '../utils.dart';
 import 'parse.ug.dart';
 
@@ -75,15 +74,15 @@ Future<Timetable?> readTimetableWithPrompt(
       await showPermissionDeniedDialog(context, Permission.storage);
     } else if (error is FileSystemException) {
       await context.showTip(
-        title: i18n.import.formatError,
+        title: "格式错误",
         desc: error.osError?.message ?? error.message,
-        primary: i18n.ok,
+        primary: "好的",
       );
     } else {
       await context.showTip(
-        title: i18n.import.formatError,
-        desc: i18n.import.formatErrorDesc,
-        primary: i18n.ok,
+        title: "格式错误",
+        desc: "所选文件无法作为课程表导入，请选择一个课程表文件。",
+        primary: "好的",
       );
     }
     return null;
@@ -110,7 +109,7 @@ Timetable buildSampleTimetable({SemesterInfo? semesterInfo}) {
   final courses = _buildSampleCourses();
   return Timetable(
     uuid: const Uuid().v4(),
-    name: i18n.import.sampleName,
+    name: "示例课程表",
     startDate: startDate,
     campus: Settings.campus,
     schoolYear: schoolYear,

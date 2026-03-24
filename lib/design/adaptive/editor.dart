@@ -4,15 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:mimir/design/adaptive/multiplatform.dart';
-import 'package:mimir/l10n/common.dart';
 import 'package:rettulf/rettulf.dart';
 
 import 'foundation.dart';
 import 'dialog.dart';
 
-const _i18n = CommonI18n();
+const _closeText = "关闭";
+const _submitText = "提交";
+const _cancelText = "取消";
 
-typedef EditorBuilder<T> = Widget Function(BuildContext ctx, String? desc, T initial);
+typedef EditorBuilder<T> =
+    Widget Function(BuildContext ctx, String? desc, T initial);
 
 class Editor {
   static final Map<Type, EditorBuilder> _customEditor = {};
@@ -38,17 +40,19 @@ class Editor {
     if (initial is int) {
       return await showIntEditor(context, desc: desc, initial: initial) as T?;
     } else if (initial is String) {
-      return await showStringEditor(context, desc: desc, initial: initial) as T?;
+      return await showStringEditor(context, desc: desc, initial: initial)
+          as T?;
     } else if (initial is bool) {
       return await showBoolEditor(context, desc: desc, initial: initial) as T?;
     } else if (initial is DateTime) {
       return await showDateTimeEditor(
-        context,
-        desc: desc,
-        initial: initial,
-        firstDate: DateTime(0),
-        lastDate: DateTime(9999),
-      ) as T?;
+            context,
+            desc: desc,
+            initial: initial,
+            firstDate: DateTime(0),
+            lastDate: DateTime(9999),
+          )
+          as T?;
     } else {
       final customEditorBuilder = _customEditor[initial.runtimeType];
       if (customEditorBuilder != null) {
@@ -58,7 +62,8 @@ class Editor {
         );
       } else {
         if (readonlyIfNotSupport) {
-          return await showReadonlyEditor(context, desc: desc, initial: initial) as T?;
+          return await showReadonlyEditor(context, desc: desc, initial: initial)
+              as T?;
         } else {
           throw UnsupportedError("Editing $initial is not supported.");
         }
@@ -93,10 +98,7 @@ class Editor {
   }) async {
     final newValue = await showAdaptiveDialog(
       context: context,
-      builder: (ctx) => BoolEditor(
-        initial: initial,
-        desc: desc,
-      ),
+      builder: (ctx) => BoolEditor(initial: initial, desc: desc),
     );
     if (newValue == null) return null;
     return newValue;
@@ -110,11 +112,8 @@ class Editor {
   }) async {
     final newValue = await showAdaptiveDialog(
       context: context,
-      builder: (ctx) => StringEditor(
-        initial: initial,
-        title: desc,
-        secure: secure,
-      ),
+      builder: (ctx) =>
+          StringEditor(initial: initial, title: desc, secure: secure),
     );
     if (newValue == null) return null;
     return newValue;
@@ -142,10 +141,7 @@ class Editor {
   }) async {
     final newValue = await showAdaptiveDialog(
       context: context,
-      builder: (ctx) => IntEditor(
-        initial: initial,
-        title: desc,
-      ),
+      builder: (ctx) => IntEditor(initial: initial, title: desc),
     );
     if (newValue == null) return null;
     return newValue;
@@ -154,23 +150,24 @@ class Editor {
 
 extension EditorEx on Editor {
   static void registerEnumEditor<T>(List<T> values) {
-    Editor.registerEditor<T>((ctx, desc, initial) => EnumEditor<T>(
-          initial: initial,
-          title: desc,
-          values: values,
-        ));
+    Editor.registerEditor<T>(
+      (ctx, desc, initial) =>
+          EnumEditor<T>(initial: initial, title: desc, values: values),
+    );
   }
 }
 
 Widget _readonlyEditor(BuildContext ctx, WidgetBuilder make, {String? title}) {
   return $Dialog$(
-      title: title,
-      primary: $Action$(
-          text: _i18n.close,
-          onPressed: () {
-            ctx.navigator.pop(false);
-          }),
-      desc: (ctx) => make(ctx));
+    title: title,
+    primary: $Action$(
+      text: _closeText,
+      onPressed: () {
+        ctx.navigator.pop(false);
+      },
+    ),
+    desc: (ctx) => make(ctx),
+  );
 }
 
 class EnumEditor<T> extends StatefulWidget {
@@ -198,14 +195,14 @@ class _EnumEditorState<T> extends State<EnumEditor<T>> {
     return $Dialog$(
       title: widget.title,
       primary: $Action$(
-        text: _i18n.submit,
+        text: _submitText,
         isDefault: true,
         onPressed: () {
           context.navigator.pop(current);
         },
       ),
       secondary: $Action$(
-        text: _i18n.cancel,
+        text: _cancelText,
         onPressed: () {
           context.navigator.pop();
         },
@@ -213,7 +210,9 @@ class _EnumEditorState<T> extends State<EnumEditor<T>> {
       desc: (ctx) => PlatformTextButton(
         child: current.toString().text(),
         onPressed: () async {
-          final controller = FixedExtentScrollController(initialItem: initialIndex);
+          final controller = FixedExtentScrollController(
+            initialItem: initialIndex,
+          );
           controller.addListener(() {
             final selected = widget.values[controller.selectedItem];
             if (selected != current) {
@@ -260,16 +259,18 @@ class _DateTimeEditorState extends State<DateTimeEditor> {
     return $Dialog$(
       title: widget.title,
       primary: $Action$(
-          text: _i18n.submit,
-          isDefault: true,
-          onPressed: () {
-            context.navigator.pop(current);
-          }),
+        text: _submitText,
+        isDefault: true,
+        onPressed: () {
+          context.navigator.pop(current);
+        },
+      ),
       secondary: $Action$(
-          text: _i18n.cancel,
-          onPressed: () {
-            context.navigator.pop();
-          }),
+        text: _cancelText,
+        onPressed: () {
+          context.navigator.pop();
+        },
+      ),
       desc: (ctx) => PlatformTextButton(
         child: current.toString().text(),
         onPressed: () async {
@@ -319,19 +320,22 @@ class _IntEditorState extends State<IntEditor> {
   @override
   Widget build(BuildContext context) {
     return $Dialog$(
-        title: widget.title,
-        primary: $Action$(
-            text: _i18n.submit,
-            isDefault: true,
-            onPressed: () {
-              context.navigator.pop(value);
-            }),
-        secondary: $Action$(
-            text: _i18n.cancel,
-            onPressed: () {
-              context.navigator.pop();
-            }),
-        desc: (ctx) => buildBody(ctx));
+      title: widget.title,
+      primary: $Action$(
+        text: _submitText,
+        isDefault: true,
+        onPressed: () {
+          context.navigator.pop(value);
+        },
+      ),
+      secondary: $Action$(
+        text: _cancelText,
+        onPressed: () {
+          context.navigator.pop();
+        },
+      ),
+      desc: (ctx) => buildBody(ctx),
+    );
   }
 
   Widget buildBody(BuildContext ctx) {
@@ -379,11 +383,7 @@ class BoolEditor extends StatefulWidget {
   final bool initial;
   final String? desc;
 
-  const BoolEditor({
-    super.key,
-    required this.initial,
-    this.desc,
-  });
+  const BoolEditor({super.key, required this.initial, this.desc});
 
   @override
   State<BoolEditor> createState() => _BoolEditorState();
@@ -396,14 +396,14 @@ class _BoolEditorState extends State<BoolEditor> {
   Widget build(BuildContext context) {
     return $Dialog$(
       primary: $Action$(
-        text: _i18n.submit,
+        text: _submitText,
         isDefault: true,
         onPressed: () {
           context.navigator.pop(value);
         },
       ),
       secondary: $Action$(
-        text: _i18n.cancel,
+        text: _cancelText,
         onPressed: () {
           context.navigator.pop();
         },
@@ -457,18 +457,20 @@ class _StringEditorState extends State<StringEditor> {
 
   @override
   Widget build(BuildContext context) {
-    final lines = context.isPortrait ? widget.initial.length ~/ 30 + 1 : widget.initial.length ~/ 100 + 1;
+    final lines = context.isPortrait
+        ? widget.initial.length ~/ 30 + 1
+        : widget.initial.length ~/ 100 + 1;
     return $Dialog$(
       title: widget.title,
       primary: $Action$(
-        text: _i18n.submit,
+        text: _submitText,
         isDefault: true,
         onPressed: () {
           context.navigator.pop(controller.text);
         },
       ),
       secondary: $Action$(
-        text: _i18n.cancel,
+        text: _cancelText,
         onPressed: () {
           context.navigator.pop();
         },
@@ -506,7 +508,11 @@ class _StringsEditorState extends State<StringsEditor> {
   @override
   void initState() {
     super.initState();
-    $values = widget.fields.map((e) => (name: e.name, $value: TextEditingController(text: e.initial))).toList();
+    $values = widget.fields
+        .map(
+          (e) => (name: e.name, $value: TextEditingController(text: e.initial)),
+        )
+        .toList();
   }
 
   @override
@@ -521,17 +527,24 @@ class _StringsEditorState extends State<StringsEditor> {
   Widget build(BuildContext context) {
     return $Dialog$(
       title: widget.title,
-      desc: (ctx) => $values.map((e) => buildField(e.name, e.$value)).toList().column(mas: MainAxisSize.min),
+      desc: (ctx) => $values
+          .map((e) => buildField(e.name, e.$value))
+          .toList()
+          .column(mas: MainAxisSize.min),
       primary: $Action$(
-          text: _i18n.submit,
-          onPressed: () {
-            context.navigator.pop(widget.ctor($values.map((e) => e.$value.text).toList()));
-          }),
+        text: _submitText,
+        onPressed: () {
+          context.navigator.pop(
+            widget.ctor($values.map((e) => e.$value.text).toList()),
+          );
+        },
+      ),
       secondary: $Action$(
-          text: _i18n.cancel,
-          onPressed: () {
-            context.navigator.pop();
-          }),
+        text: _cancelText,
+        onPressed: () {
+          context.navigator.pop();
+        },
+      ),
     );
   }
 

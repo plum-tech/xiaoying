@@ -6,7 +6,6 @@ import 'package:uuid/uuid.dart';
 
 import '../entity/course.dart';
 import '../entity/timetable.dart';
-import '../i18n.dart';
 import '../utils.dart';
 
 final Map<String, int> weekday2Index = {
@@ -41,7 +40,7 @@ TimetableWeekIndices parseWeekText2RangedNumbers(
   required String evenSuffix,
 }) {
   final weeks = weekText.split(',');
-// Then the weeks should be ["1-5周","14周","8-10周(单)"]
+  // Then the weeks should be ["1-5周","14周","8-10周(单)"]
   final indices = <TimetableWeekIndex>[];
   for (final week in weeks) {
     // odd week
@@ -62,12 +61,11 @@ TimetableWeekIndices parseWeekText2RangedNumbers(
   return TimetableWeekIndices(indices);
 }
 
-typedef _TimetableInter = ({
-  Map<String, Course> courses,
-  int lastCourseKey,
-});
+typedef _TimetableInter = ({Map<String, Course> courses, int lastCourseKey});
 
-_TimetableInter _parseUndergraduateTimetableFromCourseRaw(List<UndergraduateCourseRaw> all) {
+_TimetableInter _parseUndergraduateTimetableFromCourseRaw(
+  List<UndergraduateCourseRaw> all,
+) {
   final courseKey2Entity = <String, Course>{};
   var counter = 0;
   for (final raw in all) {
@@ -79,10 +77,16 @@ _TimetableInter _parseUndergraduateTimetableFromCourseRaw(List<UndergraduateCour
       evenSuffix: "周(双)",
     );
     final dayIndex = weekday2Index[raw.weekDayText];
-    assert(dayIndex != null && 0 <= dayIndex && dayIndex < 7, "dayIndex isn't in range [0,6] but $dayIndex");
+    assert(
+      dayIndex != null && 0 <= dayIndex && dayIndex < 7,
+      "dayIndex isn't in range [0,6] but $dayIndex",
+    );
     if (dayIndex == null || !(0 <= dayIndex && dayIndex < 7)) continue;
     final timeslots = rangeFromString(raw.timeslotsText, number2index: true);
-    assert(timeslots.start <= timeslots.end, "${timeslots.start} > ${timeslots.end} actually. ${raw.courseName}");
+    assert(
+      timeslots.start <= timeslots.end,
+      "${timeslots.start} > ${timeslots.end} actually. ${raw.courseName}",
+    );
     final course = Course(
       courseKey: courseKey,
       courseName: mapChinesePunctuations(raw.courseName).trim(),
@@ -97,10 +101,7 @@ _TimetableInter _parseUndergraduateTimetableFromCourseRaw(List<UndergraduateCour
     );
     courseKey2Entity["$courseKey"] = course;
   }
-  return (
-    courses: courseKey2Entity,
-    lastCourseKey: counter,
-  );
+  return (courses: courseKey2Entity, lastCourseKey: counter);
 }
 
 Timetable parseUndergraduateTimetableFromRaw(
@@ -115,7 +116,9 @@ Timetable parseUndergraduateTimetableFromRaw(
   final String studentId = info["XH"];
   final schoolYear = int.parse(schoolYearRaw);
   final semester = Semester.fromUgRegFormField(semesterRaw);
-  final rawCourses = courseList.map((e) => UndergraduateCourseRaw.fromJson(e)).toList();
+  final rawCourses = courseList
+      .map((e) => UndergraduateCourseRaw.fromJson(e))
+      .toList();
   final (:courses, :lastCourseKey) = _parseUndergraduateTimetableFromCourseRaw(
     rawCourses,
   );
@@ -126,7 +129,7 @@ Timetable parseUndergraduateTimetableFromRaw(
     studentType: StudentType.undergraduate,
     lastCourseKey: lastCourseKey,
     signature: name,
-    name: i18n.import.defaultName(semester.l10n(), schoolYear.toString(), (schoolYear + 1).toString()),
+    name: "$schoolYear年 ${semester.label} 课程表",
     startDate: estimateStartDate(schoolYear, semester),
     createdTime: DateTime.now(),
     campus: defaultCampus,

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rettulf/rettulf.dart';
 import 'package:mimir/design/adaptive/dialog.dart';
-import 'package:mimir/l10n/common.dart';
 
 class DetailListTile extends StatelessWidget {
   final String? title;
@@ -39,7 +38,7 @@ class DetailListTile extends StatelessWidget {
           ? () async {
               final title = this.title;
               if (title != null) {
-                context.showSnackBar(content: const CommonI18n().copyTipOf(title).text());
+                context.showSnackBar(content: "已复制$title到剪贴板".text());
               }
               await Clipboard.setData(ClipboardData(text: subtitle));
             }

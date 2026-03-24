@@ -21,7 +21,8 @@ class FeaturedMarkdownWidget extends StatefulWidget {
   State<FeaturedMarkdownWidget> createState() => _FeaturedMarkdownWidgetState();
 }
 
-class _FeaturedMarkdownWidgetState extends State<FeaturedMarkdownWidget> with AutomaticKeepAliveClientMixin {
+class _FeaturedMarkdownWidgetState extends State<FeaturedMarkdownWidget>
+    with AutomaticKeepAliveClientMixin {
   late String html;
 
   @override
@@ -53,10 +54,7 @@ class _FeaturedMarkdownWidgetState extends State<FeaturedMarkdownWidget> with Au
         EmphasisSyntax.asterisk(),
         EmphasisSyntax.underscore(),
       ],
-      blockSyntaxes: const [
-        OrderedListSyntax(),
-        UnorderedListSyntax(),
-      ],
+      blockSyntaxes: const [OrderedListSyntax(), UnorderedListSyntax()],
     );
   }
 

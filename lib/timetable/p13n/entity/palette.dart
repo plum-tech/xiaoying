@@ -1,5 +1,4 @@
 import 'package:copy_with_extension/copy_with_extension.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:mimir/design/entity/dual_color.dart';
@@ -62,12 +61,14 @@ class TimetablePalette implements WithUuid {
     );
   }
 
-  factory TimetablePalette.fromJson(Map<String, dynamic> json) => _$TimetablePaletteFromJson(json);
+  factory TimetablePalette.fromJson(Map<String, dynamic> json) =>
+      _$TimetablePaletteFromJson(json);
 
   Map<String, dynamic> toJson() => _$TimetablePaletteToJson(this);
 }
 
-class _DualColorMigratedFromColor2ModeConverter implements JsonConverter<DualColor, Map> {
+class _DualColorMigratedFromColor2ModeConverter
+    implements JsonConverter<DualColor, Map> {
   const _DualColorMigratedFromColor2ModeConverter();
 
   @override
@@ -90,9 +91,7 @@ class _DualColorMigratedFromColor2ModeConverter implements JsonConverter<DualCol
 
 extension TimetablePaletteX on TimetablePalette {
   TimetablePalette markModified() {
-    return copyWith(
-      lastModified: DateTime.now(),
-    );
+    return copyWith(lastModified: DateTime.now());
   }
 }
 
@@ -104,10 +103,10 @@ class BuiltinTimetablePalette implements TimetablePalette {
   final String? authorOverride;
 
   @override
-  String get name => nameOverride ?? "timetable.p13n.palette.builtin.$key.name".tr();
+  String get name => nameOverride ?? key;
 
   @override
-  String get author => authorOverride ?? "timetable.p13n.palette.builtin.$key.author".tr();
+  String get author => authorOverride ?? "";
   @override
   final List<DualColor> colors;
 
@@ -120,15 +119,15 @@ class BuiltinTimetablePalette implements TimetablePalette {
     required this.colors,
     String? name,
     String? author,
-  })  : nameOverride = name,
-        authorOverride = author;
+  }) : nameOverride = name,
+       authorOverride = author;
 
   @override
   Map<String, dynamic> toJson() => <String, dynamic>{
-        "uuid": uuid,
-        "author": author,
-        "colors": colors,
-      };
+    "uuid": uuid,
+    "author": author,
+    "colors": colors,
+  };
 }
 
 abstract mixin class TimetablePaletteResolver {
@@ -143,11 +142,16 @@ abstract mixin class TimetablePaletteResolver {
   DualColor resolveColor(TimetablePalette palette, Course course) {
     assert(palette.colors.isNotEmpty, "Colors can't be empty");
     if (palette.colors.isEmpty) return TimetablePalette.defaultColor;
-    assert(type.courses.containsValue(course), "Course $course not found in this timetable");
+    assert(
+      type.courses.containsValue(course),
+      "Course $course not found in this timetable",
+    );
 
-    final fixedCourseCode2Color = _fixedCourseCode2Color[palette] ?? _cacheFixedCourseCode2Color(palette);
+    final fixedCourseCode2Color =
+        _fixedCourseCode2Color[palette] ?? _cacheFixedCourseCode2Color(palette);
     return fixedCourseCode2Color[course.courseCode] ??
-        palette.colors[course.courseCode.hashCode.abs() % palette.colors.length];
+        palette.colors[course.courseCode.hashCode.abs() %
+            palette.colors.length];
   }
 
   Map<String, DualColor> _cacheFixedCourseCode2Color(TimetablePalette palette) {
@@ -169,7 +173,5 @@ class _TimetablePaletteResolverImpl with TimetablePaletteResolver {
   @override
   final Timetable type;
 
-  _TimetablePaletteResolverImpl({
-    required this.type,
-  });
+  _TimetablePaletteResolverImpl({required this.type});
 }

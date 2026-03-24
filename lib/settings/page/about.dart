@@ -4,13 +4,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:mimir/r.dart';
 import 'package:rettulf/rettulf.dart';
 import 'package:mimir/utils/guard_launch.dart';
-import '../i18n.dart';
 import '../widget/device.dart';
 
 class AboutSettingsPage extends ConsumerStatefulWidget {
-  const AboutSettingsPage({
-    super.key,
-  });
+  const AboutSettingsPage({super.key});
 
   @override
   ConsumerState<AboutSettingsPage> createState() => _AboutSettingsPageState();
@@ -27,37 +24,47 @@ class _AboutSettingsPageState extends ConsumerState<AboutSettingsPage> {
             pinned: true,
             snap: false,
             floating: false,
-            title: i18n.about.title.text(),
+            title: "关于".text(),
           ),
           SliverList.list(
             children: [
               const VersionTile(),
               ListTile(
-                title: i18n.about.termsOfService.text(),
+                title: "服务条款".text(),
                 trailing: const Icon(Icons.open_in_browser),
                 onTap: () async {
-                  await guardLaunchUrlString(context, "https://www.xiaoying.life/terms-of-service");
+                  await guardLaunchUrlString(
+                    context,
+                    "https://www.xiaoying.life/terms-of-service",
+                  );
                 },
               ),
               ListTile(
-                title: i18n.about.privacyPolicy.text(),
+                title: "隐私政策".text(),
                 trailing: const Icon(Icons.open_in_browser),
                 onTap: () async {
-                  await guardLaunchUrlString(context, "https://www.xiaoying.life/privacy-policy");
+                  await guardLaunchUrlString(
+                    context,
+                    "https://www.xiaoying.life/privacy-policy",
+                  );
                 },
               ),
               ListTile(
-                title: i18n.about.marketingWebsite.text(),
+                title: "官网".text(),
                 trailing: const Icon(Icons.open_in_browser),
                 onTap: () async {
-                  await guardLaunchUrlString(context, "https://www.xiaoying.life");
+                  await guardLaunchUrlString(
+                    context,
+                    "https://www.xiaoying.life",
+                  );
                 },
               ),
               AboutListTile(
                 icon: SvgPicture.asset("assets/icon.svg").sizedAll(32),
-                applicationName: R.appNameL10n,
+                applicationName: R.appName,
                 applicationVersion: R.meta.version.toString(),
-                applicationLegalese: "Copyright©️2023-2026 Plum Technology Ltd. All Rights Reserved.",
+                applicationLegalese:
+                    "Copyright©️2023-2026 Plum Technology Ltd. All Rights Reserved.",
               ),
             ],
           ),
@@ -82,7 +89,7 @@ class _VersionTileState extends ConsumerState<VersionTile> {
     final version = R.meta;
     return ListTile(
       leading: Icon(getDeviceIcon(R.meta, R.deviceInfo)),
-      title: i18n.about.version.text(),
+      title: "版本".text(),
       subtitle: "${version.platform.name} ${version.version.toString()}".text(),
     );
   }

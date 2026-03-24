@@ -6,23 +6,15 @@ import 'package:mimir/widget/markdown.dart';
 import 'package:rettulf/rettulf.dart';
 
 import '../entity/agreements.dart';
-import '../i18n.dart';
 
 class AgreementsCheckBox extends ConsumerWidget {
   final AgreementType type;
 
-  const AgreementsCheckBox({
-    super.key,
-    required this.type,
-  });
+  const AgreementsCheckBox({super.key, required this.type});
 
-  const AgreementsCheckBox.basic({
-    super.key,
-  }) : type = AgreementType.basic;
+  const AgreementsCheckBox.basic({super.key}) : type = AgreementType.basic;
 
-  const AgreementsCheckBox.account({
-    super.key,
-  }) : type = AgreementType.account;
+  const AgreementsCheckBox.account({super.key}) : type = AgreementType.account;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,15 +32,15 @@ class AgreementsCheckBox extends ConsumerWidget {
           ref.read($accepted.notifier).set(newV);
         },
       ),
-      FeaturedMarkdownWidget(data: type.l10n()).expanded(flex: 9),
+      FeaturedMarkdownWidget(data: type.markdownText).expanded(flex: 9),
     ].row();
   }
 }
 
 Future<void> showAgreementsRequired2Accept(BuildContext context) async {
   await context.showTip(
-    title: i18n.acceptanceRequired,
-    desc: i18n.acceptanceRequiredDesc,
-    primary: i18n.ok,
+    title: "需要同意协议",
+    desc: "在使用小应生活前，你必须同意我们的协议和政策",
+    primary: "好的",
   );
 }

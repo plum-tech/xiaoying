@@ -6,11 +6,10 @@ import 'package:mimir/design/adaptive/editor.dart';
 import 'package:mimir/design/adaptive/multiplatform.dart';
 import 'package:mimir/design/adaptive/swipe.dart';
 import 'package:rettulf/rettulf.dart';
-import 'package:mimir/l10n/time.dart';
 import 'package:mimir/utils/save.dart';
+import 'package:mimir/utils/weekday.dart';
 
 import '../../entity/timetable.dart';
-import '../../i18n.dart';
 
 class SitCourseEditable {
   final bool courseName;
@@ -46,24 +45,24 @@ class SitCourseEditable {
     this.timeslots = true,
     this.dayIndex = true,
     this.teachers = true,
-  })  : courseName = false,
-        courseCode = false,
-        classCode = false,
-        campus = false,
-        courseCredit = false;
+  }) : courseName = false,
+       courseCode = false,
+       classCode = false,
+       campus = false,
+       courseCredit = false;
 
   const SitCourseEditable.template()
-      : courseName = true,
-        courseCode = true,
-        classCode = true,
-        campus = true,
-        courseCredit = true,
-        place = false,
-        hidden = false,
-        weekIndices = false,
-        timeslots = false,
-        dayIndex = false,
-        teachers = false;
+    : courseName = true,
+      courseCode = true,
+      classCode = true,
+      campus = true,
+      courseCredit = true,
+      place = false,
+      hidden = false,
+      weekIndices = false,
+      timeslots = false,
+      dayIndex = false,
+      teachers = false;
 
   const SitCourseEditable.only({
     this.courseName = false,
@@ -111,11 +110,16 @@ class SitCourseEditorPage extends StatefulWidget {
 }
 
 class _SitCourseEditorPageState extends State<SitCourseEditorPage> {
-  late final $courseName = TextEditingController(text: widget.course?.courseName);
-  late final $courseCode = TextEditingController(text: widget.course?.courseCode);
+  late final $courseName = TextEditingController(
+    text: widget.course?.courseName,
+  );
+  late final $courseCode = TextEditingController(
+    text: widget.course?.courseCode,
+  );
   late final $classCode = TextEditingController(text: widget.course?.classCode);
   late final $place = TextEditingController(text: widget.course?.place);
-  late var weekIndices = widget.course?.weekIndices ?? const TimetableWeekIndices([]);
+  late var weekIndices =
+      widget.course?.weekIndices ?? const TimetableWeekIndices([]);
   late var timeslots = widget.course?.timeslots ?? (start: 0, end: 0);
   late var courseCredit = widget.course?.courseCredit ?? 0.0;
   late var hidden = widget.course?.hidden ?? false;
@@ -167,51 +171,39 @@ class _SitCourseEditorPageState extends State<SitCourseEditorPage> {
             SliverAppBar.medium(
               title: widget.title?.text(),
               actions: [
-                PlatformTextButton(
-                  onPressed: onSave,
-                  child: i18n.done.text(),
-                ),
+                PlatformTextButton(onPressed: onSave, child: "完成".text()),
               ],
             ),
-            SliverList.list(children: [
-              buildTextField(
-                controller: $courseName,
-                title: i18n.course.courseName,
-                readonly: !editable.courseName,
-              ),
-              buildTextField(
-                controller: $courseCode,
-                title: i18n.course.courseCode,
-                readonly: !editable.courseName,
-              ),
-              buildTextField(
-                controller: $classCode,
-                title: i18n.course.classCode,
-                readonly: !editable.courseName,
-              ),
-              if (editable.place)
+            SliverList.list(
+              children: [
                 buildTextField(
-                  title: i18n.course.place,
-                  controller: $place,
+                  controller: $courseName,
+                  title: "课程名称",
+                  readonly: !editable.courseName,
                 ),
-              if (editable.hidden) buildHidden(),
-              if (editable.dayIndex)
-                buildWeekdays().inCard(
-                  clip: Clip.hardEdge,
+                buildTextField(
+                  controller: $courseCode,
+                  title: "课程代码",
+                  readonly: !editable.courseName,
                 ),
-              if (editable.timeslots)
-                buildTimeslots().inCard(
-                  clip: Clip.hardEdge,
+                buildTextField(
+                  controller: $classCode,
+                  title: "教学班",
+                  readonly: !editable.courseName,
                 ),
-              if (editable.weekIndices)
-                buildRepeating().inCard(
-                  clip: Clip.hardEdge,
-                ),
-              if (editable.teachers)
-                buildTeachers().inCard(
-                  clip: Clip.hardEdge,
-                ),
-            ]),
+                if (editable.place)
+                  buildTextField(title: "地点", controller: $place),
+                if (editable.hidden) buildHidden(),
+                if (editable.dayIndex)
+                  buildWeekdays().inCard(clip: Clip.hardEdge),
+                if (editable.timeslots)
+                  buildTimeslots().inCard(clip: Clip.hardEdge),
+                if (editable.weekIndices)
+                  buildRepeating().inCard(clip: Clip.hardEdge),
+                if (editable.teachers)
+                  buildTeachers().inCard(clip: Clip.hardEdge),
+              ],
+            ),
           ],
         ),
       ),
@@ -220,13 +212,13 @@ class _SitCourseEditorPageState extends State<SitCourseEditorPage> {
 
   Widget buildWeekdays() {
     return ListTile(
-      title: i18n.editor.daysOfWeek.text(),
+      title: "日历日".text(),
       isThreeLine: true,
       subtitle: [
         ...Weekday.values.map(
           (w) => ChoiceChip(
             showCheckmark: false,
-            label: w.l10n().text(),
+            label: w.label.text(),
             selected: dayIndex == w.index,
             onSelected: (value) {
               setState(() {
@@ -241,15 +233,18 @@ class _SitCourseEditorPageState extends State<SitCourseEditorPage> {
   }
 
   Widget buildTimeslots() {
+    final title = timeslots.start == timeslots.end
+        ? "第 ${timeslots.start + 1} 节"
+        : "从第 ${timeslots.start + 1} 节到第 ${timeslots.end + 1} 节";
     return ListTile(
-      title: (timeslots.start == timeslots.end
-              ? i18n.editor.timeslotsSpanSingle("${timeslots.start + 1}")
-              : i18n.editor.timeslotsSpanMultiple(from: "${timeslots.start + 1}", to: "${timeslots.end + 1}"))
-          .text(),
+      title: title.text(),
       subtitle: [
         Icon(context.icons.sun),
         RangeSlider(
-          values: RangeValues(timeslots.start.toDouble(), timeslots.end.toDouble()),
+          values: RangeValues(
+            timeslots.start.toDouble(),
+            timeslots.end.toDouble(),
+          ),
           max: 10,
           divisions: 10,
           labels: RangeLabels(
@@ -275,7 +270,7 @@ class _SitCourseEditorPageState extends State<SitCourseEditorPage> {
   Widget buildRepeating() {
     return [
       ListTile(
-        title: i18n.editor.repeating.text(),
+        title: "重复".text(),
         trailing: PlatformIconButton(
           icon: Icon(context.icons.add),
           onPressed: () {
@@ -309,23 +304,22 @@ class _SitCourseEditorPageState extends State<SitCourseEditorPage> {
             markChanged();
           },
         );
-      })
+      }),
     ].column();
   }
 
   Widget buildTeachers() {
     return ListTile(
-      title: i18n.course.teacher(2).text(),
+      title: "教师".text(),
       isThreeLine: true,
       trailing: PlatformIconButton(
         icon: Icon(context.icons.add),
         onPressed: () async {
           var newTeacher = (await Editor.showStringEditor(
             context,
-            desc: i18n.course.teacher(2),
+            desc: "教师",
             initial: "",
-          ))
-              ?.trim();
+          ))?.trim();
           if (newTeacher == null) return;
           if (newTeacher.isNotEmpty && !teachers.contains(newTeacher)) {
             if (!mounted) return;
@@ -337,22 +331,24 @@ class _SitCourseEditorPageState extends State<SitCourseEditorPage> {
         },
       ),
       subtitle: [
-        ...teachers.map((teacher) => InputChip(
-              label: teacher.text(),
-              onDeleted: () {
-                setState(() {
-                  teachers.remove(teacher);
-                });
-                markChanged();
-              },
-            )),
+        ...teachers.map(
+          (teacher) => InputChip(
+            label: teacher.text(),
+            onDeleted: () {
+              setState(() {
+                teachers.remove(teacher);
+              });
+              markChanged();
+            },
+          ),
+        ),
       ].wrap(spacing: 4),
     );
   }
 
   Widget buildHidden() {
     return SwitchListTile.adaptive(
-      title: i18n.course.displayable.text(),
+      title: "在课程表中显示".text(),
       value: !hidden,
       onChanged: (newV) {
         setState(() {
@@ -364,19 +360,21 @@ class _SitCourseEditorPageState extends State<SitCourseEditorPage> {
   }
 
   void onSave() {
-    context.pop(Course(
-      courseKey: widget.course?.courseKey ?? 0,
-      courseName: $courseName.text,
-      courseCode: $courseCode.text,
-      classCode: $classCode.text,
-      place: $place.text,
-      weekIndices: weekIndices,
-      timeslots: timeslots,
-      courseCredit: courseCredit,
-      dayIndex: dayIndex,
-      teachers: teachers,
-      hidden: hidden,
-    ));
+    context.pop(
+      Course(
+        courseKey: widget.course?.courseKey ?? 0,
+        courseName: $courseName.text,
+        courseCode: $courseCode.text,
+        classCode: $classCode.text,
+        place: $place.text,
+        weekIndices: weekIndices,
+        timeslots: timeslots,
+        courseCredit: courseCredit,
+        dayIndex: dayIndex,
+        teachers: teachers,
+        hidden: hidden,
+      ),
+    );
   }
 
   Widget buildTextField({
@@ -425,11 +423,14 @@ class RepeatingItemEditor extends StatelessWidget {
               },
             ),
       child: ListTile(
-        title: index.l10n().text(),
+        title: index.label.text(),
         isThreeLine: true,
         subtitle: [
           RangeSlider(
-            values: RangeValues(index.range.start.toDouble(), index.range.end.toDouble()),
+            values: RangeValues(
+              index.range.start.toDouble(),
+              index.range.end.toDouble(),
+            ),
             max: 19,
             divisions: 19,
             labels: RangeLabels(
@@ -440,25 +441,29 @@ class RepeatingItemEditor extends StatelessWidget {
               final newStart = values.start.toInt();
               final newEnd = values.end.toInt();
               if (index.range.start != newStart || index.range.end != newEnd) {
-                onChanged?.call(index.copyWith(
-                  range: (start: newStart, end: newEnd),
-                  type: newStart == newEnd ? TimetableWeekIndexType.all : index.type,
-                ));
+                onChanged?.call(
+                  index.copyWith(
+                    range: (start: newStart, end: newEnd),
+                    type: newStart == newEnd
+                        ? TimetableWeekIndexType.all
+                        : index.type,
+                  ),
+                );
               }
             },
           ),
           [
-            ...TimetableWeekIndexType.values.map((type) => ChoiceChip(
-                  label: type.l10n().text(),
-                  selected: index.type == type,
-                  onSelected: type != TimetableWeekIndexType.all && index.isSingle
-                      ? null
-                      : (value) {
-                          onChanged?.call(index.copyWith(
-                            type: type,
-                          ));
-                        },
-                )),
+            ...TimetableWeekIndexType.values.map(
+              (type) => ChoiceChip(
+                label: type.label.text(),
+                selected: index.type == type,
+                onSelected: type != TimetableWeekIndexType.all && index.isSingle
+                    ? null
+                    : (value) {
+                        onChanged?.call(index.copyWith(type: type));
+                      },
+              ),
+            ),
           ].wrap(spacing: 4),
         ].column(mas: MainAxisSize.min, caa: CrossAxisAlignment.start),
       ),

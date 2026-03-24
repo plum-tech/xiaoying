@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:copy_with_extension/copy_with_extension.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 import 'package:mimir/entity/campus.dart';
@@ -26,7 +25,9 @@ Campus _defaultCampus() {
 String _defaultStudentId() => "";
 
 String _parseName(String name) {
-  return name.substring(0, min(Timetable.maxNameLength, name.length)).replaceAll('\n', " ");
+  return name
+      .substring(0, min(Timetable.maxNameLength, name.length))
+      .replaceAll('\n', " ");
 }
 
 String _kUUid() => const Uuid().v4();
@@ -89,12 +90,11 @@ class Timetable implements WithUuid {
   });
 
   Timetable markModified() {
-    return copyWith(
-      lastModified: DateTime.now(),
-    );
+    return copyWith(lastModified: DateTime.now());
   }
 
-  DateTime get endDate => startDate.copyWith(day: startDate.day + maxWeekLength * 7);
+  DateTime get endDate =>
+      startDate.copyWith(day: startDate.day + maxWeekLength * 7);
 
   bool inRange(DateTime date) {
     return startDate.isBefore(date) && date.isBefore(endDate);
@@ -159,23 +159,24 @@ class Timetable implements WithUuid {
 
   @override
   int get hashCode => Object.hash(
-        version,
-        uuid,
-        name,
-        signature,
-        lastCourseKey,
-        campus,
-        schoolYear,
-        semester,
-        startDate,
-        lastModified,
-        createdTime,
-        studentId,
-        studentType,
-        Object.hashAllUnordered(courses.entries.map((e) => (e.key, e.value))),
-      );
+    version,
+    uuid,
+    name,
+    signature,
+    lastCourseKey,
+    campus,
+    schoolYear,
+    semester,
+    startDate,
+    lastModified,
+    createdTime,
+    studentId,
+    studentType,
+    Object.hashAllUnordered(courses.entries.map((e) => (e.key, e.value))),
+  );
 
-  factory Timetable.fromJson(Map<String, dynamic> json) => _$TimetableFromJson(json);
+  factory Timetable.fromJson(Map<String, dynamic> json) =>
+      _$TimetableFromJson(json);
 
   Map<String, dynamic> toJson() => _$TimetableToJson(this);
 }
@@ -271,31 +272,40 @@ class Course {
 
   @override
   int get hashCode => Object.hash(
-        courseKey,
-        courseName,
-        courseCode,
-        place,
-        weekIndices,
-        timeslots,
-        courseCredit,
-        dayIndex,
-        Object.hashAll(teachers),
-        hidden,
-      );
+    courseKey,
+    courseName,
+    courseCode,
+    place,
+    weekIndices,
+    timeslots,
+    courseCredit,
+    dayIndex,
+    Object.hashAll(teachers),
+    hidden,
+  );
 }
 
-List<ClassTime> buildingTimetableOf(Campus campus, [String? place]) => getTeachingBuildingTimetable(campus, place);
+List<ClassTime> buildingTimetableOf(Campus campus, [String? place]) =>
+    getTeachingBuildingTimetable(campus, place);
 
 /// Based on [Course.timeslots], compose a full-length class time.
 /// Starts with the first part starts.
 /// Ends with the last part ends.
-ClassTime calcBeginEndTimePoint(({int start, int end}) timeslots, Campus campus, [String? place]) {
+ClassTime calcBeginEndTimePoint(
+  ({int start, int end}) timeslots,
+  Campus campus, [
+  String? place,
+]) {
   final timetable = buildingTimetableOf(campus, place);
   final (:start, :end) = timeslots;
   return (begin: timetable[start].begin, end: timetable[end].end);
 }
 
-List<ClassTime> calcBeginEndTimePointForEachLesson(({int start, int end}) timeslots, Campus campus, [String? place]) {
+List<ClassTime> calcBeginEndTimePointForEachLesson(
+  ({int start, int end}) timeslots,
+  Campus campus, [
+  String? place,
+]) {
   final timetable = buildingTimetableOf(campus, place);
   final (:start, :end) = timeslots;
   final result = <ClassTime>[];
@@ -305,7 +315,11 @@ List<ClassTime> calcBeginEndTimePointForEachLesson(({int start, int end}) timesl
   return result;
 }
 
-ClassTime calcBeginEndTimePointOfLesson(int timeslot, Campus campus, [String? place]) {
+ClassTime calcBeginEndTimePointOfLesson(
+  int timeslot,
+  Campus campus, [
+  String? place,
+]) {
   final timetable = buildingTimetableOf(campus, place);
   return timetable[timeslot];
 }
@@ -316,14 +330,19 @@ enum TimetableWeekIndexType {
   odd,
   even;
 
-  String l10nOf(String start, String end) => "timetable.weekIndexType.of.$name".tr(namedArgs: {
-        "start": start,
-        "end": end,
-      });
+  String formatRange(String start, String end) => switch (this) {
+    TimetableWeekIndexType.all => "第 $start 周到第 $end 周",
+    TimetableWeekIndexType.odd => "第 $start 周到第 $end 周中的单周",
+    TimetableWeekIndexType.even => "第 $start 周到第 $end 周中的双周",
+  };
 
-  String l10n() => "timetable.weekIndexType.$name".tr();
+  String get label => switch (this) {
+    TimetableWeekIndexType.all => "每周",
+    TimetableWeekIndexType.odd => "单周",
+    TimetableWeekIndexType.even => "双周",
+  };
 
-  static String l10nOfSingle(String index) => "timetable.weekIndexType.of.single".tr(args: [index]);
+  static String formatSingle(String index) => "第 $index 周";
 }
 
 @JsonSerializable()
@@ -338,28 +357,19 @@ class TimetableWeekIndex {
   @JsonKey()
   final ({int start, int end}) range;
 
-  const TimetableWeekIndex({
-    required this.type,
-    required this.range,
-  });
+  const TimetableWeekIndex({required this.type, required this.range});
 
-  const TimetableWeekIndex.all(
-    this.range,
-  ) : type = TimetableWeekIndexType.all;
+  const TimetableWeekIndex.all(this.range) : type = TimetableWeekIndexType.all;
 
   /// [start] will equal to [end].
-  const TimetableWeekIndex.single(
-    int weekIndex,
-  )   : type = TimetableWeekIndexType.all,
-        range = (start: weekIndex, end: weekIndex);
+  const TimetableWeekIndex.single(int weekIndex)
+    : type = TimetableWeekIndexType.all,
+      range = (start: weekIndex, end: weekIndex);
 
-  const TimetableWeekIndex.odd(
-    this.range,
-  ) : type = TimetableWeekIndexType.odd;
+  const TimetableWeekIndex.odd(this.range) : type = TimetableWeekIndexType.odd;
 
-  const TimetableWeekIndex.even(
-    this.range,
-  ) : type = TimetableWeekIndexType.even;
+  const TimetableWeekIndex.even(this.range)
+    : type = TimetableWeekIndexType.even;
 
   /// week number start by
   bool match(int weekIndex) {
@@ -370,11 +380,11 @@ class TimetableWeekIndex {
 
   /// convert the index to number.
   /// e.g.: (start: 0, end: 8) => "1–9"
-  String l10n() {
+  String get label {
     if (isSingle) {
-      return TimetableWeekIndexType.l10nOfSingle("${range.start + 1}");
+      return TimetableWeekIndexType.formatSingle("${range.start + 1}");
     } else {
-      return type.l10nOf("${range.start + 1}", "${range.end + 1}");
+      return type.formatRange("${range.start + 1}", "${range.end + 1}");
     }
   }
 
@@ -396,12 +406,14 @@ class TimetableWeekIndex {
   @override
   int get hashCode => Object.hash(type, range);
 
-  factory TimetableWeekIndex.fromJson(Map<String, dynamic> json) => _$TimetableWeekIndexFromJson(json);
+  factory TimetableWeekIndex.fromJson(Map<String, dynamic> json) =>
+      _$TimetableWeekIndexFromJson(json);
 
   Map<String, dynamic> toJson() => _$TimetableWeekIndexToJson(this);
 }
 
-extension type const TimetableWeekIndices(List<TimetableWeekIndex> indices) implements List<TimetableWeekIndex> {
+extension type const TimetableWeekIndices(List<TimetableWeekIndex> indices)
+    implements List<TimetableWeekIndex> {
   bool match(int weekIndex) {
     for (final index in indices) {
       if (index.match(weekIndex)) return true;
@@ -413,8 +425,8 @@ extension type const TimetableWeekIndices(List<TimetableWeekIndex> indices) impl
   /// The return value should be:
   /// - `1-5 周, 14 周, 8-10 单周` in Chinese.
   /// - `1-5 wk, 14 wk, 8-10 odd wk`
-  List<String> l10n() {
-    return indices.map((index) => index.l10n()).toList();
+  List<String> get labels {
+    return indices.map((index) => index.label).toList();
   }
 
   /// The result, week index, which starts with 0.
@@ -461,11 +473,15 @@ extension type const TimetableWeekIndices(List<TimetableWeekIndex> indices) impl
     // for backwards support
     if (json is Map) {
       return TimetableWeekIndices(
-        (json['indices'] as List<dynamic>).map((e) => TimetableWeekIndex.fromJson(e as Map<String, dynamic>)).toList(),
+        (json['indices'] as List<dynamic>)
+            .map((e) => TimetableWeekIndex.fromJson(e as Map<String, dynamic>))
+            .toList(),
       );
     } else {
       return TimetableWeekIndices(
-        (json as List<dynamic>).map((e) => TimetableWeekIndex.fromJson(e as Map<String, dynamic>)).toList(),
+        (json as List<dynamic>)
+            .map((e) => TimetableWeekIndex.fromJson(e as Map<String, dynamic>))
+            .toList(),
       );
     }
   }
@@ -488,7 +504,7 @@ extension type const TimetableWeekIndices(List<TimetableWeekIndex> indices) impl
   bool number2index = false,
 }) {
   if (range.contains("-")) {
-// in range of time slots
+    // in range of time slots
     final rangeParts = range.split("-");
     final start = int.parse(rangeParts[0]);
     final end = int.parse(rangeParts[1]);

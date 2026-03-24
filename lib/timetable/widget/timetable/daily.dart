@@ -3,17 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:mimir/design/adaptive/foundation.dart';
 import 'package:mimir/design/dash.dart';
 import 'package:mimir/design/entity/dual_color.dart';
-import 'package:mimir/l10n/time.dart';
 import 'package:mimir/school/utils.dart';
 import 'package:mimir/school/entity/timetable.dart';
 import 'package:mimir/timetable/widget/timetable/course_sheet.dart';
+import 'package:mimir/utils/weekday.dart';
 import 'package:rettulf/rettulf.dart';
 
 import '../../entity/timetable.dart';
 import '../../entity/timetable_entity.dart';
 import '../../p13n/builtin.dart';
 import '../../utils.dart';
-import '../../i18n.dart';
 import '../../entity/pos.dart';
 import 'header.dart';
 
@@ -25,7 +24,11 @@ class DailyTimetable extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => DailyTimetableState();
 
-  const DailyTimetable({super.key, required this.timetable, required this.$currentPos});
+  const DailyTimetable({
+    super.key,
+    required this.timetable,
+    required this.$currentPos,
+  });
 }
 
 class DailyTimetableState extends State<DailyTimetable> {
@@ -40,21 +43,23 @@ class DailyTimetableState extends State<DailyTimetable> {
 
   int pos2PageOffset(TimetablePos pos) => pos.weekIndex * 7 + pos.weekday.index;
 
-  TimetablePos page2Pos(int page) => TimetablePos(weekIndex: page ~/ 7, weekday: Weekday.fromIndex(page % 7));
+  TimetablePos page2Pos(int page) =>
+      TimetablePos(weekIndex: page ~/ 7, weekday: Weekday.fromIndex(page % 7));
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(initialPage: pos2PageOffset(widget.$currentPos.value))
-      ..addListener(() {
-        setState(() {
-          final page = (_pageController.page ?? 0).round();
-          final newPos = page2Pos(page);
-          if (currentPos != newPos) {
-            currentPos = newPos;
-          }
-        });
-      });
+    _pageController =
+        PageController(initialPage: pos2PageOffset(widget.$currentPos.value))
+          ..addListener(() {
+            setState(() {
+              final page = (_pageController.page ?? 0).round();
+              final newPos = page2Pos(page);
+              if (currentPos != newPos) {
+                currentPos = newPos;
+              }
+            });
+          });
   }
 
   @override
@@ -128,7 +133,8 @@ class TimetableOneDayPage extends StatefulWidget {
   State<TimetableOneDayPage> createState() => _TimetableOneDayPageState();
 }
 
-class _TimetableOneDayPageState extends State<TimetableOneDayPage> with AutomaticKeepAliveClientMixin {
+class _TimetableOneDayPageState extends State<TimetableOneDayPage>
+    with AutomaticKeepAliveClientMixin {
   Widget? _cached;
 
   @override
@@ -156,24 +162,44 @@ class _TimetableOneDayPageState extends State<TimetableOneDayPage> with Automati
     final slotCount = day.timeslot2LessonSlot.length;
     final builder = _LessonRowBuilder(
       dividerBuilder: (dividerNumber) {
-        return BreakDivider(title: dividerNumber == 1 ? i18n.lunchtime : i18n.dinnertime);
+        return BreakDivider(title: dividerNumber == 1 ? "午餐时间" : "晚餐时间");
       },
     );
     for (int timeslot = 0; timeslot < slotCount; timeslot++) {
-      builder.add(timeslot, buildLessonsInTimeslot(ctx, day.timeslot2LessonSlot[timeslot].lessons, timeslot));
+      builder.add(
+        timeslot,
+        buildLessonsInTimeslot(
+          ctx,
+          day.timeslot2LessonSlot[timeslot].lessons,
+          timeslot,
+        ),
+      );
     }
     // Since the course list is small, no need to use [ListView.builder].
     return ListView(children: builder.build());
   }
 
-  Widget? buildLessonsInTimeslot(BuildContext ctx, List<TimetableLessonPart> lessonsInSlot, int timeslot) {
+  Widget? buildLessonsInTimeslot(
+    BuildContext ctx,
+    List<TimetableLessonPart> lessonsInSlot,
+    int timeslot,
+  ) {
     if (lessonsInSlot.isEmpty) {
       return null;
     } else if (lessonsInSlot.length == 1) {
       final lesson = lessonsInSlot[0];
-      return buildSingleLesson(ctx, timetable: widget.timetable, lesson: lesson, timeslot: timeslot).padH(6);
+      return buildSingleLesson(
+        ctx,
+        timetable: widget.timetable,
+        lesson: lesson,
+        timeslot: timeslot,
+      ).padH(6);
     } else {
-      return LessonOverlapGroup(lessonsInSlot, timeslot, widget.timetable).padH(6);
+      return LessonOverlapGroup(
+        lessonsInSlot,
+        timeslot,
+        widget.timetable,
+      ).padH(6);
     }
   }
 
@@ -185,13 +211,26 @@ class _TimetableOneDayPageState extends State<TimetableOneDayPage> with Automati
   }) {
     final course = lesson.course;
 
-    final colorEntry = timetable.resolveColor(BuiltinTimetablePalettes.classic, course);
+    final colorEntry = timetable.resolveColor(
+      BuiltinTimetablePalettes.classic,
+      course,
+    );
     final textColor = colorEntry.textColorBy(context);
     var color = colorEntry.colorBy(context);
-    final classTime = calcBeginEndTimePointOfLesson(timeslot, timetable.campus, course.place);
+    final classTime = calcBeginEndTimePointOfLesson(
+      timeslot,
+      timetable.campus,
+      course.place,
+    );
     return [
       ClassTimeCard(color: color, classTime: classTime, textColor: textColor),
-      LessonCard(lesson: lesson, timetable: timetable, course: course, color: color, textColor: textColor).expanded(),
+      LessonCard(
+        lesson: lesson,
+        timetable: timetable,
+        course: course,
+        color: color,
+        textColor: textColor,
+      ).expanded(),
     ].row();
   }
 
@@ -253,7 +292,11 @@ class LessonCard extends StatelessWidget {
         title: AutoSizeText(course.courseName, maxLines: 1),
         subtitle: [
           if (course.place.isNotEmpty)
-            Text(beautifyPlace(course.place), softWrap: true, overflow: TextOverflow.ellipsis),
+            Text(
+              beautifyPlace(course.place),
+              softWrap: true,
+              overflow: TextOverflow.ellipsis,
+            ),
           course.teachers.join(', ').text(),
         ].column(caa: CrossAxisAlignment.start),
       ),
@@ -266,20 +309,23 @@ class ClassTimeCard extends StatelessWidget {
   final Color? textColor;
   final ClassTime classTime;
 
-  const ClassTimeCard({super.key, required this.color, required this.classTime, this.textColor});
+  const ClassTimeCard({
+    super.key,
+    required this.color,
+    required this.classTime,
+    this.textColor,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Card.filled(
       color: color,
       child: [
-        classTime.begin
-            .l10n(context)
-            .text(
-              style: TextStyle(fontWeight: FontWeight.bold, color: textColor),
-            ),
+        classTime.begin.label.text(
+          style: TextStyle(fontWeight: FontWeight.bold, color: textColor),
+        ),
         const SizedBox(height: 5),
-        classTime.end.l10n(context).text(style: TextStyle(color: textColor)),
+        classTime.end.label.text(style: TextStyle(color: textColor)),
       ].column().padAll(10),
     );
   }
@@ -290,7 +336,12 @@ class LessonOverlapGroup extends StatelessWidget {
   final int timeslot;
   final TimetableEntity timetable;
 
-  const LessonOverlapGroup(this.lessonsInSlot, this.timeslot, this.timetable, {super.key});
+  const LessonOverlapGroup(
+    this.lessonsInSlot,
+    this.timeslot,
+    this.timetable, {
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -298,13 +349,26 @@ class LessonOverlapGroup extends StatelessWidget {
     final List<Widget> all = [];
     ClassTime? classTime;
     const palette = BuiltinTimetablePalettes.classic;
-    for (int lessonIndex = 0; lessonIndex < lessonsInSlot.length; lessonIndex++) {
+    for (
+      int lessonIndex = 0;
+      lessonIndex < lessonsInSlot.length;
+      lessonIndex++
+    ) {
       final lesson = lessonsInSlot[lessonIndex];
       final course = lesson.course;
       final colorEntry = timetable.resolveColor(palette, course);
       final color = colorEntry.colorBy(context);
-      classTime = calcBeginEndTimePointOfLesson(timeslot, timetable.campus, course.place);
-      final row = LessonCard(lesson: lesson, course: course, timetable: timetable, color: color);
+      classTime = calcBeginEndTimePointOfLesson(
+        timeslot,
+        timetable.campus,
+        course.place,
+      );
+      final row = LessonCard(
+        lesson: lesson,
+        course: course,
+        timetable: timetable,
+        color: color,
+      );
       all.add(row);
     }
     // [classTime] must be nonnull.

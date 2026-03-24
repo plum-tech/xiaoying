@@ -31,8 +31,12 @@ bool get supportsSystemAccentColor => defaultTargetPlatform.supportsAccentColor;
 
 Color? findBestTextColor(Color bgColor, List<Color> textColors) {
   // final sorted = textColors.sortedBy<num>((textColor) => calculateContrastRatio(textColor, bgColor));
-  final map =
-      Map.fromEntries(textColors.map((textColor) => MapEntry(calculateContrastRatio(textColor, bgColor), textColor)));
+  final map = Map.fromEntries(
+    textColors.map(
+      (textColor) =>
+          MapEntry(calculateContrastRatio(textColor, bgColor), textColor),
+    ),
+  );
   final sorted = map.entries.sortedBy<num>((e) => e.key).toList();
   final res = sorted.lastOrNull?.value;
   return res;

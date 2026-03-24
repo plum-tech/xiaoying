@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:animations/animations.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -29,7 +28,11 @@ class _MimirAppState extends ConsumerState<MimirApp> {
   void initState() {
     super.initState();
     if (UniversalPlatform.isAndroid) {
-      SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(systemNavigationBarColor: Colors.transparent));
+      SystemChrome.setSystemUIOverlayStyle(
+        const SystemUiOverlayStyle(
+          systemNavigationBarColor: Colors.transparent,
+        ),
+      );
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     }
   }
@@ -52,20 +55,27 @@ class _MimirAppState extends ConsumerState<MimirApp> {
             ),
           ),
         ),
-        colorScheme: ColorScheme.fromSeed(seedColor: _randomColor(R.uuid.hashCode), brightness: origin.brightness),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: _randomColor(R.uuid.hashCode),
+          brightness: origin.brightness,
+        ),
         visualDensity: VisualDensity.comfortable,
         splashFactory: InkSparkle.splashFactory,
         navigationBarTheme: const NavigationBarThemeData(height: 60),
-        snackBarTheme: const SnackBarThemeData(behavior: SnackBarBehavior.floating),
+        snackBarTheme: const SnackBarThemeData(
+          behavior: SnackBarBehavior.floating,
+        ),
         pageTransitionsTheme: const PageTransitionsTheme(
           builders: {
             TargetPlatform.android: ZoomPageTransitionsBuilder(),
             TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
             TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
-            TargetPlatform.linux:
-                SharedAxisPageTransitionsBuilder(transitionType: SharedAxisTransitionType.vertical),
-            TargetPlatform.windows:
-                SharedAxisPageTransitionsBuilder(transitionType: SharedAxisTransitionType.vertical),
+            TargetPlatform.linux: SharedAxisPageTransitionsBuilder(
+              transitionType: SharedAxisTransitionType.vertical,
+            ),
+            TargetPlatform.windows: SharedAxisPageTransitionsBuilder(
+              transitionType: SharedAxisTransitionType.vertical,
+            ),
           },
         ),
       );
@@ -73,16 +83,15 @@ class _MimirAppState extends ConsumerState<MimirApp> {
 
     return MaterialApp.router(
       title: R.appName,
-      onGenerateTitle: (ctx) => "appName".tr(),
+      onGenerateTitle: (ctx) => R.appName,
       routerConfig: router,
-      localizationsDelegates: context.localizationDelegates,
-      supportedLocales: context.supportedLocales,
-      locale: context.locale,
       themeMode: ThemeMode.system,
       theme: bakeTheme(ThemeData.light()),
       darkTheme: bakeTheme(ThemeData.dark()),
-      builder: (ctx, child) =>
-          _PostServiceRunner(key: const ValueKey("Post service runner"), child: child ?? const SizedBox.shrink()),
+      builder: (ctx, child) => _PostServiceRunner(
+        key: const ValueKey("Post service runner"),
+        child: child ?? const SizedBox.shrink(),
+      ),
       scrollBehavior: const MaterialScrollBehavior().copyWith(
         dragDevices: {
           PointerDeviceKind.mouse,
@@ -98,7 +107,12 @@ class _MimirAppState extends ConsumerState<MimirApp> {
 
 Color _randomColor(int seed) {
   final rand = Random(seed);
-  return Color.fromRGBO(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256), 1);
+  return Color.fromRGBO(
+    rand.nextInt(256),
+    rand.nextInt(256),
+    rand.nextInt(256),
+    1,
+  );
 }
 
 class _PostServiceRunner extends ConsumerStatefulWidget {
@@ -117,7 +131,9 @@ class _PostServiceRunnerState extends ConsumerState<_PostServiceRunner> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       final navigateCtx = $key.currentContext;
       if (navigateCtx == null) return;
-      final accepted = ref.read(Settings.agreements.$basicAcceptanceOf(AgreementVersion.current));
+      final accepted = ref.read(
+        Settings.agreements.$basicAcceptanceOf(AgreementVersion.current),
+      );
       if (accepted == true) return;
       await AgreementsAcceptanceSheet.show(navigateCtx);
     });

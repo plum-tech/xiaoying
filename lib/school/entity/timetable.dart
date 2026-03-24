@@ -1,7 +1,4 @@
-import 'package:flutter/widgets.dart';
 import 'package:mimir/entity/campus.dart';
-import 'package:mimir/l10n/common.dart';
-import 'package:mimir/l10n/extension.dart';
 
 class TimePoint {
   final int hour;
@@ -10,8 +7,8 @@ class TimePoint {
   const TimePoint(this.hour, this.minute);
 
   const TimePoint.fromMinutes(int minutes)
-      : hour = minutes ~/ 60,
-        minute = minutes % 60;
+    : hour = minutes ~/ 60,
+      minute = minutes % 60;
 
   @override
   String toString() => '$hour:${'$minute'.padLeft(2, '0')}';
@@ -32,13 +29,16 @@ class TimePoint {
     return sb.toString();
   }
 
-  String l10n(BuildContext context) => context.formatHmNum(DateTime(0, 1, 1, hour, minute));
+  String get label => '$hour:${'$minute'.padLeft(2, '0')}';
 
-  TimeDuration difference(TimePoint b) => TimeDuration.fromMinutes(totalMinutes - b.totalMinutes);
+  TimeDuration difference(TimePoint b) =>
+      TimeDuration.fromMinutes(totalMinutes - b.totalMinutes);
 
-  TimePoint operator -(TimeDuration b) => TimePoint.fromMinutes(totalMinutes - b.totalMinutes);
+  TimePoint operator -(TimeDuration b) =>
+      TimePoint.fromMinutes(totalMinutes - b.totalMinutes);
 
-  TimePoint operator +(TimeDuration b) => TimePoint.fromMinutes(totalMinutes + b.totalMinutes);
+  TimePoint operator +(TimeDuration b) =>
+      TimePoint.fromMinutes(totalMinutes + b.totalMinutes);
 
   int get totalMinutes => hour * 60 + minute;
 }
@@ -52,25 +52,24 @@ extension DateTimeTimePointX on DateTime {
 class TimeDuration {
   final int hour;
   final int minute;
-  static const _i18n = TimeI18n();
 
   int get totalMinutes => hour * 60 + minute;
 
   const TimeDuration(this.hour, this.minute);
 
   const TimeDuration.fromMinutes(int minutes)
-      : hour = minutes ~/ 60,
-        minute = minutes % 60;
+    : hour = minutes ~/ 60,
+      minute = minutes % 60;
 
-  String localized() {
+  String get label {
     final h = "$hour";
     final min = "$minute".padLeft(2, '0');
     if (hour == 0) {
-      return _i18n.minuteFormat(min);
+      return "$min 分钟";
     } else if (minute == 0) {
-      return _i18n.hourFormat(h);
+      return "$h 小时";
     }
-    return _i18n.hourMinuteFormat(h, min);
+    return "$h 小时 $min 分钟";
   }
 
   Duration toDuration() => Duration(hours: hour, minutes: minute);

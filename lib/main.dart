@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,8 +14,6 @@ import 'package:system_theme/system_theme.dart';
 import 'package:uuid/uuid.dart';
 
 import 'app.dart';
-
-import 'l10n/yaml_assets_loader.dart';
 import 'r.dart';
 
 void main() async {
@@ -41,8 +38,6 @@ void main() async {
   } catch (error, stackTrace) {
     debugPrintError(error, stackTrace);
   }
-  await EasyLocalization.ensureInitialized();
-
   await Files.init(
     temp: await getTemporaryDirectory(),
     cache: await getApplicationCacheDirectory(),
@@ -67,18 +62,5 @@ void main() async {
   await Init.initNetwork();
   await Init.initModules();
   await Init.initStorage();
-  runApp(
-    ProviderScope(
-      child: EasyLocalization(
-        supportedLocales: R.supportedLocales,
-        path: 'assets/l10n',
-        fallbackLocale: R.defaultLocale,
-        useFallbackTranslations: true,
-        assetLoader: _yamlAssetsLoader,
-        child: const MimirApp(),
-      ),
-    ),
-  );
+  runApp(const ProviderScope(child: MimirApp()));
 }
-
-final _yamlAssetsLoader = YamlAssetLoader();

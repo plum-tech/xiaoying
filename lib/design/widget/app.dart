@@ -48,7 +48,9 @@ class AppCard extends StatelessWidget {
           leading: leading,
           titleTextStyle: textTheme.titleLarge,
           title: title,
-          subtitleTextStyle: textTheme.bodyLarge?.copyWith(color: context.colorScheme.onSurfaceVariant),
+          subtitleTextStyle: textTheme.bodyLarge?.copyWith(
+            color: context.colorScheme.onSurfaceVariant,
+          ),
           subtitle: subtitle,
           trailing: trailing,
         ),

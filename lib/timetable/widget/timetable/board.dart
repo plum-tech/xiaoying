@@ -24,16 +24,10 @@ class TimetableBoard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return $displayMode >>
         (ctx, mode) => AnimatedSwitcher(
-              duration: Durations.short4,
-              child: mode == DisplayMode.daily
-                  ? DailyTimetable(
-                      $currentPos: $currentPos,
-                      timetable: timetable,
-                    )
-                  : WeeklyTimetable(
-                      $currentPos: $currentPos,
-                      timetable: timetable,
-                    ),
-            );
+          duration: Durations.short4,
+          child: mode == DisplayMode.daily
+              ? DailyTimetable($currentPos: $currentPos, timetable: timetable)
+              : WeeklyTimetable($currentPos: $currentPos, timetable: timetable),
+        );
   }
 }

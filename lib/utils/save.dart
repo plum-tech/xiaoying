@@ -1,12 +1,8 @@
 import 'dart:async';
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mimir/design/adaptive/dialog.dart';
-import 'package:mimir/l10n/common.dart';
-
-const _i18n = _I18n();
 
 class PromptSaveBeforeQuitScope extends StatelessWidget {
   final bool changed;
@@ -27,9 +23,9 @@ class PromptSaveBeforeQuitScope extends StatelessWidget {
       onPopInvokedWithResult: (didPop, result) async {
         if (didPop) return;
         final confirmSave = await context.showDialogRequest(
-          desc: _i18n.saveAndQuitRequest,
-          primary: _i18n.saveAndQuit,
-          secondary: _i18n.discard,
+          desc: "你有未保存的更改，想要保存吗？",
+          primary: "保存并退出",
+          secondary: "丢弃",
           secondaryDestructive: true,
           dismissible: true,
         );
@@ -62,9 +58,9 @@ class PromptDiscardBeforeQuitScope extends StatelessWidget {
       onPopInvokedWithResult: (didPop, result) async {
         if (didPop) return;
         final cancel = await context.showDialogRequest(
-          desc: _i18n.discardAndQuitRequest,
-          primary: _i18n.discardAndQuit,
-          secondary: _i18n.cancel,
+          desc: "你的进度无法被保存，想要丢弃吗？",
+          primary: "丢弃并退出",
+          secondary: "取消",
           primaryDestructive: true,
           dismissible: true,
         );
@@ -76,20 +72,4 @@ class PromptDiscardBeforeQuitScope extends StatelessWidget {
       child: child,
     );
   }
-}
-
-class _I18n with CommonI18nMixin {
-  const _I18n();
-
-  static const ns = "quitPrompt";
-
-  String get saveAndQuitRequest => "$ns.request.saveAndQuit".tr();
-
-  String get discardAndQuitRequest => "$ns.request.discardAndQuit".tr();
-
-  String get saveAndQuit => "$ns.saveAndQuit".tr();
-
-  String get discard => "$ns.discard".tr();
-
-  String get discardAndQuit => "$ns.discardAndQuit".tr();
 }

@@ -5,10 +5,7 @@ class ProgressWatcher {
   double _progress;
   final void Function(double progress)? callback;
 
-  ProgressWatcher({
-    double initial = 0.0,
-    this.callback,
-  }) : _progress = initial;
+  ProgressWatcher({double initial = 0.0, this.callback}) : _progress = initial;
 
   double get value => _progress;
 
@@ -63,7 +60,8 @@ class AnimatedProgressCircle extends StatelessWidget {
       duration: duration,
       curve: Curves.easeInOut,
       tween: Tween<double>(begin: value, end: value),
-      builder: (context, value, _) => CircularProgressIndicator.adaptive(value: value),
+      builder: (context, value, _) =>
+          CircularProgressIndicator.adaptive(value: value),
     );
   }
 }
@@ -86,15 +84,10 @@ class BlockWhenLoading extends StatelessWidget {
       AnimatedOpacity(
         opacity: blocked ? 0.5 : 1,
         duration: Durations.short4,
-        child: AbsorbPointer(
-          absorbing: blocked,
-          child: child,
-        ),
+        child: AbsorbPointer(absorbing: blocked, child: child),
       ),
       if (blocked && loading)
-        Positioned.fill(
-          child: const CircularProgressIndicator().center(),
-        ),
+        Positioned.fill(child: const CircularProgressIndicator().center()),
     ].stack();
   }
 }
@@ -103,11 +96,7 @@ class WhenLoading extends StatelessWidget {
   final bool loading;
   final Widget child;
 
-  const WhenLoading({
-    super.key,
-    required this.child,
-    this.loading = true,
-  });
+  const WhenLoading({super.key, required this.child, this.loading = true});
 
   @override
   Widget build(BuildContext context) {
@@ -118,9 +107,7 @@ class WhenLoading extends StatelessWidget {
         child: child,
       ),
       if (loading)
-        Positioned.fill(
-          child: const CircularProgressIndicator().center(),
-        ),
+        Positioned.fill(child: const CircularProgressIndicator().center()),
     ].stack();
   }
 }

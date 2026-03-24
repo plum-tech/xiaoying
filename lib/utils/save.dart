@@ -40,36 +40,3 @@ class PromptSaveBeforeQuitScope extends StatelessWidget {
     );
   }
 }
-
-class PromptDiscardBeforeQuitScope extends StatelessWidget {
-  final bool changed;
-  final Widget child;
-
-  const PromptDiscardBeforeQuitScope({
-    super.key,
-    required this.changed,
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return PopScope(
-      canPop: !changed,
-      onPopInvokedWithResult: (didPop, result) async {
-        if (didPop) return;
-        final cancel = await context.showDialogRequest(
-          desc: "你的进度无法被保存，想要丢弃吗？",
-          primary: "丢弃并退出",
-          secondary: "取消",
-          primaryDestructive: true,
-          dismissible: true,
-        );
-        if (cancel == true) {
-          if (!context.mounted) return;
-          context.pop();
-        }
-      },
-      child: child,
-    );
-  }
-}

@@ -263,19 +263,6 @@ class HiveTable<TId, T> {
     }
   }
 
-  void drop() {
-    final ids = idList;
-    if (ids == null) return;
-    for (final id in ids) {
-      box.delete(_rowK(id));
-    }
-    box.delete(_idListK);
-    box.delete(_selectedIdK);
-    idAllocator.clear();
-    $selected.notifier();
-    $any.notifier();
-  }
-
   // TODO: Row delegate?
   /// ignore null row
   List<({TId id, T row})> getRowsWithId() {
@@ -305,8 +292,6 @@ class HiveTable<TId, T> {
     }
     return res;
   }
-
-  Listenable listenRowChange(TId id) => box.listenable(keys: [_rowK(id)]);
 
   late final $rowOf = box.providerFamily<T, TId>(
     (id) => _rowK(id),

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -49,16 +47,15 @@ class _ImportTimetablePageState extends ConsumerState<ImportTimetablePage> {
   }
 
   Future<void> importSampleTimetable() async {
-    var timetable = await readSampleTimetableWithPrompt(
+    final timetable = buildSampleTimetable(semesterInfo: selected);
+    if (!mounted) return;
+    final importedTimetable = await processImportedTimetable(
       context,
-      semesterInfo: selected,
+      timetable,
     );
-    if (timetable == null) return;
+    if (importedTimetable == null) return;
     if (!mounted) return;
-    timetable = await processImportedTimetable(context, timetable);
-    if (timetable == null) return;
-    if (!mounted) return;
-    context.pop(timetable);
+    context.pop(importedTimetable);
   }
 
   Widget buildImportPage({Key? key}) {

@@ -27,27 +27,6 @@ enum Semester implements Comparable<Semester> {
     if (this == term1) return -1;
     return 1;
   }
-
-  String toUgRegFormField() {
-    const mapping = {
-      Semester.all: '',
-      Semester.term1: '3',
-      Semester.term2: '12',
-    };
-    return mapping[this]!;
-  }
-
-  static Semester fromUgRegFormField(String field) {
-    const mapping = {
-      '': Semester.all,
-      '3': Semester.term1,
-      '12': Semester.term2,
-      // for compatibility
-      '1': Semester.term1,
-      '2': Semester.term2,
-    };
-    return mapping[field]!;
-  }
 }
 
 @HiveType(typeId: CacheHiveType.semesterInfo)
@@ -174,17 +153,4 @@ enum CourseCat {
     CourseCat.integratedPractice => "综合实践",
     CourseCat.practicalInstruction => "实践教学",
   };
-
-  static CourseCat parse(String? str) {
-    return switch (str) {
-      "通识课" => genEd,
-      "公共基础课" => publicCore,
-      "学科专业基础课" => specializedCore,
-      "专业必修课" => specializedCompulsory,
-      "专业选修课" => specializedElective,
-      "综合实践" => integratedPractice,
-      "实践教学" => practicalInstruction,
-      _ => none,
-    };
-  }
 }

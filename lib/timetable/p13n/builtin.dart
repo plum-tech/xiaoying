@@ -72,10 +72,4 @@ extension TimetablePlatteX on TimetablePalette {
     if (colors.isEmpty) return TimetablePalette.defaultColor;
     return colors[course.courseCode.hashCode.abs() % colors.length];
   }
-
-  DualColor safeGetColor(int index) {
-    assert(colors.isNotEmpty, "Colors can't be empty");
-    if (colors.isEmpty) return TimetablePalette.defaultColor;
-    return colors[index % colors.length];
-  }
 }

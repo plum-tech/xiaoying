@@ -23,14 +23,6 @@ class Editor {
     _customEditor[T] = (ctx, desc, initial) => builder(ctx, desc, initial);
   }
 
-  static bool isSupport(dynamic test) {
-    return test is int ||
-        test is String ||
-        test is bool ||
-        test is DateTime ||
-        _customEditor.containsKey(test.runtimeType);
-  }
-
   static Future<T?> showAnyEditor<T>(
     BuildContext context, {
     required T initial,

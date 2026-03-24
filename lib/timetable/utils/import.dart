@@ -1,77 +1,10 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:mimir/design/adaptive/dialog.dart';
-import 'package:mimir/entity/campus.dart';
 import 'package:mimir/school/entity/school.dart';
 import 'package:mimir/school/utils.dart';
 import 'package:mimir/settings/settings.dart';
-import 'package:mimir/utils/error.dart';
-import 'package:mimir/utils/permission.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
 
 import '../entity/timetable.dart';
 import '../utils.dart';
-import 'parse.ug.dart';
-
-Future<Timetable?> readTimetableFromBytes(Uint8List bytes) async {
-  // timetable file should be encoding in utf-8.
-  final content = const Utf8Decoder().convert(bytes.toList());
-  final json = jsonDecode(content);
-  try {
-    final timetable = Timetable.fromJson(json);
-    return timetable;
-  } catch (error, stackTrace) {
-    debugPrintError(error, stackTrace);
-    // try parsing the file as timetable raw
-    return parseUndergraduateTimetableFromRaw(
-      json,
-      defaultCampus: Campus.defaultCampus,
-    );
-  }
-}
-
-Future<Timetable?> readSampleTimetableWithPrompt(
-  BuildContext context, {
-  SemesterInfo? semesterInfo,
-}) {
-  return readTimetableWithPrompt(
-    context,
-    get: () async => buildSampleTimetable(semesterInfo: semesterInfo),
-  );
-}
-
-Future<Timetable?> readTimetableWithPrompt(
-  BuildContext context, {
-  required Future<Timetable?> Function() get,
-}) async {
-  try {
-    final timetable = await get();
-    return timetable;
-  } catch (error, stackTrace) {
-    debugPrintError(error, stackTrace);
-    if (!context.mounted) return null;
-    if (error is PlatformException) {
-      await showPermissionDeniedDialog(context, Permission.storage);
-    } else if (error is FileSystemException) {
-      await context.showTip(
-        title: "格式错误",
-        desc: error.osError?.message ?? error.message,
-        primary: "好的",
-      );
-    } else {
-      await context.showTip(
-        title: "格式错误",
-        desc: "所选文件无法作为课程表导入，请选择一个课程表文件。",
-        primary: "好的",
-      );
-    }
-    return null;
-  }
-}
 
 Timetable buildSampleTimetable({SemesterInfo? semesterInfo}) {
   final now = DateTime.now();

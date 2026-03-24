@@ -124,12 +124,14 @@ class _MyTimetableListPageState extends ConsumerState<MyTimetableListPage> {
   }
 
   Future<void> importSampleTimetable() async {
-    var timetable = await readSampleTimetableWithPrompt(context);
-    if (timetable == null) return;
+    final timetable = buildSampleTimetable();
     if (!mounted) return;
-    timetable = await processImportedTimetable(context, timetable);
-    if (timetable == null) return;
-    final id = TimetableInit.storage.timetable.add(timetable);
+    final importedTimetable = await processImportedTimetable(
+      context,
+      timetable,
+    );
+    if (importedTimetable == null) return;
+    final id = TimetableInit.storage.timetable.add(importedTimetable);
     if (Settings.timetable.autoUseImported) {
       TimetableInit.storage.timetable.selectedId = id;
     } else {

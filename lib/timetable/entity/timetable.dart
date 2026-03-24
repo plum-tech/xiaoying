@@ -96,10 +96,6 @@ class Timetable implements WithUuid {
   DateTime get endDate =>
       startDate.copyWith(day: startDate.day + maxWeekLength * 7);
 
-  bool inRange(DateTime date) {
-    return startDate.isBefore(date) && date.isBefore(endDate);
-  }
-
   @override
   String toString() {
     return {
@@ -520,14 +516,6 @@ extension type const TimetableWeekIndices(List<TimetableWeekIndex> indices)
     } else {
       return (start: single, end: single);
     }
-  }
-}
-
-String rangeToString(({int start, int end}) range) {
-  if (range.start == range.end) {
-    return "${range.start}";
-  } else {
-    return "${range.start}-${range.end}";
   }
 }
 

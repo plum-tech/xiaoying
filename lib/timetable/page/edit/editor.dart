@@ -280,17 +280,6 @@ class _TimetableEditorPageState extends State<TimetableEditorPage> {
     );
   }
 
-  void setFromTimetable(Timetable timetable) {
-    setState(() {
-      $name.text = timetable.name;
-      $startDate.value = timetable.startDate;
-      $signature.text = timetable.signature;
-      courses = Map.of(timetable.courses);
-      lastCourseKey = timetable.lastCourseKey;
-    });
-    markChanged();
-  }
-
   void onSave() {
     final signature = $signature.text.trim();
     Settings.lastSignature = signature;

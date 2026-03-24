@@ -52,26 +52,6 @@ class TimetableEntity with TimetablePaletteResolver, CourseCodeIndexer {
   Campus get campus => type.campus;
 
   String get signature => type.signature;
-
-  TimetableDay? getDaySinceStart(int days) {
-    return this.days[days - 1];
-  }
-
-  TimetableWeek? getWeekOn(DateTime date) {
-    if (startDate.isAfter(date)) return null;
-    final diff = date.difference(startDate);
-    if (diff.inDays > maxWeekLength * 7) return null;
-    final weekIndex = diff.inDays ~/ 7;
-    if (weekIndex < 0 || weekIndex >= maxWeekLength) return null;
-    return getWeek(weekIndex);
-  }
-
-  TimetableDay? getDayOn(DateTime date) {
-    if (startDate.isAfter(date)) return null;
-    final diff = date.difference(startDate);
-    if (diff.inDays > maxWeekLength * 7) return null;
-    return days.elementAtOrNull(diff.inDays);
-  }
 }
 
 extension type TimetableWeek(List<TimetableDay> days) {
@@ -124,23 +104,6 @@ class TimetableDay {
   List<TimetableLessonSlot> get timeslot2LessonSlot =>
       UnmodifiableListView(slots);
 
-  late final Set<Course> _associatedCourses = slots
-      .map((slot) => slot.lessons)
-      .flattened
-      .map((part) => part.course)
-      .toSet();
-
-  Set<Course> get associatedCourses => UnmodifiableSetView(_associatedCourses);
-
-  bool _frozen = false;
-
-  bool get frozen => _frozen;
-
-  void freeze() {
-    _frozen = true;
-    throw UnimplementedError();
-  }
-
   DateTime get date => reflectWeekDayIndexToDate(
     startDate: parent.startDate,
     weekIndex: weekIndex,
@@ -176,9 +139,6 @@ class TimetableDay {
   bool get isFree => slots.every((lessonSlot) => lessonSlot.lessons.isEmpty);
 
   void add({required TimetableLessonPart lesson, required int at}) {
-    if (frozen) {
-      throw throw UnsupportedError("Cannot modify a frozen $TimetableDay.");
-    }
     assert(0 <= at && at < slots.length);
     if (0 <= at && at < slots.length) {
       final lessonSlot = slots[at];
@@ -188,87 +148,9 @@ class TimetableDay {
   }
 
   void clear() {
-    if (frozen) {
-      throw throw UnsupportedError("Cannot modify a frozen $TimetableDay.");
-    }
     for (final lessonSlot in slots) {
       lessonSlot.lessons.clear();
     }
-  }
-
-  void replaceWith(TimetableDay other) {
-    // timeslot2LessonSlot
-    setLessonSlots(other.cloneLessonSlots());
-  }
-
-  void swap(TimetableDay other) {
-    // timeslot2LessonSlot
-    final $timeslot2LessonSlot = other.cloneLessonSlots();
-    other.setLessonSlots(cloneLessonSlots());
-    setLessonSlots($timeslot2LessonSlot);
-  }
-
-  void setLessonSlots(Iterable<TimetableLessonSlot> v) {
-    slots.clear();
-    slots.addAll(v);
-
-    for (final lessonSlot in slots) {
-      lessonSlot.parent = this;
-      for (final part in lessonSlot.lessons) {
-        part.type.parent = this;
-      }
-    }
-  }
-
-  List<TimetableLessonSlot> cloneLessonSlots() {
-    final old2newLesson = <TimetableLesson, TimetableLesson>{};
-    final timeslots = List.of(
-      slots.map((lessonSlot) {
-        return TimetableLessonSlot(
-          lessons: List.of(
-            lessonSlot.lessons.map((lessonPart) {
-              final oldLesson = lessonPart.type;
-              final lesson =
-                  old2newLesson[oldLesson] ?? oldLesson.copyWith(parts: []);
-              old2newLesson[oldLesson] ??= lesson;
-              final part = lessonPart.copyWith(type: lesson);
-              return part;
-            }),
-          ),
-        );
-      }),
-    );
-
-    for (final slot in timeslots) {
-      for (final lessonPart in slot.lessons) {
-        lessonPart.type.parts.addAll(
-          timeslots
-              .map((slot) => slot.lessons)
-              .flattened
-              .where((part) => part.type == lessonPart.type),
-        );
-      }
-    }
-    return timeslots;
-  }
-
-  /// At all lessons [layer]
-  Iterable<TimetableLessonPart> browseLessonsAt({required int layer}) sync* {
-    for (final lessonSlot in slots) {
-      if (0 <= layer && layer < lessonSlot.lessons.length) {
-        yield lessonSlot.lessons[layer];
-      }
-    }
-  }
-
-  bool hasAnyLesson() {
-    for (final lessonSlot in slots) {
-      if (lessonSlot.lessons.isNotEmpty) {
-        assert(associatedCourses.isNotEmpty);
-        return true;
-      }
-    }
-    return false;
   }
 
   @override

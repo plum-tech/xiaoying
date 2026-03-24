@@ -57,13 +57,9 @@ dependencies:
 
   # Platform
   # Android / iOS / Windows Permission
-  permission_handler: ^11.4.0
   # Open with other APP/programs
-  open_file: ^3.5.10
   url_launcher: ^6.3.1
-  file_picker: ^8.1.2
   share_plus: ^10.1.4
-  app_settings: ^5.2.0
 
   # Get package info (version)
   package_info_plus: ^8.2.1

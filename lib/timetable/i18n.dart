@@ -22,7 +22,8 @@ class _I18n with CommonI18nMixin {
 
   String get navigation => "$ns.navigation".tr();
 
-  String weekOrderedName({required int number}) => "$ns.weekOrderedName".tr(args: [number.toString()]);
+  String weekOrderedName({required int number}) =>
+      "$ns.weekOrderedName".tr(args: [number.toString()]);
 
   String get startWith => "$ns.startWith".tr();
 
@@ -107,6 +108,12 @@ class _Import {
 
   String get fromFileBtn => "$ns.fromFileBtn".tr();
 
+  String get sample => "$ns.sample".tr();
+
+  String get sampleBtn => "$ns.sampleBtn".tr();
+
+  String get sampleName => "$ns.sampleName".tr();
+
   String get connectivityCheckerDesc => "$ns.connectivityCheckerDesc".tr();
 
   String get selectSemesterTip => "$ns.selectSemesterTip".tr();
@@ -127,16 +134,14 @@ class _Import {
 
   String get timetableInfo => "$ns.timetableInfo".tr();
 
-  String defaultName(
-    String semester,
-    String yearStart,
-    String yearEnd,
-  ) =>
-      "$ns.defaultName".tr(namedArgs: {
-        "semester": semester,
-        "yearStart": yearStart,
-        "yearEnd": yearEnd,
-      });
+  String defaultName(String semester, String yearStart, String yearEnd) =>
+      "$ns.defaultName".tr(
+        namedArgs: {
+          "semester": semester,
+          "yearStart": yearStart,
+          "yearEnd": yearEnd,
+        },
+      );
 
   String get fileSystemError => "$ns.fileSystemError.title".tr();
 
@@ -174,16 +179,11 @@ class _Editor {
 
   String get daysOfWeek => "$ns.daysOfWeek".tr();
 
-  String timeslotsSpanMultiple({
-    required String from,
-    required String to,
-  }) =>
-      "$ns.timeslots.multiple".tr(namedArgs: {
-        "from": from,
-        "to": to,
-      });
+  String timeslotsSpanMultiple({required String from, required String to}) =>
+      "$ns.timeslots.multiple".tr(namedArgs: {"from": from, "to": to});
 
-  String timeslotsSpanSingle(String at) => "$ns.timeslots.single".tr(args: [at]);
+  String timeslotsSpanSingle(String at) =>
+      "$ns.timeslots.single".tr(args: [at]);
 }
 
 class _Issue {
@@ -231,9 +231,12 @@ class _Export {
 
   String get alarmBeforeClassBegins => "$ns.alarmBeforeClassBegins.title".tr();
 
-  String alarmBeforeClassBeginsDesc(Duration duration) => "$ns.alarmBeforeClassBegins.desc".tr(namedArgs: {
-        "duration": i18n.time.minuteFormat(duration.inMinutes.toString()),
-      });
+  String alarmBeforeClassBeginsDesc(Duration duration) =>
+      "$ns.alarmBeforeClassBegins.desc".tr(
+        namedArgs: {
+          "duration": i18n.time.minuteFormat(duration.inMinutes.toString()),
+        },
+      );
 }
 
 class _FreeTip {
@@ -265,9 +268,11 @@ class _Settings {
 
   String get autoUseImportedDesc => "$ns.autoUseImported.desc".tr();
 
-  String get showTimetableNavigation => "$ns.showTimetableNavigation.title".tr();
+  String get showTimetableNavigation =>
+      "$ns.showTimetableNavigation.title".tr();
 
-  String get showTimetableNavigationDesc => "$ns.showTimetableNavigation.desc".tr();
+  String get showTimetableNavigationDesc =>
+      "$ns.showTimetableNavigation.desc".tr();
 
   String get palette => "$ns.palette.title".tr();
 

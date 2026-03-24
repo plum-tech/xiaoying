@@ -64,6 +64,9 @@ timetable:
     fromFile: 从文件
     tryImportBtn: 尝试导入
     fromFileBtn: 从文件导入
+    sample: 示例课程表
+    sampleBtn: 导入示例课程表
+    sampleName: 示例课程表
     connectivityCheckerDesc: 在导入课程表之前，需要先检查你是否能访问教务系统。
     selectSemesterTip: 请先选择学年与学期
     endTip: 请完善课程表的信息。

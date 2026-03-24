@@ -20,7 +20,8 @@ class ImportTimetablePage extends ConsumerStatefulWidget {
   const ImportTimetablePage({super.key});
 
   @override
-  ConsumerState<ImportTimetablePage> createState() => _ImportTimetablePageState();
+  ConsumerState<ImportTimetablePage> createState() =>
+      _ImportTimetablePageState();
 }
 
 class _ImportTimetablePageState extends ConsumerState<ImportTimetablePage> {
@@ -39,8 +40,8 @@ class _ImportTimetablePageState extends ConsumerState<ImportTimetablePage> {
         title: i18n.import.title.text(),
         actions: [
           PlatformTextButton(
-            onPressed: importFromFile,
-            child: i18n.import.fromFileBtn.text(),
+            onPressed: importSampleTimetable,
+            child: i18n.import.sampleBtn.text(),
           ),
         ],
       ),
@@ -48,8 +49,11 @@ class _ImportTimetablePageState extends ConsumerState<ImportTimetablePage> {
     );
   }
 
-  Future<void> importFromFile() async {
-    var timetable = await readTimetableFromPickedFileWithPrompt(context);
+  Future<void> importSampleTimetable() async {
+    var timetable = await readSampleTimetableWithPrompt(
+      context,
+      semesterInfo: selected,
+    );
     if (timetable == null) return;
     if (!mounted) return;
     timetable = await processImportedTimetable(context, timetable);
@@ -70,7 +74,11 @@ class _ImportTimetablePageState extends ConsumerState<ImportTimetablePage> {
           });
         },
       ).padSymmetric(v: 30),
-    ].column(key: key, maa: MainAxisAlignment.center, caa: CrossAxisAlignment.center);
+    ].column(
+      key: key,
+      maa: MainAxisAlignment.center,
+      caa: CrossAxisAlignment.center,
+    );
   }
 }
 
@@ -80,9 +88,7 @@ Future<Timetable?> processImportedTimetable(
   bool useRootNavigator = false,
 }) async {
   final newTimetable = await context.showSheet<Timetable>(
-    (ctx) => TimetableEditorPage(
-      timetable: timetable,
-    ),
+    (ctx) => TimetableEditorPage(timetable: timetable),
     dismissible: false,
   );
   return newTimetable;

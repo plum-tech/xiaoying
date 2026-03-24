@@ -34,7 +34,8 @@ class MyTimetableListPage extends ConsumerStatefulWidget {
   const MyTimetableListPage({super.key});
 
   @override
-  ConsumerState<MyTimetableListPage> createState() => _MyTimetableListPageState();
+  ConsumerState<MyTimetableListPage> createState() =>
+      _MyTimetableListPageState();
 }
 
 class _MyTimetableListPageState extends ConsumerState<MyTimetableListPage> {
@@ -59,24 +60,22 @@ class _MyTimetableListPageState extends ConsumerState<MyTimetableListPage> {
 
   Widget buildFab() {
     return FloatingActionButton.extended(
-      onPressed: importFromFile,
-      label: Text( i18n.import.fromFile),
+      onPressed: importSampleTimetable,
+      label: Text(i18n.import.sample),
       icon: Icon(context.icons.add),
     );
   }
 
   Widget buildEmptyTimetableBody() {
     return Scaffold(
-      appBar: AppBar(
-        title: i18n.mine.title.text(),
-      ),
+      appBar: AppBar(title: i18n.mine.title.text()),
       floatingActionButton: buildFab(),
       body: LeavingBlank(
         icon: Icons.calendar_month_rounded,
         desc: i18n.mine.emptyTip,
         action: FilledButton(
-          onPressed: importFromFile,
-          child: i18n.import.import.text(),
+          onPressed: importSampleTimetable,
+          child: i18n.import.sampleBtn.text(),
         ),
       ),
     );
@@ -91,9 +90,7 @@ class _MyTimetableListPageState extends ConsumerState<MyTimetableListPage> {
       floatingActionButton: buildFab(),
       body: CustomScrollView(
         slivers: [
-          SliverAppBar.medium(
-            title: i18n.mine.title.text(),
-          ),
+          SliverAppBar.medium(title: i18n.mine.title.text()),
           SliverList.builder(
             itemCount: timetables.length,
             itemBuilder: (ctx, i) {
@@ -127,11 +124,19 @@ class _MyTimetableListPageState extends ConsumerState<MyTimetableListPage> {
     );
   }
 
-  Future<Timetable?> importFromFile() async {
-    final timetable = await readTimetableFromPickedFileWithPrompt(context);
-    if (timetable == null) return null;
-    if (!mounted) return null;
-    return timetable;
+  Future<void> importSampleTimetable() async {
+    var timetable = await readSampleTimetableWithPrompt(context);
+    if (timetable == null) return;
+    if (!mounted) return;
+    timetable = await processImportedTimetable(context, timetable);
+    if (timetable == null) return;
+    final id = TimetableInit.storage.timetable.add(timetable);
+    if (Settings.timetable.autoUseImported) {
+      TimetableInit.storage.timetable.selectedId = id;
+    } else {
+      TimetableInit.storage.timetable.selectedId ??= id;
+    }
+    await HapticFeedback.mediumImpact();
   }
 }
 
@@ -187,10 +192,7 @@ class TimetableCard extends StatelessWidget {
             activator: const SingleActivator(LogicalKeyboardKey.keyP),
             action: () async {
               if (!ctx.mounted) return;
-              await previewTimetable(
-                context,
-                timetable: timetable,
-              );
+              await previewTimetable(context, timetable: timetable);
             },
           ),
         EntryAction.edit(
@@ -198,13 +200,16 @@ class TimetableCard extends StatelessWidget {
           icon: context.icons.edit,
           activator: const SingleActivator(LogicalKeyboardKey.keyE),
           action: () async {
-            var newTimetable = await ctx.push<Timetable>("/timetable/edit/${timetable.uuid}");
+            var newTimetable = await ctx.push<Timetable>(
+              "/timetable/edit/${timetable.uuid}",
+            );
             if (newTimetable == null) return;
             final newName = allocValidFileName(newTimetable.name);
             if (newName != newTimetable.name) {
               newTimetable = newTimetable.copyWith(name: newName);
             }
-            TimetableInit.storage.timetable[timetable.uuid] = newTimetable.markModified();
+            TimetableInit.storage.timetable[timetable.uuid] = newTimetable
+                .markModified();
           },
         ),
         // share_plus: sharing files is not supported on Linux
@@ -235,7 +240,10 @@ class TimetableCard extends StatelessWidget {
           action: () async {
             final duplicate = timetable.copyWith(
               uuid: const Uuid().v4(),
-              name: getDuplicateFileName(timetable.name, all: allTimetableNames),
+              name: getDuplicateFileName(
+                timetable.name,
+                all: allTimetableNames,
+              ),
               lastModified: DateTime.now(),
             );
             TimetableInit.storage.timetable.add(duplicate);
@@ -258,10 +266,7 @@ class TimetableCard extends StatelessWidget {
 class TimetableInfo extends StatelessWidget {
   final Timetable timetable;
 
-  const TimetableInfo({
-    super.key,
-    required this.timetable,
-  });
+  const TimetableInfo({super.key, required this.timetable});
 
   @override
   Widget build(BuildContext context) {
@@ -273,7 +278,9 @@ class TimetableInfo extends StatelessWidget {
       timetable.name.text(style: textTheme.titleLarge),
       "$year, $semester".text(style: textTheme.titleMedium),
       if (author.isNotEmpty) author.text(style: textTheme.bodyMedium),
-      "${i18n.startWith} ${context.formatYmdText(timetable.startDate)}".text(style: textTheme.bodyMedium),
+      "${i18n.startWith} ${context.formatYmdText(timetable.startDate)}".text(
+        style: textTheme.bodyMedium,
+      ),
     ].column(caa: CrossAxisAlignment.start);
   }
 }
@@ -290,10 +297,19 @@ class TimetableDetailsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final timetable = ref.watch(TimetableInit.storage.timetable.$rowOf(this.timetable.uuid)) ?? this.timetable;
+    final timetable =
+        ref.watch(
+          TimetableInit.storage.timetable.$rowOf(this.timetable.uuid),
+        ) ??
+        this.timetable;
     final resolver = TimetablePaletteResolver(timetable);
-    final palette = ref.watch(TimetableInit.storage.palette.$selectedRow) ?? BuiltinTimetablePalettes.classic;
-    final code2Courses = timetable.courses.values.groupListsBy((c) => c.courseCode).entries.toList();
+    final palette =
+        ref.watch(TimetableInit.storage.palette.$selectedRow) ??
+        BuiltinTimetablePalettes.classic;
+    final code2Courses = timetable.courses.values
+        .groupListsBy((c) => c.courseCode)
+        .entries
+        .toList();
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -301,40 +317,45 @@ class TimetableDetailsPage extends ConsumerWidget {
             title: TextScroll(timetable.name),
             actions: actions,
           ),
-          SliverList.list(children: [
-            ListTile(
-              leading: const Icon(Icons.drive_file_rename_outline),
-              title: i18n.editor.name.text(),
-              subtitle: timetable.name.text(),
-            ),
-            ListTile(
-              leading: const Icon(Icons.date_range),
-              title: i18n.startWith.text(),
-              subtitle: context.formatYmdText(timetable.startDate).text(),
-            ),
-            ListTile(
-              leading: const Icon(Icons.create),
-              title: i18n.createdWhen.text(),
-              subtitle: context.formatYmdText(timetable.createdTime).text(),
-            ),
-            ListTile(
-              leading: const Icon(Icons.person),
-              title: i18n.signature.text(),
-              subtitle: timetable.signature.text(),
-            ),
-            ListTile(
-              leading: const Icon(Icons.school),
-              title: StudentType.l10nTitle().text(),
-              subtitle: timetable.studentType.l10n().text(),
-            ),
-          ]),
-          if (code2Courses.isNotEmpty) const SliverToBoxAdapter(child: Divider()),
+          SliverList.list(
+            children: [
+              ListTile(
+                leading: const Icon(Icons.drive_file_rename_outline),
+                title: i18n.editor.name.text(),
+                subtitle: timetable.name.text(),
+              ),
+              ListTile(
+                leading: const Icon(Icons.date_range),
+                title: i18n.startWith.text(),
+                subtitle: context.formatYmdText(timetable.startDate).text(),
+              ),
+              ListTile(
+                leading: const Icon(Icons.create),
+                title: i18n.createdWhen.text(),
+                subtitle: context.formatYmdText(timetable.createdTime).text(),
+              ),
+              ListTile(
+                leading: const Icon(Icons.person),
+                title: i18n.signature.text(),
+                subtitle: timetable.signature.text(),
+              ),
+              ListTile(
+                leading: const Icon(Icons.school),
+                title: StudentType.l10nTitle().text(),
+                subtitle: timetable.studentType.l10n().text(),
+              ),
+            ],
+          ),
+          if (code2Courses.isNotEmpty)
+            const SliverToBoxAdapter(child: Divider()),
           SliverList.builder(
             itemCount: code2Courses.length,
             itemBuilder: (ctx, i) {
               final MapEntry(value: courses) = code2Courses[i];
               final template = courses.first;
-              final color = resolver.resolveColor(palette, template).colorBy(context);
+              final color = resolver
+                  .resolveColor(palette, template)
+                  .colorBy(context);
               return TimetableCourseCard(
                 courses: courses,
                 courseName: template.courseName,
@@ -344,7 +365,7 @@ class TimetableDetailsPage extends ConsumerWidget {
                 color: color,
               );
             },
-          )
+          ),
         ],
       ),
     );

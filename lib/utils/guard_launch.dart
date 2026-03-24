@@ -10,7 +10,7 @@ Future<bool> guardLaunchUrl(BuildContext ctx, Uri url) async {
       if (UniversalPlatform.isDesktop) {
         return await launchUrl(url, mode: LaunchMode.externalApplication);
       }
-      return launchUrl(url,mode: .inAppBrowserView);
+      return launchUrl(url, mode: LaunchMode.inAppBrowserView);
     } catch (error, stackTrace) {
       debugPrintError(error, stackTrace);
       return false;

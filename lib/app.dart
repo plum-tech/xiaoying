@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:animations/animations.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -29,7 +30,7 @@ class _MimirAppState extends ConsumerState<MimirApp> {
     super.initState();
     if (UniversalPlatform.isAndroid) {
       SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(systemNavigationBarColor: Colors.transparent));
-      SystemChrome.setEnabledSystemUIMode(.edgeToEdge);
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     }
   }
 
@@ -46,7 +47,9 @@ class _MimirAppState extends ConsumerState<MimirApp> {
         platform: R.debugCupertino ? TargetPlatform.iOS : null,
         menuTheme: MenuThemeData(
           style: (origin.menuTheme.style ?? const MenuStyle()).copyWith(
-            shape: WidgetStatePropertyAll<OutlinedBorder?>(RoundedRectangleBorder(borderRadius: .circular(12.0))),
+            shape: WidgetStatePropertyAll<OutlinedBorder?>(
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+            ),
           ),
         ),
         colorScheme: ColorScheme.fromSeed(seedColor: _randomColor(R.uuid.hashCode), brightness: origin.brightness),
@@ -56,11 +59,13 @@ class _MimirAppState extends ConsumerState<MimirApp> {
         snackBarTheme: const SnackBarThemeData(behavior: SnackBarBehavior.floating),
         pageTransitionsTheme: const PageTransitionsTheme(
           builders: {
-            .android: ZoomPageTransitionsBuilder(),
-            .iOS: CupertinoPageTransitionsBuilder(),
-            .macOS: CupertinoPageTransitionsBuilder(),
-            .linux: SharedAxisPageTransitionsBuilder(transitionType: SharedAxisTransitionType.vertical),
-            .windows: SharedAxisPageTransitionsBuilder(transitionType: SharedAxisTransitionType.vertical),
+            TargetPlatform.android: ZoomPageTransitionsBuilder(),
+            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+            TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
+            TargetPlatform.linux:
+                SharedAxisPageTransitionsBuilder(transitionType: SharedAxisTransitionType.vertical),
+            TargetPlatform.windows:
+                SharedAxisPageTransitionsBuilder(transitionType: SharedAxisTransitionType.vertical),
           },
         ),
       );
@@ -73,13 +78,19 @@ class _MimirAppState extends ConsumerState<MimirApp> {
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
-      themeMode: .system,
-      theme: bakeTheme(.light()),
-      darkTheme: bakeTheme(.dark()),
+      themeMode: ThemeMode.system,
+      theme: bakeTheme(ThemeData.light()),
+      darkTheme: bakeTheme(ThemeData.dark()),
       builder: (ctx, child) =>
           _PostServiceRunner(key: const ValueKey("Post service runner"), child: child ?? const SizedBox.shrink()),
       scrollBehavior: const MaterialScrollBehavior().copyWith(
-        dragDevices: {.mouse, .touch, .stylus, .trackpad, .unknown},
+        dragDevices: {
+          PointerDeviceKind.mouse,
+          PointerDeviceKind.touch,
+          PointerDeviceKind.stylus,
+          PointerDeviceKind.trackpad,
+          PointerDeviceKind.unknown,
+        },
       ),
     );
   }

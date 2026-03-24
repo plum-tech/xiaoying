@@ -20,7 +20,7 @@ Widget _onError(BuildContext context, GoRouterState state) {
 
 final _timetableShellRoute = GoRoute(
   path: "/timetable",
-// Timetable is the home page.
+  // Timetable is the home page.
   builder: (ctx, state) => const TimetablePage(),
 );
 
@@ -55,10 +55,7 @@ final _settingsRoute = GoRoute(
       path: "timetable",
       builder: (ctx, state) => const TimetableSettingsPage(),
     ),
-    GoRoute(
-      path: "about",
-      builder: (ctx, state) => const AboutSettingsPage(),
-    ),
+    GoRoute(path: "about", builder: (ctx, state) => const AboutSettingsPage()),
   ],
 );
 
@@ -76,19 +73,12 @@ GoRouter buildRouter(ValueNotifier<RoutingConfig> $routingConfig) {
 RoutingConfig buildTimetableFocusRouter() {
   return RoutingConfig(
     routes: [
-      GoRoute(
-        path: "/",
-        redirect: (ctx, state) => "/timetable",
-      ),
-      StatefulShellRoute.indexedStack(
-        builder: (context, state, navigationShell) {
-          return MainStagePage(navigationShell: navigationShell);
+      GoRoute(path: "/", redirect: (ctx, state) => "/timetable"),
+      ShellRoute(
+        builder: (context, state, child) {
+          return MainStagePage(child: child);
         },
-        branches: [
-          StatefulShellBranch(
-            routes: [_timetableShellRoute],
-          ),
-        ],
+        routes: [_timetableShellRoute],
       ),
       ..._timetableRoutes,
       _settingsRoute,

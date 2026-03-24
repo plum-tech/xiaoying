@@ -4,8 +4,6 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
-import 'package:mimir/credentials/entity/user_type.dart';
-import 'package:mimir/credentials/init.dart';
 import 'package:mimir/entity/campus.dart';
 import 'package:mimir/entity/uuid.dart';
 import 'package:mimir/school/entity/school.dart';
@@ -15,27 +13,17 @@ import 'package:mimir/timetable/utils.dart';
 import 'package:statistics/statistics.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../school/entity/school_code.dart';
-
 part 'timetable.g.dart';
 
 DateTime _kNow() => DateTime.now();
 
-SchoolCode _kSchoolCode() => SchoolCode.sit;
-
-StudentType _kStudentType() => switch (CredentialsInit.storage.oa.userType) {
-      OaUserType.undergraduate => StudentType.undergraduate,
-      OaUserType.postgraduate => StudentType.postgraduate,
-      _ => StudentType.undergraduate,
-    };
+StudentType _kStudentType() => StudentType.undergraduate;
 
 Campus _defaultCampus() {
   return Settings.campus;
 }
 
-String _defaultStudentId() {
-  return CredentialsInit.storage.oa.credentials?.account ?? "";
-}
+String _defaultStudentId() => "";
 
 String _parseName(String name) {
   return name.substring(0, min(Timetable.maxNameLength, name.length)).replaceAll('\n', " ");
@@ -55,14 +43,12 @@ class Timetable implements WithUuid {
   final String name;
   @JsonKey()
   final DateTime startDate;
-  @JsonKey(unknownEnumValue: Campus.fengxian, defaultValue: _defaultCampus)
+  @JsonKey(unknownEnumValue: Campus.defaultCampus, defaultValue: _defaultCampus)
   final Campus campus;
   @JsonKey()
   final int schoolYear;
   @JsonKey()
   final Semester semester;
-  @JsonKey(defaultValue: _kSchoolCode)
-  final SchoolCode schoolCode;
   @JsonKey(defaultValue: _kStudentType)
   final StudentType studentType;
   @JsonKey()
@@ -90,7 +76,6 @@ class Timetable implements WithUuid {
     required this.courses,
     required this.lastCourseKey,
     required this.name,
-    required this.schoolCode,
     required this.startDate,
     required this.campus,
     required this.schoolYear,
@@ -122,7 +107,6 @@ class Timetable implements WithUuid {
       "name": name,
       "startDate": startDate,
       "schoolYear": schoolYear,
-      "schoolCode": schoolCode,
       "semester": semester,
       "lastModified": lastModified,
       "createdTime": createdTime,
@@ -138,7 +122,6 @@ class Timetable implements WithUuid {
         'name:"$name",'
         'signature:"$signature",'
         'studentId:"$studentId",'
-        'schoolCode:"$schoolCode",'
         'studentType:"$studentType",'
         "campus:$campus,"
         'startDate:DateTime.parse("$startDate"),'
@@ -162,7 +145,6 @@ class Timetable implements WithUuid {
         version == other.version &&
         uuid == other.uuid &&
         campus == other.campus &&
-        schoolCode == other.schoolCode &&
         schoolYear == other.schoolYear &&
         semester == other.semester &&
         name == other.name &&
@@ -186,7 +168,6 @@ class Timetable implements WithUuid {
         schoolYear,
         semester,
         startDate,
-        schoolCode,
         lastModified,
         createdTime,
         studentId,

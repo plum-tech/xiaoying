@@ -45,7 +45,7 @@ Future<Timetable?> readTimetableFromBytes(Uint8List bytes) async {
     // try parsing the file as timetable raw
     return parseUndergraduateTimetableFromRaw(
       json,
-      defaultCampus: Campus.fengxian,
+      defaultCampus: Campus.defaultCampus,
     );
   }
 }

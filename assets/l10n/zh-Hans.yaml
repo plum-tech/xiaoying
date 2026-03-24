@@ -25,7 +25,6 @@ agreements:
 mimir:
   school:
     title: 学校
-    10259: 上海应用技术大学
 timetable:
   navigation: 课程表
   jump: 跳转
@@ -193,9 +192,6 @@ credentials:
     captcha: 你的验证码不正确
     frozen: 你的账号处于冻结状态
     locked: 你的账号处于锁定状态
-    oa-frozen: 你的 OA 账号处于冻结状态，请稍后再试
-    oa-locked: 你的 OA 账号处于锁定状态，请联系管理员
-    oa-incompleteUserInfo: 你的 OA 账号用户信息不完整，请访问 https://myportal.sit.edu.cn 进行完善
 auth:
   signIn: 登录
   signUp: 注册
@@ -208,56 +204,27 @@ auth:
   offlineModeBtn: 离线模式
   failedWarn: 登录失败
   formatError: 格式错误
-oa:
-  login:
-    loginOa: 登录 OA
-    welcomeHeader: 欢迎！
-    accountHint: 学号/工号
-    oaPwdHint: 输入你的OA密码
-    freshmanSystemPwd: 迎新系统密码
-    freshmanSystemPwdHint: 输入迎新系统密码
-    loginRequired: 需要登录
-    neverLoggedInTip: 你必须先登录才能继续。
-    schoolServerUnconnectedTip: 无法连接学校服务器
-    disclaimer: |
-      您即将登录上海应用技术大学（简称"学校"）的[信息门户（简称"OA"）](https://myportal.sit.edu.cn/)的账户，
-      作为学校其他系统的统一认证服务。
-
-      我们非常重视您的隐私安全。您的账号与密码仅用于提交给学校服务器进行身份验证，并仅存储在本地。
 settings:
   title: 设置
   themeColor: 主题色
   fromSystem: 根据系统
-  loginTest:
-    title: 测试登录
-    desc: 尝试使用当前的登录凭据登录
   clearCache:
     title: 清空缓存
     desc: 清空使用过程中产生的离线缓存和 Cookies
-    request: 你下次需要连接校园网才能重新加载它们。
+    request: 清空缓存后，相关离线数据需要重新生成。
   themeMode:
     title: 亮度
   wipeData:
-    title: 擦除数据并登出
-    desc: 擦除所有数据并登出当前 OA 账号
+    title: 擦除数据
+    desc: 擦除所有本地数据
     request: 擦除所有数据
-    requestDesc: 此操作将永久擦除你的登录凭据，缓存和其他信息，如已导入的课程表。
+    requestDesc: 此操作将永久擦除你的缓存和其他本地信息，如已导入的课程表。
   about:
     title: 关于
     version: 版本
     termsOfService: 服务条款
     privacyPolicy: 隐私政策
     marketingWebsite: 官网
-oaAnnounce:
-  title: OA 公告
-  noOaAnnouncementsTip: 学校没有 OA 公告
-  downloadCompleted: 下载完成
-  downloadFailed: 下载失败
-  downloading: 下载中
-  info:
-    title: 标题
-    publishTime: 发布时间
-    department: 发布部门
     author: 作者
     tags: 标签
     attachmentHeader:
@@ -300,8 +267,7 @@ weekdayShort:
   5: 六
   6: 日
 campus:
-  xuhui: 徐汇
-  fengxian: 奉贤
+  defaultCampus: 默认校区
 unit:
   rmb: "{} 元"
   powerKwh: "{} 度"
@@ -318,12 +284,6 @@ themeMode:
   dark: 黑暗
   light: 明亮
   system: 系统
-OaUserType:
-  undergraduate: 本科生
-  postgraduate: 研究生
-  freshman: 新生
-  worker: 职工
-  other: 其他
 permission:
   permissionDenied: 没有权限
   permissionDeniedDescOf: "{} 权限未被授权，请检查应用的设置。"

@@ -12,7 +12,6 @@ on:
           - 'game_2048'
           - 'game_minesweeper'
           - 'mailbox'
-          - '10259'
           - '13871'
           - '12587'
           - 'auth'

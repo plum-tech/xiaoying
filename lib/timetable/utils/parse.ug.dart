@@ -1,4 +1,3 @@
-import 'package:mimir/school/entity/school_code.dart';
 import 'package:mimir/entity/campus.dart';
 import 'package:mimir/school/entity/school.dart';
 import 'package:mimir/school/utils.dart';
@@ -104,23 +103,6 @@ _TimetableInter _parseUndergraduateTimetableFromCourseRaw(List<UndergraduateCour
   );
 }
 
-Campus? _parseCampus(String campus) {
-  if (campus.contains("奉贤")) {
-    return Campus.fengxian;
-  } else if (campus.contains("徐汇")) {
-    return Campus.xuhui;
-  }
-  return null;
-}
-
-Campus? _extractCampusFromCourses(Iterable<UndergraduateCourseRaw> courses) {
-  for (final course in courses) {
-    final campus = _parseCampus(course.campus);
-    if (campus != null) return campus;
-  }
-  return null;
-}
-
 Timetable parseUndergraduateTimetableFromRaw(
   Map json, {
   required Campus defaultCampus,
@@ -141,14 +123,13 @@ Timetable parseUndergraduateTimetableFromRaw(
     uuid: const Uuid().v4(),
     courses: courses,
     studentId: studentId,
-    schoolCode: SchoolCode.sit,
     studentType: StudentType.undergraduate,
     lastCourseKey: lastCourseKey,
     signature: name,
     name: i18n.import.defaultName(semester.l10n(), schoolYear.toString(), (schoolYear + 1).toString()),
     startDate: estimateStartDate(schoolYear, semester),
     createdTime: DateTime.now(),
-    campus: _extractCampusFromCourses(rawCourses) ?? defaultCampus,
+    campus: defaultCampus,
     schoolYear: schoolYear,
     semester: semester,
     lastModified: DateTime.now(),

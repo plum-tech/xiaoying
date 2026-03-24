@@ -8,29 +8,23 @@ part of 'campus.dart';
 
 class CampusAdapter extends TypeAdapter<Campus> {
   @override
-  final int typeId = 3;
+  final typeId = 3;
 
   @override
   Campus read(BinaryReader reader) {
     switch (reader.readByte()) {
       case 0:
-        return Campus.fengxian;
-      case 1:
-        return Campus.xuhui;
+        return Campus.defaultCampus;
       default:
-        return Campus.fengxian;
+        return Campus.defaultCampus;
     }
   }
 
   @override
   void write(BinaryWriter writer, Campus obj) {
     switch (obj) {
-      case Campus.fengxian:
+      case Campus.defaultCampus:
         writer.writeByte(0);
-        break;
-      case Campus.xuhui:
-        writer.writeByte(1);
-        break;
     }
   }
 
@@ -39,5 +33,8 @@ class CampusAdapter extends TypeAdapter<Campus> {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is CampusAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
+      identical(this, other) ||
+      other is CampusAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
 }

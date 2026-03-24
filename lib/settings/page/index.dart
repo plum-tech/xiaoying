@@ -3,16 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mimir/agreements/entity/agreements.dart';
 import 'package:mimir/agreements/page/privacy_policy.dart';
-import 'package:mimir/credentials/entity/login_status.dart';
-import 'package:mimir/credentials/init.dart';
 import 'package:mimir/design/adaptive/dialog.dart';
 import 'package:mimir/design/adaptive/multiplatform.dart';
 import 'package:mimir/lifecycle.dart';
-import 'package:mimir/login/i18n.dart';
 import 'package:mimir/storage/hive/init.dart';
 import 'package:mimir/init.dart';
 import 'package:mimir/settings/settings.dart';
-import 'package:mimir/school/widget/campus.dart';
 import 'package:rettulf/rettulf.dart';
 
 import '../i18n.dart';
@@ -50,43 +46,10 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     final all = <Widget>[];
     final agreementAccepted = ref.watch(Settings.agreements.$basicAcceptanceOf(AgreementVersion.current)) ?? false;
     if (agreementAccepted) {
-      final oaLoginStatus = ref.watch(CredentialsInit.storage.oa.$loginStatus);
-      if (oaLoginStatus != OaLoginStatus.never) {
-        all.add(const CampusSelector().padSymmetric(h: 8));
-      }
-    }
-    if (agreementAccepted) {
-      final oaCredentials = ref.watch(CredentialsInit.storage.oa.$credentials);
-      if (oaCredentials != null) {
-        all.add(PageNavigationTile(
-          title: i18n.oa.oaAccount.text(),
-          subtitle: oaCredentials.account.text(),
-          leading: const Icon(Icons.person_rounded),
-          path: "/settings/oa",
-        ));
-      } else {
-        const oaLogin = OaLoginI18n();
-        all.add(ListTile(
-          title: oaLogin.loginOa.text(),
-          subtitle: oaLogin.neverLoggedInTip.text(),
-          leading: const Icon(Icons.person_rounded),
-          onTap: () {
-            context.go("/oa/login");
-          },
-        ));
-      }
-      all.add(const Divider());
-    }
-    if (agreementAccepted) {
       all.add(PageNavigationTile(
         leading: const Icon(Icons.calendar_month_outlined),
         title: i18n.app.navigation.timetable.text(),
         path: "/settings/timetable",
-      ));
-      all.add(PageNavigationTile(
-        title: i18n.app.navigation.school.text(),
-        leading: const Icon(Icons.school_outlined),
-        path: "/settings/school",
       ));
       all.add(const Divider());
     }
@@ -128,7 +91,6 @@ void _onClearCache(BuildContext context) async {
     destructive: true,
   );
   if (confirm == true) {
-    await Init.schoolCookieJar.deleteAll();
     await HiveInit.clearCache();
   }
 }
@@ -161,7 +123,7 @@ Future<void> _onWipeData() async {
     await Init.initNetwork();
     await Init.initModules();
     if (!navigateCtx.mounted) return;
-    navigateCtx.go("/oa/login");
+    navigateCtx.go("/");
     await Future.delayed(const Duration(milliseconds: 100));
     if (!navigateCtx.mounted) return;
     await AgreementsAcceptanceSheet.show(navigateCtx);

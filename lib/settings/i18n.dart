@@ -1,5 +1,4 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:mimir/credentials/i18n.dart';
 import 'package:mimir/l10n/app.dart';
 import 'package:mimir/l10n/common.dart';
 
@@ -8,8 +7,6 @@ const i18n = _I18n();
 class _I18n with CommonI18nMixin {
   const _I18n();
 
-  final oa = const OaCredentialsI18n();
-  final eduEmail = const EmailCredentialsI18n();
   final dev = const _DevOptions();
   final about = const _About();
   final app = const AppI18n();

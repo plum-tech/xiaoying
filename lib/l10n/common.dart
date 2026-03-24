@@ -136,7 +136,5 @@ class CampusI10n {
 
   static const ns = "campus";
 
-  String get xuhui => "$ns.xuhui".tr();
-
-  String get fengxian => "$ns.fengxian".tr();
+  String get defaultCampus => "$ns.defaultCampus".tr();
 }

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mimir/timetable/i18n.dart' as $timetable;
-import 'package:mimir/school/i18n.dart' as $school;
 
 import 'package:rettulf/rettulf.dart';
 
@@ -48,14 +47,6 @@ class _MainStagePageState extends ConsumerState<MainStagePage> {
           icon: Icons.calendar_month_outlined,
           activeIcon: Icons.calendar_month,
           label: $timetable.i18n.navigation,
-        )
-      ),
-      (
-        route: "/school",
-        item: (
-          icon: Icons.school_outlined,
-          activeIcon: Icons.school,
-          label: $school.i18n.navigation,
         )
       ),
     ];

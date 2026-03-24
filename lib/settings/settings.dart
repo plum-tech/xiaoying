@@ -23,11 +23,11 @@ class SettingsImpl {
   late final timetable = TimetableSettings(box);
   late final agreements = AgreementsSettings(box);
 
-  Campus get campus => box.safeGet<Campus>(_K.campus) ?? Campus.fengxian;
+  Campus get campus => box.safeGet<Campus>(_K.campus) ?? Campus.defaultCampus;
 
   set campus(Campus newV) => box.safePut<Campus>(_K.campus, newV);
 
-  late final $campus = box.providerWithDefault<Campus>(_K.campus, () => Campus.fengxian);
+  late final $campus = box.providerWithDefault<Campus>(_K.campus, () => Campus.defaultCampus);
 
   String? get lastSignature => box.safeGet<String>(_K.lastSignature);
 

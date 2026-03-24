@@ -2,10 +2,6 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:mimir/credentials/error.dart';
-import 'package:mimir/design/adaptive/dialog.dart';
-import 'package:mimir/lifecycle.dart';
-import 'package:mimir/login/i18n.dart';
 
 void debugPrintError(Object? error, [StackTrace? stackTrace]) {
   if (error == null) {
@@ -29,19 +25,6 @@ void debugPrintError(Object? error, [StackTrace? stackTrace]) {
   }
 }
 
-const _i18n = CommonAuthI18n();
-
 Future<void> handleRequestError(Object? error, [StackTrace? stackTrace]) async {
   debugPrintError(error, stackTrace);
-  final context = $key.currentContext;
-  if (error is CredentialException) {
-    if (context == null || context.mounted) return;
-    await context.showTip(
-      serious: true,
-      title: _i18n.failedWarn,
-      desc: error.type.l10n(),
-      primary: _i18n.close,
-    );
-    return;
-  }
 }

@@ -17,29 +17,7 @@ Duration calcuSwitchAnimationDuration(num distance) {
   return Duration(milliseconds: time.toInt());
 }
 
-final _builtinStartDate = {
-  (2016, Semester.term1): DateTime(2016, 8, 29),
-  (2016, Semester.term2): DateTime(2017, 2, 20),
-  (2017, Semester.term1): DateTime(2017, 9, 4),
-  (2017, Semester.term2): DateTime(2018, 3, 5),
-  (2018, Semester.term1): DateTime(2018, 9, 3),
-  (2018, Semester.term2): DateTime(2019, 2, 25),
-  (2019, Semester.term1): DateTime(2019, 9, 2),
-  (2019, Semester.term2): DateTime(2020, 2, 24),
-  (2020, Semester.term1): DateTime(2020, 9, 14),
-  (2020, Semester.term2): DateTime(2021, 3, 1),
-  (2021, Semester.term1): DateTime(2021, 9, 6),
-  (2021, Semester.term2): DateTime(2022, 2, 14),
-  (2022, Semester.term1): DateTime(2022, 9, 5),
-  (2022, Semester.term2): DateTime(2023, 2, 6),
-  (2023, Semester.term1): DateTime(2023, 9, 18),
-  (2023, Semester.term2): DateTime(2024, 2, 26),
-  (2024, Semester.term1): DateTime(2024, 9, 2),
-};
-
 DateTime estimateStartDate(int year, Semester semester) {
-  final builtin = _builtinStartDate[(year, semester)];
-  if (builtin != null) return builtin;
   if (semester == Semester.term1) {
     return findFirstWeekdayInCurrentMonth(DateTime(year, 9), DateTime.monday);
   } else {

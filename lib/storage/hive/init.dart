@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:mimir/settings/settings.dart';
+// ignore: implementation_imports
 import "package:hive_ce/src/hive_impl.dart";
 import 'adapter.dart';
 
@@ -12,18 +13,7 @@ class HiveInit {
   static final core = HiveImpl();
   static final cache = HiveImpl();
 
-  static late Box //
-      credentials,
-      timetable,
-      settings,
-      cookies;
-
-  static late Box //
-      examArrange,
-      examResult,
-      oaAnnounce,
-      ywb,
-      schoolCookies;
+  static late Box settings, timetable;
 
   static late Map<String, Box> name2Box;
   static late List<Box> cacheBoxes;
@@ -46,18 +36,10 @@ class HiveInit {
   static Future<void> initBox() async {
     debugPrint("Initializing hive box");
     name2Box = _name2Box([
-      credentials = await core.openBox('credentials'),
       settings = await core.openBox('settings'),
       timetable = await core.openBox('timetable'),
-      ...cacheBoxes = [
-        cookies = await cache.openBox('cookies'),
-        schoolCookies = await cache.openBox('school-cookies'),
-        examArrange = await cache.openBox('exam-arrange'),
-        examResult = await cache.openBox('exam-result'),
-        oaAnnounce = await cache.openBox('oa-announce'),
-        ywb = await cache.openBox('ywb'),
-      ],
     ]);
+    cacheBoxes = const [];
     Settings = SettingsImpl(settings);
   }
 

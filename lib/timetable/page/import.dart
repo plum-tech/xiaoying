@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mimir/credentials/init.dart';
 import 'package:mimir/design/adaptive/foundation.dart';
 import 'package:mimir/school/entity/school.dart';
 import 'package:mimir/school/utils.dart';
@@ -60,10 +59,9 @@ class _ImportTimetablePageState extends ConsumerState<ImportTimetablePage> {
   }
 
   Widget buildImportPage({Key? key}) {
-    final credentials = ref.watch(CredentialsInit.storage.oa.$credentials);
     return [
       SemesterSelector(
-        baseYear: getAdmissionYearFromStudentId(credentials?.account),
+        baseYear: null,
         initial: initial,
         showNextYear: true,
         onSelected: (newSelection) {

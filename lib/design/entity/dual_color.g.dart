@@ -13,10 +13,7 @@ abstract class _$ColorEntryCWProxy {
   /// ```dart
   /// ColorEntry(...).copyWith(id: 12, name: "My name")
   /// ````
-  ColorEntry call({
-    Color? color,
-    bool? inverseText,
-  });
+  ColorEntry call({Color color, bool inverseText});
 }
 
 /// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfColorEntry.copyWith(...)`.
@@ -26,7 +23,6 @@ class _$ColorEntryCWProxyImpl implements _$ColorEntryCWProxy {
   final ColorEntry _value;
 
   @override
-
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored.
   ///
   /// Usage
@@ -38,11 +34,11 @@ class _$ColorEntryCWProxyImpl implements _$ColorEntryCWProxy {
     Object? inverseText = const $CopyWithPlaceholder(),
   }) {
     return ColorEntry(
-      color == const $CopyWithPlaceholder() || color == null
+      color == const $CopyWithPlaceholder()
           ? _value.color
           // ignore: cast_nullable_to_non_nullable
           : color as Color,
-      inverseText: inverseText == const $CopyWithPlaceholder() || inverseText == null
+      inverseText: inverseText == const $CopyWithPlaceholder()
           ? _value.inverseText
           // ignore: cast_nullable_to_non_nullable
           : inverseText as bool,
@@ -63,10 +59,7 @@ abstract class _$DualColorCWProxy {
   /// ```dart
   /// DualColor(...).copyWith(id: 12, name: "My name")
   /// ````
-  DualColor call({
-    ColorEntry? light,
-    ColorEntry? dark,
-  });
+  DualColor call({ColorEntry light, ColorEntry dark});
 }
 
 /// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfDualColor.copyWith(...)`.
@@ -76,7 +69,6 @@ class _$DualColorCWProxyImpl implements _$DualColorCWProxy {
   final DualColor _value;
 
   @override
-
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored.
   ///
   /// Usage
@@ -88,11 +80,11 @@ class _$DualColorCWProxyImpl implements _$DualColorCWProxy {
     Object? dark = const $CopyWithPlaceholder(),
   }) {
     return DualColor(
-      light: light == const $CopyWithPlaceholder() || light == null
+      light: light == const $CopyWithPlaceholder()
           ? _value.light
           // ignore: cast_nullable_to_non_nullable
           : light as ColorEntry,
-      dark: dark == const $CopyWithPlaceholder() || dark == null
+      dark: dark == const $CopyWithPlaceholder()
           ? _value.dark
           // ignore: cast_nullable_to_non_nullable
           : dark as ColorEntry,
@@ -111,21 +103,22 @@ extension $DualColorCopyWith on DualColor {
 // **************************************************************************
 
 ColorEntry _$ColorEntryFromJson(Map<String, dynamic> json) => ColorEntry(
-      _colorFromJson((json['color'] as num).toInt()),
-      inverseText: json['inverseText'] as bool? ?? false,
-    );
+  _colorFromJson((json['color'] as num).toInt()),
+  inverseText: json['inverseText'] as bool? ?? false,
+);
 
-Map<String, dynamic> _$ColorEntryToJson(ColorEntry instance) => <String, dynamic>{
+Map<String, dynamic> _$ColorEntryToJson(ColorEntry instance) =>
+    <String, dynamic>{
       'color': _colorToJson(instance.color),
       'inverseText': instance.inverseText,
     };
 
 DualColor _$DualColorFromJson(Map<String, dynamic> json) => DualColor(
-      light: ColorEntry.fromJson(json['light'] as Map<String, dynamic>),
-      dark: ColorEntry.fromJson(json['dark'] as Map<String, dynamic>),
-    );
+  light: ColorEntry.fromJson(json['light'] as Map<String, dynamic>),
+  dark: ColorEntry.fromJson(json['dark'] as Map<String, dynamic>),
+);
 
 Map<String, dynamic> _$DualColorToJson(DualColor instance) => <String, dynamic>{
-      'light': instance.light,
-      'dark': instance.dark,
-    };
+  'light': instance.light,
+  'dark': instance.dark,
+};

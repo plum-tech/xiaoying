@@ -13,9 +13,7 @@ abstract class _$TimetableLessonSlotCWProxy {
   /// ```dart
   /// TimetableLessonSlot(...).copyWith(id: 12, name: "My name")
   /// ````
-  TimetableLessonSlot call({
-    List<TimetableLessonPart>? lessons,
-  });
+  TimetableLessonSlot call({List<TimetableLessonPart> lessons});
 }
 
 /// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfTimetableLessonSlot.copyWith(...)`.
@@ -25,18 +23,15 @@ class _$TimetableLessonSlotCWProxyImpl implements _$TimetableLessonSlotCWProxy {
   final TimetableLessonSlot _value;
 
   @override
-
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored.
   ///
   /// Usage
   /// ```dart
   /// TimetableLessonSlot(...).copyWith(id: 12, name: "My name")
   /// ````
-  TimetableLessonSlot call({
-    Object? lessons = const $CopyWithPlaceholder(),
-  }) {
+  TimetableLessonSlot call({Object? lessons = const $CopyWithPlaceholder()}) {
     return TimetableLessonSlot(
-      lessons: lessons == const $CopyWithPlaceholder() || lessons == null
+      lessons: lessons == const $CopyWithPlaceholder()
           ? _value.lessons
           // ignore: cast_nullable_to_non_nullable
           : lessons as List<TimetableLessonPart>,
@@ -47,7 +42,8 @@ class _$TimetableLessonSlotCWProxyImpl implements _$TimetableLessonSlotCWProxy {
 extension $TimetableLessonSlotCopyWith on TimetableLessonSlot {
   /// Returns a callable class that can be used as follows: `instanceOfTimetableLessonSlot.copyWith(...)`.
   // ignore: library_private_types_in_public_api
-  _$TimetableLessonSlotCWProxy get copyWith => _$TimetableLessonSlotCWProxyImpl(this);
+  _$TimetableLessonSlotCWProxy get copyWith =>
+      _$TimetableLessonSlotCWProxyImpl(this);
 }
 
 abstract class _$TimetableLessonCWProxy {
@@ -57,10 +53,7 @@ abstract class _$TimetableLessonCWProxy {
   /// ```dart
   /// TimetableLesson(...).copyWith(id: 12, name: "My name")
   /// ````
-  TimetableLesson call({
-    Course? course,
-    List<TimetableLessonPart>? parts,
-  });
+  TimetableLesson call({Course course, List<TimetableLessonPart> parts});
 }
 
 /// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfTimetableLesson.copyWith(...)`.
@@ -70,7 +63,6 @@ class _$TimetableLessonCWProxyImpl implements _$TimetableLessonCWProxy {
   final TimetableLesson _value;
 
   @override
-
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored.
   ///
   /// Usage
@@ -82,11 +74,11 @@ class _$TimetableLessonCWProxyImpl implements _$TimetableLessonCWProxy {
     Object? parts = const $CopyWithPlaceholder(),
   }) {
     return TimetableLesson(
-      course: course == const $CopyWithPlaceholder() || course == null
+      course: course == const $CopyWithPlaceholder()
           ? _value.course
           // ignore: cast_nullable_to_non_nullable
           : course as Course,
-      parts: parts == const $CopyWithPlaceholder() || parts == null
+      parts: parts == const $CopyWithPlaceholder()
           ? _value.parts
           // ignore: cast_nullable_to_non_nullable
           : parts as List<TimetableLessonPart>,
@@ -107,10 +99,7 @@ abstract class _$TimetableLessonPartCWProxy {
   /// ```dart
   /// TimetableLessonPart(...).copyWith(id: 12, name: "My name")
   /// ````
-  TimetableLessonPart call({
-    TimetableLesson? type,
-    int? index,
-  });
+  TimetableLessonPart call({TimetableLesson type, int index});
 }
 
 /// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfTimetableLessonPart.copyWith(...)`.
@@ -120,7 +109,6 @@ class _$TimetableLessonPartCWProxyImpl implements _$TimetableLessonPartCWProxy {
   final TimetableLessonPart _value;
 
   @override
-
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored.
   ///
   /// Usage
@@ -132,11 +120,11 @@ class _$TimetableLessonPartCWProxyImpl implements _$TimetableLessonPartCWProxy {
     Object? index = const $CopyWithPlaceholder(),
   }) {
     return TimetableLessonPart(
-      type: type == const $CopyWithPlaceholder() || type == null
+      type: type == const $CopyWithPlaceholder()
           ? _value.type
           // ignore: cast_nullable_to_non_nullable
           : type as TimetableLesson,
-      index: index == const $CopyWithPlaceholder() || index == null
+      index: index == const $CopyWithPlaceholder()
           ? _value.index
           // ignore: cast_nullable_to_non_nullable
           : index as int,
@@ -147,5 +135,6 @@ class _$TimetableLessonPartCWProxyImpl implements _$TimetableLessonPartCWProxy {
 extension $TimetableLessonPartCopyWith on TimetableLessonPart {
   /// Returns a callable class that can be used as follows: `instanceOfTimetableLessonPart.copyWith(...)`.
   // ignore: library_private_types_in_public_api
-  _$TimetableLessonPartCWProxy get copyWith => _$TimetableLessonPartCWProxyImpl(this);
+  _$TimetableLessonPartCWProxy get copyWith =>
+      _$TimetableLessonPartCWProxyImpl(this);
 }

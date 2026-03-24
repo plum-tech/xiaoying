@@ -8,7 +8,7 @@ part of 'school.dart';
 
 class SemesterInfoAdapter extends TypeAdapter<SemesterInfo> {
   @override
-  final int typeId = 1;
+  final typeId = 1;
 
   @override
   SemesterInfo read(BinaryReader reader) {
@@ -17,7 +17,7 @@ class SemesterInfoAdapter extends TypeAdapter<SemesterInfo> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return SemesterInfo(
-      year: fields[0] as int?,
+      year: (fields[0] as num?)?.toInt(),
       semester: fields[1] as Semester,
     );
   }
@@ -38,12 +38,14 @@ class SemesterInfoAdapter extends TypeAdapter<SemesterInfo> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is SemesterInfoAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
+      other is SemesterInfoAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
 }
 
 class SemesterAdapter extends TypeAdapter<Semester> {
   @override
-  final int typeId = 0;
+  final typeId = 0;
 
   @override
   Semester read(BinaryReader reader) {
@@ -64,13 +66,10 @@ class SemesterAdapter extends TypeAdapter<Semester> {
     switch (obj) {
       case Semester.all:
         writer.writeByte(0);
-        break;
       case Semester.term1:
         writer.writeByte(1);
-        break;
       case Semester.term2:
         writer.writeByte(2);
-        break;
     }
   }
 
@@ -79,12 +78,15 @@ class SemesterAdapter extends TypeAdapter<Semester> {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is SemesterAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
+      identical(this, other) ||
+      other is SemesterAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
 }
 
 class CourseCatAdapter extends TypeAdapter<CourseCat> {
   @override
-  final int typeId = 2;
+  final typeId = 2;
 
   @override
   CourseCat read(BinaryReader reader) {
@@ -115,28 +117,20 @@ class CourseCatAdapter extends TypeAdapter<CourseCat> {
     switch (obj) {
       case CourseCat.none:
         writer.writeByte(0);
-        break;
       case CourseCat.genEd:
         writer.writeByte(1);
-        break;
       case CourseCat.publicCore:
         writer.writeByte(2);
-        break;
       case CourseCat.specializedCore:
         writer.writeByte(3);
-        break;
       case CourseCat.specializedCompulsory:
         writer.writeByte(4);
-        break;
       case CourseCat.specializedElective:
         writer.writeByte(5);
-        break;
       case CourseCat.integratedPractice:
         writer.writeByte(6);
-        break;
       case CourseCat.practicalInstruction:
         writer.writeByte(7);
-        break;
     }
   }
 
@@ -145,5 +139,8 @@ class CourseCatAdapter extends TypeAdapter<CourseCat> {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is CourseCatAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
+      identical(this, other) ||
+      other is CourseCatAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
 }

@@ -24,11 +24,11 @@ abstract class _$TimetablePaletteCWProxy {
   /// TimetablePalette(...).copyWith(id: 12, name: "My name")
   /// ````
   TimetablePalette call({
-    String? uuid,
-    String? name,
-    String? author,
-    List<DualColor>? colors,
-    DateTime? lastModified,
+    String uuid,
+    String name,
+    String author,
+    List<DualColor> colors,
+    DateTime lastModified,
   });
 }
 
@@ -51,10 +51,10 @@ class _$TimetablePaletteCWProxyImpl implements _$TimetablePaletteCWProxy {
   TimetablePalette colors(List<DualColor> colors) => this(colors: colors);
 
   @override
-  TimetablePalette lastModified(DateTime lastModified) => this(lastModified: lastModified);
+  TimetablePalette lastModified(DateTime lastModified) =>
+      this(lastModified: lastModified);
 
   @override
-
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `TimetablePalette(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
@@ -69,23 +69,23 @@ class _$TimetablePaletteCWProxyImpl implements _$TimetablePaletteCWProxy {
     Object? lastModified = const $CopyWithPlaceholder(),
   }) {
     return TimetablePalette(
-      uuid: uuid == const $CopyWithPlaceholder() || uuid == null
+      uuid: uuid == const $CopyWithPlaceholder()
           ? _value.uuid
           // ignore: cast_nullable_to_non_nullable
           : uuid as String,
-      name: name == const $CopyWithPlaceholder() || name == null
+      name: name == const $CopyWithPlaceholder()
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String,
-      author: author == const $CopyWithPlaceholder() || author == null
+      author: author == const $CopyWithPlaceholder()
           ? _value.author
           // ignore: cast_nullable_to_non_nullable
           : author as String,
-      colors: colors == const $CopyWithPlaceholder() || colors == null
+      colors: colors == const $CopyWithPlaceholder()
           ? _value.colors
           // ignore: cast_nullable_to_non_nullable
           : colors as List<DualColor>,
-      lastModified: lastModified == const $CopyWithPlaceholder() || lastModified == null
+      lastModified: lastModified == const $CopyWithPlaceholder()
           ? _value.lastModified
           // ignore: cast_nullable_to_non_nullable
           : lastModified as DateTime,
@@ -103,20 +103,30 @@ extension $TimetablePaletteCopyWith on TimetablePalette {
 // JsonSerializableGenerator
 // **************************************************************************
 
-TimetablePalette _$TimetablePaletteFromJson(Map<String, dynamic> json) => TimetablePalette(
+TimetablePalette _$TimetablePaletteFromJson(Map<String, dynamic> json) =>
+    TimetablePalette(
       uuid: json['uuid'] as String? ?? _kUUid(),
       name: json['name'] as String,
       author: json['author'] as String,
       colors: (json['colors'] as List<dynamic>)
-          .map((e) => const _DualColorMigratedFromColor2ModeConverter().fromJson(e as Map))
+          .map(
+            (e) => const _DualColorMigratedFromColor2ModeConverter().fromJson(
+              e as Map,
+            ),
+          )
           .toList(),
-      lastModified: json['lastModified'] == null ? _kLastModified() : DateTime.parse(json['lastModified'] as String),
+      lastModified: json['lastModified'] == null
+          ? _kLastModified()
+          : DateTime.parse(json['lastModified'] as String),
     );
 
-Map<String, dynamic> _$TimetablePaletteToJson(TimetablePalette instance) => <String, dynamic>{
+Map<String, dynamic> _$TimetablePaletteToJson(TimetablePalette instance) =>
+    <String, dynamic>{
       'uuid': instance.uuid,
       'name': instance.name,
       'author': instance.author,
-      'colors': instance.colors.map(const _DualColorMigratedFromColor2ModeConverter().toJson).toList(),
+      'colors': instance.colors
+          .map(const _DualColorMigratedFromColor2ModeConverter().toJson)
+          .toList(),
       'lastModified': instance.lastModified.toIso8601String(),
     };

@@ -1,0 +1,363 @@
+import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mimir/design/adaptive/multiplatform.dart';
+import 'package:mimir/design/animation/progress.dart';
+import 'package:mimir/design/widget/common.dart';
+import 'package:mimir/design/adaptive/dialog.dart';
+import 'package:mimir/design/widget/entry_card.dart';
+import 'package:mimir/school/entity/school.dart';
+import 'package:rettulf/rettulf.dart';
+import 'package:mimir/settings/settings.dart';
+import 'package:mimir/timetable/widget/course.dart';
+import 'package:mimir/utils/date.dart';
+import 'package:mimir/utils/format.dart';
+import 'package:text_scroll/text_scroll.dart';
+import 'package:universal_platform/universal_platform.dart';
+import 'package:uuid/uuid.dart';
+
+import '../entity/timetable.dart';
+import '../init.dart';
+import '../utils/export.dart';
+import '../utils/import.dart';
+import 'import.dart';
+import 'preview.dart';
+
+class MyTimetableListPage extends ConsumerStatefulWidget {
+  const MyTimetableListPage({super.key});
+
+  @override
+  ConsumerState<MyTimetableListPage> createState() =>
+      _MyTimetableListPageState();
+}
+
+class _MyTimetableListPageState extends ConsumerState<MyTimetableListPage> {
+  String? syncingUuid;
+
+  @override
+  Widget build(BuildContext context) {
+    final storage = TimetableInit.storage.timetable;
+    final timetables = ref.watch(storage.$rows);
+    final selectedId = ref.watch(storage.$selectedId);
+    timetables.sort((a, b) => b.lastModified.compareTo(a.lastModified));
+
+    if (timetables.isEmpty) {
+      return buildEmptyTimetableBody();
+    } else {
+      return buildTimetablesBody(
+        timetables: timetables,
+        selectedId: selectedId,
+      );
+    }
+  }
+
+  Widget buildFab() {
+    return FloatingActionButton.extended(
+      onPressed: importSampleTimetable,
+      label: const Text("示例课程表"),
+      icon: Icon(context.icons.add),
+    );
+  }
+
+  Widget buildEmptyTimetableBody() {
+    return Scaffold(
+      appBar: AppBar(title: "你的课程表".text()),
+      floatingActionButton: buildFab(),
+      body: LeavingBlank(
+        icon: Icons.calendar_month_rounded,
+        desc: "快去导入一个课程表吧！",
+        action: FilledButton(
+          onPressed: importSampleTimetable,
+          child: "导入示例课程表".text(),
+        ),
+      ),
+    );
+  }
+
+  Widget buildTimetablesBody({
+    required List<Timetable> timetables,
+    required String? selectedId,
+  }) {
+    final timetableNames = timetables.map((t) => t.name).toList();
+    return Scaffold(
+      floatingActionButton: buildFab(),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar.medium(title: "你的课程表".text()),
+          SliverList.builder(
+            itemCount: timetables.length,
+            itemBuilder: (ctx, i) {
+              final timetable = timetables[i];
+              return BlockWhenLoading(
+                blocked: syncingUuid != null,
+                loading: timetable.uuid == syncingUuid,
+                child: buildCard(
+                  timetable: timetable,
+                  selectedId: selectedId,
+                  timetableNames: timetableNames,
+                ),
+              ).padH(6);
+            },
+          ),
+          const SizedBox(height: 80).sliver(),
+        ],
+      ),
+    );
+  }
+
+  Widget buildCard({
+    required Timetable timetable,
+    required String? selectedId,
+    required List<String> timetableNames,
+  }) {
+    return TimetableCard(
+      timetable: timetable,
+      selected: selectedId == timetable.uuid,
+      allTimetableNames: timetableNames,
+    );
+  }
+
+  Future<void> importSampleTimetable() async {
+    final timetable = buildSampleTimetable();
+    if (!mounted) return;
+    final importedTimetable = await processImportedTimetable(
+      context,
+      timetable,
+    );
+    if (importedTimetable == null) return;
+    final id = TimetableInit.storage.timetable.add(importedTimetable);
+    if (Settings.timetable.autoUseImported) {
+      TimetableInit.storage.timetable.selectedId = id;
+    } else {
+      TimetableInit.storage.timetable.selectedId ??= id;
+    }
+    await HapticFeedback.mediumImpact();
+  }
+}
+
+class TimetableCard extends StatelessWidget {
+  final Timetable timetable;
+  final bool selected;
+  final List<String>? allTimetableNames;
+
+  const TimetableCard({
+    super.key,
+    required this.timetable,
+    required this.selected,
+    this.allTimetableNames,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return EntryCard(
+      title: timetable.name,
+      selected: selected,
+      selectAction: (ctx) => EntrySelectAction(
+        selectLabel: "使用",
+        selectedLabel: "已使用",
+        action: () async {
+          TimetableInit.storage.timetable.selectedId = timetable.uuid;
+        },
+      ),
+      deleteAction: (ctx) => EntryAction.delete(
+        label: "删除",
+        icon: context.icons.delete,
+        action: () async {
+          final confirm = await ctx.showActionRequest(
+            title: "确定删除？",
+            action: "删除",
+            desc: "这个课程表将被永久删除",
+            cancel: "取消",
+            destructive: true,
+          );
+          if (confirm != true) return;
+          TimetableInit.storage.timetable.delete(timetable.uuid);
+          if (TimetableInit.storage.timetable.isEmpty) {
+            if (!ctx.mounted) return;
+            ctx.pop();
+          }
+        },
+      ),
+      actions: (ctx) => [
+        if (!selected)
+          EntryAction(
+            main: true,
+            label: "预览",
+            icon: ctx.icons.preview,
+            activator: const SingleActivator(LogicalKeyboardKey.keyP),
+            action: () async {
+              if (!ctx.mounted) return;
+              await previewTimetable(context, timetable: timetable);
+            },
+          ),
+        EntryAction.edit(
+          label: "编辑",
+          icon: context.icons.edit,
+          activator: const SingleActivator(LogicalKeyboardKey.keyE),
+          action: () async {
+            var newTimetable = await ctx.push<Timetable>(
+              "/timetable/edit/${timetable.uuid}",
+            );
+            if (newTimetable == null) return;
+            final newName = allocValidFileName(newTimetable.name);
+            if (newName != newTimetable.name) {
+              newTimetable = newTimetable.copyWith(name: newName);
+            }
+            TimetableInit.storage.timetable[timetable.uuid] = newTimetable
+                .markModified();
+          },
+        ),
+        // share_plus: sharing files is not supported on Linux
+        if (!UniversalPlatform.isLinux)
+          EntryAction(
+            label: "分享",
+            icon: context.icons.share,
+            type: EntryActionType.share,
+            action: () async {
+              await exportTimetableFileAndShare(timetable, context: ctx);
+            },
+          ),
+        if (kDebugMode)
+          EntryAction(
+            icon: context.icons.copy,
+            label: "复制 Dart 代码",
+            action: () async {
+              final code = timetable.toDartCode();
+              debugPrint(code);
+              await Clipboard.setData(ClipboardData(text: code));
+            },
+          ),
+        EntryAction(
+          label: "创建副本",
+          oneShot: true,
+          icon: context.icons.copy,
+          activator: const SingleActivator(LogicalKeyboardKey.keyD),
+          action: () async {
+            final duplicate = timetable.copyWith(
+              uuid: const Uuid().v4(),
+              name: getDuplicateFileName(
+                timetable.name,
+                all: allTimetableNames,
+              ),
+              lastModified: DateTime.now(),
+            );
+            TimetableInit.storage.timetable.add(duplicate);
+          },
+        ),
+      ],
+      detailsBuilder: (ctx, actions) {
+        return TimetableDetailsPage(
+          timetable: timetable,
+          actions: actions?.call(ctx),
+        );
+      },
+      itemBuilder: (ctx) {
+        return TimetableInfo(timetable: timetable);
+      },
+    );
+  }
+}
+
+class TimetableInfo extends StatelessWidget {
+  final Timetable timetable;
+
+  const TimetableInfo({super.key, required this.timetable});
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = context.textTheme;
+    final year = '${timetable.schoolYear}–${timetable.schoolYear + 1}';
+    final semester = timetable.semester.label;
+    final author = [timetable.studentId, timetable.signature].join(" ");
+    return [
+      timetable.name.text(style: textTheme.titleLarge),
+      "$year, $semester".text(style: textTheme.titleMedium),
+      if (author.isNotEmpty) author.text(style: textTheme.bodyMedium),
+      "起始于 ${formatChineseDate(timetable.startDate)}".text(
+        style: textTheme.bodyMedium,
+      ),
+    ].column(caa: CrossAxisAlignment.start);
+  }
+}
+
+class TimetableDetailsPage extends ConsumerWidget {
+  final Timetable timetable;
+  final List<Widget>? actions;
+
+  const TimetableDetailsPage({
+    super.key,
+    required this.timetable,
+    this.actions,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final timetable =
+        ref.watch(
+          TimetableInit.storage.timetable.$rowOf(this.timetable.uuid),
+        ) ??
+        this.timetable;
+    final code2Courses = timetable.courses.values
+        .groupListsBy((c) => c.courseCode)
+        .entries
+        .toList();
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar.medium(
+            title: TextScroll(timetable.name),
+            actions: actions,
+          ),
+          SliverList.list(
+            children: [
+              ListTile(
+                leading: const Icon(Icons.drive_file_rename_outline),
+                title: "名称".text(),
+                subtitle: timetable.name.text(),
+              ),
+              ListTile(
+                leading: const Icon(Icons.date_range),
+                title: "起始于".text(),
+                subtitle: formatChineseDate(timetable.startDate).text(),
+              ),
+              ListTile(
+                leading: const Icon(Icons.create),
+                title: "创建于".text(),
+                subtitle: formatChineseDate(timetable.createdTime).text(),
+              ),
+              ListTile(
+                leading: const Icon(Icons.person),
+                title: "签名".text(),
+                subtitle: timetable.signature.text(),
+              ),
+              ListTile(
+                leading: const Icon(Icons.school),
+                title: StudentType.titleLabel.text(),
+                subtitle: timetable.studentType.label.text(),
+              ),
+            ],
+          ),
+          if (code2Courses.isNotEmpty)
+            const SliverToBoxAdapter(child: Divider()),
+          SliverList.builder(
+            itemCount: code2Courses.length,
+            itemBuilder: (ctx, i) {
+              final MapEntry(value: courses) = code2Courses[i];
+              final template = courses.first;
+              return TimetableCourseCard(
+                courses: courses,
+                courseName: template.courseName,
+                courseCode: template.courseCode,
+                classCode: template.classCode,
+                campus: timetable.campus,
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}

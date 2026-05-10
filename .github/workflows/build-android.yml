@@ -1,0 +1,89 @@
+name: Flutter Build Android
+
+env:
+  # 填写可访问 plum-tech/xiaoying-x 以及相关私有依赖仓库的 GitHub Personal Access Token; 用于检出私有仓库和拉取私有依赖。
+  MIMIR_GITHUB_TOKEN: ${{ secrets.MIMIR_GITHUB_TOKEN }}
+  # 填写 Android 签名 keystore(.jks) 文件的 Base64 编码内容; 用于给 release APK 签名。
+  APK_SIGN_JKS_BASE64: ${{ secrets.APK_SIGN_JKS_BASE64 }}
+  # 填写 keystore(.jks) 的 store password; 用于打开签名文件。
+  APK_SIGN_JKS_PASSWORD: ${{ secrets.APK_SIGN_JKS_PASSWORD }}
+  # 填写签名 alias 对应的 key password; 用于使用指定密钥签名 APK。
+  APK_SIGN_ALIAS_PASS: ${{ secrets.APK_SIGN_ALIAS_PASS }}
+  # 填写 keystore 中用于发布签名的 alias 名称; 用于定位实际签名密钥。
+  APK_SIGN_ALIAS: ${{ secrets.APK_SIGN_ALIAS }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Branch, tag or commit to build'
+        default: ""
+        type: string
+
+jobs:
+  build_android:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          repository: plum-tech/xiaoying-x
+          ref: ${{ inputs.ref }}
+          token: ${{ env.MIMIR_GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      # Configure Git with PAT for subsequent steps
+      # This is the crucial step that sets up global credentials.
+      - name: Configure Git for private dependencies
+        run: |
+          git config --global url."https://${{ env.MIMIR_GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"
+
+      - name: Install JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+          flutter-version-file: pubspec.yaml
+
+      - name: Configure Flutter CLI
+        run: |
+          flutter config --no-cli-animations
+
+      - name: Flutter pub get
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 20
+          max_attempts: 3
+          retry_wait_seconds: 20
+          shell: bash
+          command: flutter pub get
+
+      - name: Build APK
+        run: |
+          flutter build apk --release --target-platform android-arm,android-arm64 --split-per-abi --no-pub
+
+      - name: Sign APK
+        uses: r0adkll/sign-android-release@v1
+        id: sign_apk
+        with:
+          releaseDirectory: build/app/outputs/flutter-apk
+          signingKeyBase64: ${{ env.APK_SIGN_JKS_BASE64 }}
+          keyStorePassword: ${{ env.APK_SIGN_JKS_PASSWORD }}
+          keyPassword: ${{ env.APK_SIGN_ALIAS_PASS }}
+          alias: ${{ env.APK_SIGN_ALIAS }}
+        env:
+          BUILD_TOOLS_VERSION: "34.0.0"
+
+      - name: Publish Android Artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: Android-release
+          path: build/app/outputs/flutter-apk/*-signed.apk

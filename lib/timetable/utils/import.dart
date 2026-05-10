@@ -1,0 +1,108 @@
+import 'package:mimir/school/entity/school.dart';
+import 'package:mimir/school/utils.dart';
+import 'package:mimir/settings/settings.dart';
+import 'package:uuid/uuid.dart';
+
+import '../entity/timetable.dart';
+import '../utils.dart';
+
+Timetable buildSampleTimetable({SemesterInfo? semesterInfo}) {
+  final now = DateTime.now();
+  final info = semesterInfo ?? estimateSemesterInfo(now);
+  final schoolYear = info.year ?? estimateSchoolYear(now);
+  final semester = info.semester == Semester.all
+      ? estimateSemester(now)
+      : info.semester;
+  final startDate = info.exactlyOne
+      ? estimateStartDate(schoolYear, semester)
+      : _startOfCurrentWeek(now);
+  final createdAt = DateTime(
+    now.year,
+    now.month,
+    now.day,
+    now.hour,
+    now.minute,
+  );
+  final courses = _buildSampleCourses();
+  return Timetable(
+    uuid: const Uuid().v4(),
+    name: "示例课程表",
+    startDate: startDate,
+    campus: Settings.campus,
+    schoolYear: schoolYear,
+    semester: semester,
+    studentType: StudentType.undergraduate,
+    lastCourseKey: courses.length,
+    signature: Settings.lastSignature ?? "",
+    studentId: "",
+    courses: {for (final course in courses) "${course.courseKey}": course},
+    lastModified: createdAt,
+    createdTime: createdAt,
+  );
+}
+
+DateTime _startOfCurrentWeek(DateTime date) {
+  final monday = date.subtract(Duration(days: date.weekday - DateTime.monday));
+  return DateTime(monday.year, monday.month, monday.day);
+}
+
+List<Course> _buildSampleCourses() {
+  return const [
+    Course(
+      courseKey: 0,
+      courseName: "高等数学",
+      courseCode: "MATH101",
+      classCode: "A01",
+      place: "一教A101",
+      weekIndices: TimetableWeekIndices([
+        TimetableWeekIndex.all((start: 0, end: 15)),
+      ]),
+      timeslots: (start: 0, end: 1),
+      courseCredit: 4,
+      dayIndex: 0,
+      teachers: ["王老师"],
+    ),
+    Course(
+      courseKey: 1,
+      courseName: "程序设计基础",
+      courseCode: "CS102",
+      classCode: "B02",
+      place: "二教B203",
+      weekIndices: TimetableWeekIndices([
+        TimetableWeekIndex.all((start: 0, end: 15)),
+      ]),
+      timeslots: (start: 2, end: 3),
+      courseCredit: 3,
+      dayIndex: 1,
+      teachers: ["李老师"],
+    ),
+    Course(
+      courseKey: 2,
+      courseName: "大学英语",
+      courseCode: "ENG103",
+      classCode: "C03",
+      place: "外语楼302",
+      weekIndices: TimetableWeekIndices([
+        TimetableWeekIndex.even((start: 0, end: 15)),
+      ]),
+      timeslots: (start: 4, end: 5),
+      courseCredit: 2,
+      dayIndex: 2,
+      teachers: ["Chen"],
+    ),
+    Course(
+      courseKey: 3,
+      courseName: "体育",
+      courseCode: "PE104",
+      classCode: "D04",
+      place: "体育馆",
+      weekIndices: TimetableWeekIndices([
+        TimetableWeekIndex.odd((start: 0, end: 15)),
+      ]),
+      timeslots: (start: 6, end: 7),
+      courseCredit: 1,
+      dayIndex: 4,
+      teachers: ["周老师"],
+    ),
+  ];
+}

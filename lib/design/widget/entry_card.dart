@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart'
@@ -10,7 +9,6 @@ import 'package:mimir/design/adaptive/foundation.dart';
 import 'package:mimir/design/adaptive/menu.dart';
 import 'package:mimir/design/adaptive/multiplatform.dart';
 import 'package:mimir/design/widget/card.dart';
-import 'package:super_context_menu/super_context_menu.dart';
 
 enum EntryActionType { edit, share, other }
 
@@ -99,9 +97,7 @@ class EntryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return supportContextMenu
-        ? buildCardWithContextMenu(context)
-        : buildCardWithDropMenu(context);
+    return buildCardWithDropMenu(context);
   }
 
   Widget buildCardWithDropMenu(BuildContext context) {
@@ -197,122 +193,6 @@ class EntryCard extends StatelessWidget {
             clip: Clip.hardEdge,
           ),
     );
-  }
-
-  Widget buildCardWithContextMenu(BuildContext context) {
-    return Builder(
-      builder: (context) {
-        final actions = this.actions(context);
-        final deleteAction = this.deleteAction?.call(context);
-        return ContextMenuWidget(
-          menuProvider: (MenuRequest request) {
-            return Menu(
-              children: buildMenuActions(
-                context,
-                actions: actions,
-                selectAction: selectAction(context),
-                deleteAction: deleteAction,
-              ),
-            );
-          },
-          child: buildCardWithContextMenuBody(
-            context,
-            selectAction: selectAction(context),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget buildCardWithContextMenuBody(
-    BuildContext context, {
-    required EntrySelectAction? selectAction,
-  }) {
-    Widget widget = [
-      itemBuilder(context),
-      OverflowBar(
-        alignment: MainAxisAlignment.end,
-        children: [
-          if (selectAction != null)
-            CupertinoButton(
-              padding: EdgeInsets.zero,
-              onPressed: selected ? null : selectAction.action,
-              child: selected
-                  ? Icon(
-                      context.icons.checkMark,
-                      color: context.colorScheme.primary,
-                    )
-                  : Icon(context.icons.checkBoxBlankOutlineRounded),
-            ),
-        ],
-      ),
-    ].column(caa: CrossAxisAlignment.start).padOnly(t: 12, l: 12, r: 8, b: 4);
-    if (isCupertino) {
-      return GestureDetector(
-        onTap: () => showDetailsSheet(context),
-        child: selectedCard(child: widget),
-      );
-    } else {
-      return selectedCard(
-        child: InkWell(onTap: () => showDetailsSheet(context), child: widget),
-      );
-    }
-  }
-
-  Widget selectedCard({required Widget child}) {
-    return child.inAnyCard(
-      type: selected ? CardVariant.filled : CardVariant.outlined,
-      clip: Clip.hardEdge,
-    );
-  }
-
-  Future<void> showDetailsSheet(BuildContext context) async {
-    await context.showSheet((ctx) => detailsBuilder(ctx, buildDetailsActions));
-  }
-
-  List<MenuAction> buildMenuActions(
-    BuildContext context, {
-    required List<EntryAction> actions,
-    required EntrySelectAction? selectAction,
-    required EntryAction? deleteAction,
-  }) {
-    final all = <MenuAction>[];
-    if (selectAction != null && !selected) {
-      final selectCallback = selectAction.action;
-      all.add(
-        MenuAction(
-          image: MenuImage.icon(context.icons.checkMark),
-          title: selectAction.selectLabel,
-          callback: selectCallback,
-        ),
-      );
-    }
-    for (final action in actions) {
-      final callback = action.action;
-      final icon = action.icon;
-      all.add(
-        MenuAction(
-          image: icon == null ? null : MenuImage.icon(icon),
-          title: action.label,
-          activator: action.activator,
-          callback: callback,
-        ),
-      );
-    }
-    if (deleteAction != null) {
-      final icon = deleteAction.icon;
-      all.add(
-        MenuAction(
-          image: icon == null ? null : MenuImage.icon(icon),
-          title: deleteAction.label,
-          attributes: const MenuActionAttributes(destructive: true),
-          activator: deleteAction.activator,
-          callback: deleteAction.action,
-        ),
-      );
-    }
-    assert(all.isNotEmpty, "CupertinoContextMenuActions can't be empty");
-    return all;
   }
 
   ({EntryAction main, List<EntryAction> secondary}) separateActions4Details(

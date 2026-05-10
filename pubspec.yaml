@@ -66,7 +66,6 @@ dependencies:
   pull_down_button: ^0.10.2
   # read system theme color
   system_theme: ^3.1.2
-  super_context_menu: ^0.8.24
   # Utils
   # dart.io.Platform API for Web
   universal_platform: ^1.1.0

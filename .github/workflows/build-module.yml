@@ -1,5 +1,9 @@
 name: Flutter Build Module
 
+env:
+  # 填写可访问 plum-tech/xiaoying_${{ inputs.module }} 以及相关私有依赖仓库的 GitHub Personal Access Token; 用于检出所选模块的私有仓库和拉取私有依赖。
+  MIMIR_GITHUB_TOKEN: ${{ secrets.MIMIR_GITHUB_TOKEN }}
+
 on:
   workflow_dispatch:
     inputs:
@@ -31,14 +35,14 @@ jobs:
         with:
           repository: plum-tech/xiaoying_${{ inputs.module }}
           ref: ${{ inputs.ref }}
-          token: ${{ secrets.MIMIR_GITHUB_TOKEN }}
+          token: ${{ env.MIMIR_GITHUB_TOKEN }}
           fetch-depth: 0
 
       # Configure Git with PAT for subsequent steps
       # This is the crucial step that sets up global credentials.
       - name: Configure Git for private dependencies
         run: |
-          git config --global url."https://${{ secrets.MIMIR_GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"
+          git config --global url."https://${{ env.MIMIR_GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"
 
       - name: Install JDK 17
         uses: actions/setup-java@v5

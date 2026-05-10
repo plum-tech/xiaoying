@@ -41,14 +41,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.7.0"
-  asn1lib:
-    dependency: transitive
-    description:
-      name: asn1lib
-      sha256: "9a8f69025044eb466b9b60ef3bc3ac99b4dc6c158ae9c56d25eeccf5bc56d024"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.6.5"
   async:
     dependency: transitive
     description:
@@ -57,14 +49,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.13.0"
-  async_locks:
-    dependency: "direct main"
-    description:
-      name: async_locks
-      sha256: ca9ffa89fa1e91e74280aefef2053e3eb7b3469f45c10ac79b2cf011969e684b
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.0.2"
   audio_session:
     dependency: transitive
     description:
@@ -89,14 +73,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
-  beautiful_soup_dart:
-    dependency: "direct main"
-    description:
-      name: beautiful_soup_dart
-      sha256: "57e23946c85776dd9515a4e9a14263fff37dbedbd559bc4412bf565886e12b10"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.3.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -290,7 +266,7 @@ packages:
     source: hosted
     version: "0.3.5+1"
   crypto:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: crypto
       sha256: c8ea0233063ba03258fbcf2ca4d6dadfefe14f02fab57702265467a19f27fadf
@@ -369,14 +345,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
-  encrypt:
-    dependency: "direct main"
-    description:
-      name: encrypt
-      sha256: "62d9aa4670cc2a8798bab89b39fc71b6dfbacf615de6cf5001fb39f7e4a996a2"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.0.3"
   fake_async:
     dependency: transitive
     description:
@@ -454,14 +422,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.3"
-  flutter_svg_provider:
-    dependency: "direct main"
-    description:
-      name: flutter_svg_provider
-      sha256: cda47ab350671ba51ae4605d48f4c82fa5a2c399d22ebda367c1b407234c5048
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.7"
   flutter_swipe_action_cell:
     dependency: "direct main"
     description:
@@ -496,14 +456,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.15.2"
-  format:
-    dependency: "direct main"
-    description:
-      name: format
-      sha256: b6a2d9bdacd35d9161cdad37a2ab2f8fdcdaf1d37ca1dc84bbda8d46d7924875
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.6.0"
   frontend_server_client:
     dependency: transitive
     description:
@@ -617,7 +569,7 @@ packages:
     source: hosted
     version: "1.9.2"
   html:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: html
       sha256: "6d1264f2dffa1b1101c25a91dff0dc2daee4c18e87cd8538729773c073dbf602"
@@ -976,14 +928,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
-  pointycastle:
-    dependency: transitive
-    description:
-      name: pointycastle
-      sha256: "4be0097fcf3fd3e8449e53730c631200ebc7b88016acecab2b0da2f0149222fe"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.9.1"
   pool:
     dependency: transitive
     description:

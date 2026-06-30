@@ -38,7 +38,7 @@ jobs:
     runs-on: macos-26
     steps:
       # 检出代码仓库，使用 PAT 令牌
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           repository: plum-tech/xiaoying-x
           ref: ${{ inputs.ref }}
@@ -164,7 +164,7 @@ jobs:
     if: ${{ inputs.deploy_app_store }}
     needs: [ build_ios ]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           repository: plum-tech/xiaoying-x
           ref: ${{ inputs.ref }}
